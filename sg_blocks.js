@@ -55,10 +55,13 @@
     el.style.opacity = clamp(p, 0, 100) / 100;
   }
 
-  function applyBackdropBlur(el) {
-    const v = parseInt(getVal("block-backdrop-blur", "0"), 10);
-    el.style.backdropFilter = v > 0 ? `blur(${v}px)` : "none";
-  }
+function applyBackdropBlur(el) {
+  const v = parseInt(getVal("block-backdrop-blur", "0"), 10);
+  const val = v > 0 ? `blur(${v}px)` : "none";
+  el.style.backdropFilter = val;
+  el.style.webkitBackdropFilter = val; 
+}
+
 
   function applyBackground(el) {
     const mode = getVal("block-bg-mode", "solid");
@@ -199,7 +202,11 @@
     div.className = "canvas-element type-block";
     div.dataset.id = "blk_" + Date.now();
     div.dataset.type = "block";
+    div.dataset.blockUi = "bg,border,radius,shadow,blur,opacity";
+
     div.style.zIndex = zCounter;
+
+
 
     div.style.width = "260px";
     div.style.height = "140px";

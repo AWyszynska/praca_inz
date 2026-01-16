@@ -14,6 +14,37 @@ function sg_clean_file_name(string $name): string {
   if (!preg_match('/\.xml$/i', $name)) $name .= '.xml';
   return $name;
 }
+function sg_norm_css_value(string $s): string {
+  $s = trim($s);
+  if ($s === '') return '';
+  $s = str_replace('"', "'", $s);
+  $s = preg_replace('/\s+/', ' ', $s);
+  $s = preg_replace('/,\s+/', ',', $s);
+  return $s;
+}
+
+function sg_add_child_compact(SimpleXMLElement $node, string $name, $val, $default = null, bool $escape = false): void {
+  $v = (string)($val ?? '');
+
+  if ($default === null) {
+    if (trim($v) === '') return;
+  } else {
+    $dv = (string)$default;
+
+    $cmpV = $v;
+    $cmpD = $dv;
+    $toNorm = ['bg','border','borderRadius','boxShadow','fontFamily','color','backdropFilter'];
+    if (in_array($name, $toNorm, true)) {
+      $cmpV = sg_norm_css_value($v);
+      $cmpD = sg_norm_css_value($dv);
+    }
+
+    if ($cmpV === $cmpD) return;
+  }
+
+  $node->addChild($name, $escape ? htmlspecialchars($v, ENT_QUOTES | ENT_XML1, 'UTF-8') : $v);
+}
+
 
 $requested = isset($_GET['file']) ? (string)$_GET['file'] : '';
 if ($requested !== '') {
@@ -61,192 +92,263 @@ if ($baseFile !== '' && $baseFile !== $selected) {
 
 
     if (!empty($elements)) {
+
 function saveRecursive($items, $xmlNode) {
   foreach ($items as $item) {
     if (!is_array($item)) continue;
     if (empty($item['id']) || empty($item['type'])) continue;
 
+    $type = (string)$item['type'];
+
     $el = $xmlNode->addChild('element');
     $el->addAttribute('id', (string)$item['id']);
-    $el->addAttribute('type', (string)$item['type']);
+    $el->addAttribute('type', $type);
+
+    sg_add_child_compact($el, 'htmlId', $item['htmlId'] ?? '', '', true);
+    sg_add_child_compact($el, 'htmlClass', $item['htmlClass'] ?? '', '', true);
 
     $el->addChild('x', $item['x'] ?? 0);
     $el->addChild('y', $item['y'] ?? 0);
     $el->addChild('w', $item['w'] ?? 'auto');
     $el->addChild('h', $item['h'] ?? 'auto');
-                
-                $el->addChild('color', $item['color']);
-                $el->addChild('bg', $item['bg']);
-                $el->addChild('fontSize', $item['fontSize']);
-                $el->addChild('fontFamily', $item['fontFamily']); 
-                $el->addChild('fontWeight', $item['fontWeight'] ?? '400');
-                $el->addChild('fontStyle', $item['fontStyle'] ?? 'normal');
-                $el->addChild('textDecoration', $item['textDecoration'] ?? 'none');
-                $el->addChild('textAlign', $item['textAlign'] ?? 'left');
-                $el->addChild('lineHeight', $item['lineHeight'] ?? '1.2');
-                $el->addChild('letterSpacing', $item['letterSpacing'] ?? 'normal');
-                $el->addChild('textTransform', $item['textTransform'] ?? 'none');
-                $el->addChild('padding', $item['padding'] ?? '0px');
-                $el->addChild('border', $item['border']);
-                $el->addChild('zIndex', $item['zIndex']);
-                $el->addChild('borderRadius', $item['borderRadius'] ?? '0px');
-                $el->addChild('boxShadow', $item['boxShadow'] ?? 'none');
-                $el->addChild('opacity', $item['opacity'] ?? '1');
-                $el->addChild('backdropFilter', $item['backdropFilter'] ?? 'none');
-                $el->addChild('formType', $item['formType'] ?? '');
-                $el->addChild('label', $item['label'] ?? '');
-                $el->addChild('options', $item['options'] ?? '');
-                $el->addChild('accentColor', $item['accentColor'] ?? '');
-                $el->addChild('content', htmlspecialchars($item['content'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('formHelpText', htmlspecialchars($item['formHelpText'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('formPlaceholder', htmlspecialchars($item['formPlaceholder'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('formName', htmlspecialchars($item['formName'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
+
+$defBg = 'transparent';
+$defBorder = 'none';
+$defRadius = '0px';
+$defShadow = 'none';
+$defOpacity = '1';
+$defBackdrop = 'none';
+
+if ($type === 'block') {
+  $defBg     = 'rgb(255, 255, 255)';
+  $defBorder = '1px solid rgb(226, 232, 240)';
+  $defRadius = '16px';
+  $defShadow = 'rgba(0, 0, 0, 0.12) 0px 12px 30px 0px';
+}
+
+sg_add_child_compact($el, 'bg', $item['bg'] ?? $defBg, $defBg);
+sg_add_child_compact($el, 'border', $item['border'] ?? $defBorder, $defBorder);
+sg_add_child_compact($el, 'zIndex', $item['zIndex'] ?? '0', '0');
+sg_add_child_compact($el, 'borderRadius', $item['borderRadius'] ?? $defRadius, $defRadius);
+sg_add_child_compact($el, 'boxShadow', $item['boxShadow'] ?? $defShadow, $defShadow);
+sg_add_child_compact($el, 'opacity', $item['opacity'] ?? $defOpacity, $defOpacity);
+sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackdrop, $defBackdrop);
+
+    switch ($type) {
+
+      case 'text':
+        sg_add_child_compact($el, 'content', $item['content'] ?? '', '', true);
+
+        sg_add_child_compact($el, 'color', $item['color'] ?? 'rgb(0, 0, 0)', 'rgb(0, 0, 0)');
+        sg_add_child_compact($el, 'fontSize', $item['fontSize'] ?? '20px', '20px');
+        sg_add_child_compact($el, 'fontFamily', $item['fontFamily'] ?? "'Segoe UI', sans-serif", "'Segoe UI', sans-serif");
 
 
-$el->addChild('formRequired', $item['formRequired'] ?? '0');
-$el->addChild('formInline', $item['formInline'] ?? '0');
+        sg_add_child_compact($el, 'fontWeight', $item['fontWeight'] ?? '400', '400');
+        sg_add_child_compact($el, 'fontStyle', $item['fontStyle'] ?? 'normal', 'normal');
+        sg_add_child_compact($el, 'textDecoration', $item['textDecoration'] ?? 'none', 'none');
+        sg_add_child_compact($el, 'textTransform', $item['textTransform'] ?? 'none', 'none');
 
-$el->addChild('formRows', $item['formRows'] ?? '3');
-$el->addChild('formMin', $item['formMin'] ?? '');
-$el->addChild('formMax', $item['formMax'] ?? '');
-$el->addChild('formStep', $item['formStep'] ?? '');
-$el->addChild('ratingMin', $item['ratingMin'] ?? '1');
-$el->addChild('ratingMax', $item['ratingMax'] ?? '5');
-$el->addChild('ratingStep', $item['ratingStep'] ?? '1');
-$el->addChild('ratingMinLabel', htmlspecialchars($item['ratingMinLabel'] ?? ''));
-$el->addChild('ratingMaxLabel', htmlspecialchars($item['ratingMaxLabel'] ?? ''));
-$el->addChild('likertMin', $item['likertMin'] ?? '1');
-$el->addChild('likertMax', $item['likertMax'] ?? '5');
-$el->addChild('likertLeft', htmlspecialchars($item['likertLeft'] ?? ''));
-$el->addChild('likertRight', htmlspecialchars($item['likertRight'] ?? ''));
-$el->addChild('formInputRadius', $item['formInputRadius'] ?? '10');
+        sg_add_child_compact($el, 'textAlign', $item['textAlign'] ?? 'left', 'left');
+        sg_add_child_compact($el, 'lineHeight', $item['lineHeight'] ?? '1.2', '1.2');
+        sg_add_child_compact($el, 'letterSpacing', $item['letterSpacing'] ?? 'normal', 'normal');
+        sg_add_child_compact($el, 'padding', $item['padding'] ?? '0px', '0px');
+        break;
 
-                $el->addChild('sliderLabel', $item['sliderLabel'] ?? '');
-                $el->addChild('sliderUnit', $item['sliderUnit'] ?? '');
-                $el->addChild('sliderMin', $item['sliderMin'] ?? '0');
-                $el->addChild('sliderMax', $item['sliderMax'] ?? '100');
-                $el->addChild('sliderStep', $item['sliderStep'] ?? '1');
-                $el->addChild('sliderValue', $item['sliderValue'] ?? '50');
-                $el->addChild('sliderShowValue', $item['sliderShowValue'] ?? '1');
-                $el->addChild('sliderShowMinMax', $item['sliderShowMinMax'] ?? '0');
-                $el->addChild('sliderPreset', $item['sliderPreset'] ?? 'soft');
-                $el->addChild('sliderTrack', $item['sliderTrack'] ?? '#e2e8f0');
-                $el->addChild('sliderFill', $item['sliderFill'] ?? '#156fe5');
-                $el->addChild('sliderThumb', $item['sliderThumb'] ?? '#156fe5');
-                $el->addChild('sliderTrackH', $item['sliderTrackH'] ?? '8');
-                $el->addChild('sliderThumbS', $item['sliderThumbS'] ?? '18');
-                $el->addChild('scrollTargetMode', $item['scrollTargetMode'] ?? 'page');
-                $el->addChild('scrollTargetId', $item['scrollTargetId'] ?? '');
-                $el->addChild('scrollPinMode', $item['scrollPinMode'] ?? 'fixed');
-                $el->addChild('scrollSide', $item['scrollSide'] ?? 'right');
-                $el->addChild('scrollOffsetTop', $item['scrollOffsetTop'] ?? '120');
-                $el->addChild('scrollOffsetSide', $item['scrollOffsetSide'] ?? '16');
-                $el->addChild('scrollHeight', $item['scrollHeight'] ?? '260');
-                $el->addChild('scrollTrackW', $item['scrollTrackW'] ?? '10');
-                $el->addChild('scrollThumbH', $item['scrollThumbH'] ?? '64');
-                $el->addChild('scrollValue', $item['scrollValue'] ?? '0');
-                $el->addChild('scrollTrackColor', $item['scrollTrackColor'] ?? '#e2e8f0');
-                $el->addChild('scrollThumbColor', $item['scrollThumbColor'] ?? '#64748b');
-                $el->addChild('scrollRadius', $item['scrollRadius'] ?? '999');
-$el->addChild('isFooter',     $item['isFooter'] ?? '0');
-$el->addChild('footerDock',   $item['footerDock'] ?? 'bottom'); 
-$el->addChild('footerBottom', $item['footerBottom'] ?? '0');    
-$el->addChild('footerLeft',   $item['footerLeft'] ?? '0');
-$el->addChild('imgFit',        $item['imgFit'] ?? 'cover');
-$el->addChild('imgPosX',       $item['imgPosX'] ?? '50');
-$el->addChild('imgPosY',       $item['imgPosY'] ?? '50');
-$el->addChild('imgRotate',     $item['imgRotate'] ?? '0');
-$el->addChild('imgScale',      $item['imgScale'] ?? '1');
-$el->addChild('imgFlipX',      $item['imgFlipX'] ?? '0');
-$el->addChild('imgFlipY',      $item['imgFlipY'] ?? '0');
+      case 'image':
+        sg_add_child_compact($el, 'content', $item['content'] ?? '', '', true);
 
-$el->addChild('imgBlur',       $item['imgBlur'] ?? '0');
-$el->addChild('imgGray',       $item['imgGray'] ?? '0');
-$el->addChild('imgSepia',      $item['imgSepia'] ?? '0');
-$el->addChild('imgBrightness', $item['imgBrightness'] ?? '100');
-$el->addChild('imgContrast',   $item['imgContrast'] ?? '100');
-$el->addChild('imgSaturate',   $item['imgSaturate'] ?? '100');
-$el->addChild('btnText', htmlspecialchars($item['btnText'] ?? 'Kliknij', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('btnAction', $item['btnAction'] ?? 'link');
-$el->addChild('btnUrl', htmlspecialchars($item['btnUrl'] ?? 'https://', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('btnTarget', $item['btnTarget'] ?? '_blank');
+        sg_add_child_compact($el, 'imgFit', $item['imgFit'] ?? 'cover', 'cover');
+        sg_add_child_compact($el, 'imgPosX', $item['imgPosX'] ?? '50', '50');
+        sg_add_child_compact($el, 'imgPosY', $item['imgPosY'] ?? '50', '50');
+        sg_add_child_compact($el, 'imgRotate', $item['imgRotate'] ?? '0', '0');
+        sg_add_child_compact($el, 'imgScale', $item['imgScale'] ?? '1', '1');
+        sg_add_child_compact($el, 'imgFlipX', $item['imgFlipX'] ?? '0', '0');
+        sg_add_child_compact($el, 'imgFlipY', $item['imgFlipY'] ?? '0', '0');
 
-$el->addChild('btnScrollTargetId', htmlspecialchars($item['btnScrollTargetId'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('btnScrollOffset', $item['btnScrollOffset'] ?? '0');
+        sg_add_child_compact($el, 'imgBlur', $item['imgBlur'] ?? '0', '0');
+        sg_add_child_compact($el, 'imgGray', $item['imgGray'] ?? '0', '0');
+        sg_add_child_compact($el, 'imgSepia', $item['imgSepia'] ?? '0', '0');
+        sg_add_child_compact($el, 'imgBrightness', $item['imgBrightness'] ?? '100', '100');
+        sg_add_child_compact($el, 'imgContrast', $item['imgContrast'] ?? '100', '100');
+        sg_add_child_compact($el, 'imgSaturate', $item['imgSaturate'] ?? '100', '100');
+        break;
 
-$el->addChild('btnPreset', $item['btnPreset'] ?? 'primary');
-$el->addChild('btnSize', $item['btnSize'] ?? 'md');
-$el->addChild('btnIcon', htmlspecialchars($item['btnIcon'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('btnIconPos', $item['btnIconPos'] ?? 'left');
+      case 'button':
+        sg_add_child_compact($el, 'btnText', $item['btnText'] ?? 'Kliknij', 'Kliknij', true);
+        sg_add_child_compact($el, 'btnAction', $item['btnAction'] ?? 'link', 'link');
+        sg_add_child_compact($el, 'btnUrl', $item['btnUrl'] ?? 'https://', 'https://', true);
+        sg_add_child_compact($el, 'btnTarget', $item['btnTarget'] ?? '_blank', '_blank');
 
-$el->addChild('btnRadius', $item['btnRadius'] ?? '10');
-$el->addChild('btnBorderW', $item['btnBorderW'] ?? '1');
-$el->addChild('btnWeight', $item['btnWeight'] ?? '600');
-$el->addChild('btnAlign', $item['btnAlign'] ?? 'center');
-$el->addChild('btnUpper', $item['btnUpper'] ?? '0');
-$el->addChild('btnLetter', $item['btnLetter'] ?? '0');
+        sg_add_child_compact($el, 'btnScrollTargetId', $item['btnScrollTargetId'] ?? '', '', true);
+        sg_add_child_compact($el, 'btnScrollOffset', $item['btnScrollOffset'] ?? '0', '0');
 
-$el->addChild('btnBg', $item['btnBg'] ?? '#156fe5');
-$el->addChild('btnColor', $item['btnColor'] ?? '#ffffff');
-$el->addChild('btnBorderColor', $item['btnBorderColor'] ?? '#156fe5');
-$el->addChild('btnHoverBg', $item['btnHoverBg'] ?? '#0f5bd1');
-$el->addChild('btnHoverColor', $item['btnHoverColor'] ?? '#ffffff');
-$el->addChild('btnShadow', $item['btnShadow'] ?? 'soft');
+        sg_add_child_compact($el, 'btnPreset', $item['btnPreset'] ?? 'primary', 'primary');
+        sg_add_child_compact($el, 'btnSize', $item['btnSize'] ?? 'md', 'md');
+        sg_add_child_compact($el, 'btnIcon', $item['btnIcon'] ?? '', '', true);
+        sg_add_child_compact($el, 'btnIconPos', $item['btnIconPos'] ?? 'left', 'left');
 
-$el->addChild('btnGradient', $item['btnGradient'] ?? '0');
-$el->addChild('btnGradFrom', $item['btnGradFrom'] ?? '#156fe5');
-$el->addChild('btnGradTo', $item['btnGradTo'] ?? '#22c55e');
-$el->addChild('btnGradAngle', $item['btnGradAngle'] ?? '135');
+        sg_add_child_compact($el, 'btnRadius', $item['btnRadius'] ?? '10', '10');
+        sg_add_child_compact($el, 'btnBorderW', $item['btnBorderW'] ?? '1', '1');
+        sg_add_child_compact($el, 'btnWeight', $item['btnWeight'] ?? '700', '700');
+        sg_add_child_compact($el, 'btnAlign', $item['btnAlign'] ?? 'center', 'center');
+        sg_add_child_compact($el, 'btnUpper', $item['btnUpper'] ?? '0', '0');
+        sg_add_child_compact($el, 'btnLetter', $item['btnLetter'] ?? '0', '0');
 
-$el->addChild('btnName', htmlspecialchars($item['btnName'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('btnDisabled', $item['btnDisabled'] ?? '0');
-$el->addChild('navItems', htmlspecialchars($item['navItems'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('navOrientation', $item['navOrientation'] ?? 'horizontal');
-$el->addChild('navAlign', $item['navAlign'] ?? 'left');
-$el->addChild('navGap', $item['navGap'] ?? '10');
-$el->addChild('navPad', $item['navPad'] ?? '10');
+        sg_add_child_compact($el, 'btnBg', $item['btnBg'] ?? '#156fe5', '#156fe5');
+        sg_add_child_compact($el, 'btnColor', $item['btnColor'] ?? '#ffffff', '#ffffff');
+        sg_add_child_compact($el, 'btnBorderColor', $item['btnBorderColor'] ?? '#156fe5', '#156fe5');
+        sg_add_child_compact($el, 'btnHoverBg', $item['btnHoverBg'] ?? '#0f5bd1', '#0f5bd1');
+        sg_add_child_compact($el, 'btnHoverColor', $item['btnHoverColor'] ?? '#ffffff', '#ffffff');
+        sg_add_child_compact($el, 'btnShadow', $item['btnShadow'] ?? 'soft', 'soft');
 
-$el->addChild('navLinkPadX', $item['navLinkPadX'] ?? '12');
-$el->addChild('navLinkPadY', $item['navLinkPadY'] ?? '8');
-$el->addChild('navLinkRadius', $item['navLinkRadius'] ?? '8');
-$el->addChild('navUnderline', $item['navUnderline'] ?? '0');
+        sg_add_child_compact($el, 'btnGradient', $item['btnGradient'] ?? '0', '0');
+        sg_add_child_compact($el, 'btnGradFrom', $item['btnGradFrom'] ?? '#156fe5', '#156fe5');
+        sg_add_child_compact($el, 'btnGradTo', $item['btnGradTo'] ?? '#22c55e', '#22c55e');
+        sg_add_child_compact($el, 'btnGradAngle', $item['btnGradAngle'] ?? '135', '135');
 
-$el->addChild('navLinkColor', $item['navLinkColor'] ?? '#ffffff');
-$el->addChild('navHoverBg', htmlspecialchars($item['navHoverBg'] ?? 'rgba(255,255,255,0.12)', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('navHoverColor', $item['navHoverColor'] ?? '#ffffff');
-$el->addChild('navActiveBg', htmlspecialchars($item['navActiveBg'] ?? 'rgba(255,255,255,0.18)', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('navActiveColor', $item['navActiveColor'] ?? '#ffffff');
+        sg_add_child_compact($el, 'btnName', $item['btnName'] ?? '', '', true);
+        sg_add_child_compact($el, 'btnDisabled', $item['btnDisabled'] ?? '0', '0');
+        break;
 
-$el->addChild('navActiveMode', $item['navActiveMode'] ?? 'query_page');
-$el->addChild('calYear', $item['calYear'] ?? '2026');
-$el->addChild('calMonth', $item['calMonth'] ?? '1');
-$el->addChild('calWeekStart', $item['calWeekStart'] ?? 'mon');
-$el->addChild('calTheme', $item['calTheme'] ?? 'blue');        
-$el->addChild('calBgA', htmlspecialchars($item['calBgA'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('calBgB', htmlspecialchars($item['calBgB'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
-$el->addChild('calAccent', htmlspecialchars($item['calAccent'] ?? '', ENT_QUOTES | ENT_XML1, 'UTF-8'));
+      case 'nav':
+        sg_add_child_compact($el, 'navItems', $item['navItems'] ?? '', '', true);
+        sg_add_child_compact($el, 'navOrientation', $item['navOrientation'] ?? 'horizontal', 'horizontal');
+        sg_add_child_compact($el, 'navAlign', $item['navAlign'] ?? 'left', 'left');
+        sg_add_child_compact($el, 'navGap', $item['navGap'] ?? '10', '10');
+        sg_add_child_compact($el, 'navPad', $item['navPad'] ?? '10', '10');
 
-$el->addChild('calRadius', $item['calRadius'] ?? '30');
-$el->addChild('calOuterPad', $item['calOuterPad'] ?? '22');
-$el->addChild('calGap', $item['calGap'] ?? '10');
-$el->addChild('calCellRadius', $item['calCellRadius'] ?? '16');
+        sg_add_child_compact($el, 'navLinkPadX', $item['navLinkPadX'] ?? '12', '12');
+        sg_add_child_compact($el, 'navLinkPadY', $item['navLinkPadY'] ?? '8', '8');
+        sg_add_child_compact($el, 'navLinkRadius', $item['navLinkRadius'] ?? '8', '8');
+        sg_add_child_compact($el, 'navUnderline', $item['navUnderline'] ?? '0', '0');
 
-$el->addChild('calMonthSize', $item['calMonthSize'] ?? '34');
-$el->addChild('calDaySize', $item['calDaySize'] ?? '18');
-$el->addChild('calWeekSize', $item['calWeekSize'] ?? '14');
-$el->addChild('calNavSize', $item['calNavSize'] ?? '44');
+        sg_add_child_compact($el, 'navLinkColor', $item['navLinkColor'] ?? '#ffffff', '#ffffff');
+        sg_add_child_compact($el, 'navHoverBg', $item['navHoverBg'] ?? 'rgba(255,255,255,0.12)', 'rgba(255,255,255,0.12)', true);
+        sg_add_child_compact($el, 'navHoverColor', $item['navHoverColor'] ?? '#ffffff', '#ffffff');
+        sg_add_child_compact($el, 'navActiveBg', $item['navActiveBg'] ?? 'rgba(255,255,255,0.18)', 'rgba(255,255,255,0.18)', true);
+        sg_add_child_compact($el, 'navActiveColor', $item['navActiveColor'] ?? '#ffffff', '#ffffff');
+        sg_add_child_compact($el, 'navActiveMode', $item['navActiveMode'] ?? 'query_page', 'query_page');
+        break;
 
-$el->addChild('calShowOutside', $item['calShowOutside'] ?? '1');
-$el->addChild('calShowToday', $item['calShowToday'] ?? '1');
+      case 'block':
+          sg_add_child_compact($el, 'blockUi', $item['blockUi'] ?? '', '', true);
+      break;
 
+      case 'calendar':
+        sg_add_child_compact($el, 'calYear', $item['calYear'] ?? '2026', '2026');
+        sg_add_child_compact($el, 'calMonth', $item['calMonth'] ?? '1', '1');
+        sg_add_child_compact($el, 'calWeekStart', $item['calWeekStart'] ?? 'mon', 'mon');
+        sg_add_child_compact($el, 'calTheme', $item['calTheme'] ?? 'blue', 'blue');
 
+        sg_add_child_compact($el, 'calBgA', $item['calBgA'] ?? '', '', true);
+        sg_add_child_compact($el, 'calBgB', $item['calBgB'] ?? '', '', true);
+        sg_add_child_compact($el, 'calAccent', $item['calAccent'] ?? '', '', true);
 
-                if (!empty($item['children'])) {
-                    $childrenNode = $el->addChild('children');
-                    saveRecursive($item['children'], $childrenNode);
-                }
-            }
+        sg_add_child_compact($el, 'calRadius', $item['calRadius'] ?? '30', '30');
+        sg_add_child_compact($el, 'calOuterPad', $item['calOuterPad'] ?? '22', '22');
+        sg_add_child_compact($el, 'calGap', $item['calGap'] ?? '10', '10');
+        sg_add_child_compact($el, 'calCellRadius', $item['calCellRadius'] ?? '16', '16');
+
+        sg_add_child_compact($el, 'calMonthSize', $item['calMonthSize'] ?? '34', '34');
+        sg_add_child_compact($el, 'calDaySize', $item['calDaySize'] ?? '18', '18');
+        sg_add_child_compact($el, 'calWeekSize', $item['calWeekSize'] ?? '14', '14');
+        sg_add_child_compact($el, 'calNavSize', $item['calNavSize'] ?? '44', '44');
+
+        sg_add_child_compact($el, 'calShowOutside', $item['calShowOutside'] ?? '1', '1');
+        sg_add_child_compact($el, 'calShowToday', $item['calShowToday'] ?? '1', '1');
+        break;
+
+      case 'slider':
+        sg_add_child_compact($el, 'sliderLabel', $item['sliderLabel'] ?? '', '', true);
+        sg_add_child_compact($el, 'sliderUnit', $item['sliderUnit'] ?? '', '', true);
+
+        sg_add_child_compact($el, 'sliderMin', $item['sliderMin'] ?? '0', '0');
+        sg_add_child_compact($el, 'sliderMax', $item['sliderMax'] ?? '100', '100');
+        sg_add_child_compact($el, 'sliderStep', $item['sliderStep'] ?? '1', '1');
+        sg_add_child_compact($el, 'sliderValue', $item['sliderValue'] ?? '0', '0');
+
+        sg_add_child_compact($el, 'sliderShowValue', $item['sliderShowValue'] ?? '1', '1');
+        sg_add_child_compact($el, 'sliderShowMinMax', $item['sliderShowMinMax'] ?? '0', '0');
+        sg_add_child_compact($el, 'sliderPreset', $item['sliderPreset'] ?? 'soft', 'soft');
+
+        sg_add_child_compact($el, 'sliderTrack', $item['sliderTrack'] ?? '#e2e8f0', '#e2e8f0');
+        sg_add_child_compact($el, 'sliderFill', $item['sliderFill'] ?? '#156fe5', '#156fe5');
+        sg_add_child_compact($el, 'sliderThumb', $item['sliderThumb'] ?? '#156fe5', '#156fe5');
+
+        sg_add_child_compact($el, 'sliderTrackH', $item['sliderTrackH'] ?? '8', '8');
+        sg_add_child_compact($el, 'sliderThumbS', $item['sliderThumbS'] ?? '18', '18');
+        break;
+
+      case 'sidescroll':
+        sg_add_child_compact($el, 'scrollTargetMode', $item['scrollTargetMode'] ?? 'page', 'page');
+        sg_add_child_compact($el, 'scrollTargetId', $item['scrollTargetId'] ?? '', '', true);
+
+        sg_add_child_compact($el, 'scrollPinMode', $item['scrollPinMode'] ?? 'fixed', 'fixed');
+        sg_add_child_compact($el, 'scrollSide', $item['scrollSide'] ?? 'right', 'right');
+
+        sg_add_child_compact($el, 'scrollOffsetTop', $item['scrollOffsetTop'] ?? '120', '120');
+        sg_add_child_compact($el, 'scrollOffsetSide', $item['scrollOffsetSide'] ?? '16', '16');
+        sg_add_child_compact($el, 'scrollHeight', $item['scrollHeight'] ?? '260', '260');
+
+        sg_add_child_compact($el, 'scrollTrackW', $item['scrollTrackW'] ?? '10', '10');
+        sg_add_child_compact($el, 'scrollThumbH', $item['scrollThumbH'] ?? '64', '64');
+        sg_add_child_compact($el, 'scrollValue', $item['scrollValue'] ?? '0', '0');
+
+        sg_add_child_compact($el, 'scrollTrackColor', $item['scrollTrackColor'] ?? '#e2e8f0', '#e2e8f0');
+        sg_add_child_compact($el, 'scrollThumbColor', $item['scrollThumbColor'] ?? '#64748b', '#64748b');
+        sg_add_child_compact($el, 'scrollRadius', $item['scrollRadius'] ?? '999', '999');
+        break;
+
+      case 'form':
+        sg_add_child_compact($el, 'formType', $item['formType'] ?? 'text', 'text');
+        sg_add_child_compact($el, 'label', $item['label'] ?? '', '', true);
+        sg_add_child_compact($el, 'options', $item['options'] ?? '', '', true);
+        sg_add_child_compact($el, 'accentColor', $item['accentColor'] ?? '#156fe5', '#156fe5');
+
+        sg_add_child_compact($el, 'formHelpText', $item['formHelpText'] ?? '', '', true);
+        sg_add_child_compact($el, 'formPlaceholder', $item['formPlaceholder'] ?? '', '', true);
+        sg_add_child_compact($el, 'formName', $item['formName'] ?? '', '', true);
+
+        sg_add_child_compact($el, 'formRequired', $item['formRequired'] ?? '0', '0');
+        sg_add_child_compact($el, 'formInline', $item['formInline'] ?? '0', '0');
+
+        sg_add_child_compact($el, 'formRows', $item['formRows'] ?? '3', '3');
+        sg_add_child_compact($el, 'formMin', $item['formMin'] ?? '', '', true);
+        sg_add_child_compact($el, 'formMax', $item['formMax'] ?? '', '', true);
+        sg_add_child_compact($el, 'formStep', $item['formStep'] ?? '', '', true);
+
+        sg_add_child_compact($el, 'ratingMin', $item['ratingMin'] ?? '1', '1');
+        sg_add_child_compact($el, 'ratingMax', $item['ratingMax'] ?? '5', '5');
+        sg_add_child_compact($el, 'ratingStep', $item['ratingStep'] ?? '1', '1');
+        sg_add_child_compact($el, 'ratingMinLabel', $item['ratingMinLabel'] ?? '', '', true);
+        sg_add_child_compact($el, 'ratingMaxLabel', $item['ratingMaxLabel'] ?? '', '', true);
+
+        sg_add_child_compact($el, 'likertMin', $item['likertMin'] ?? '1', '1');
+        sg_add_child_compact($el, 'likertMax', $item['likertMax'] ?? '5', '5');
+        sg_add_child_compact($el, 'likertLeft', $item['likertLeft'] ?? '', '', true);
+        sg_add_child_compact($el, 'likertRight', $item['likertRight'] ?? '', '', true);
+
+        sg_add_child_compact($el, 'formInputRadius', $item['formInputRadius'] ?? '10', '10');
+        break;
+
+      default:
+
+        if (($item['isFooter'] ?? '0') === '1') {
+          sg_add_child_compact($el, 'isFooter', '1', '0');
+          sg_add_child_compact($el, 'footerDock', $item['footerDock'] ?? 'bottom', 'bottom');
+          sg_add_child_compact($el, 'footerBottom', $item['footerBottom'] ?? '0', '0');
+          sg_add_child_compact($el, 'footerLeft', $item['footerLeft'] ?? '0', '0');
         }
+        break;
+    }
+    if (!empty($item['children'])) {
+      $childrenNode = $el->addChild('children');
+      saveRecursive($item['children'], $childrenNode);
+    }
+  }
+}
+
         saveRecursive($elements, $xml);
     }
     $xml->asXML($newXmlFile);
@@ -274,9 +376,18 @@ $el->addChild('calShowToday', $item['calShowToday'] ?? '1');
     
     .canvas-element { position: absolute; padding: 0 !important; margin: 0 !important; cursor: move; outline: none; box-sizing: border-box; }
     .canvas-element div, .canvas-element p { margin: 0 !important; padding: 0 !important; line-height: inherit; }
-    .canvas-element.active { outline: 2px dashed #156fe5 !important; background: rgba(21, 111, 229, 0.05); }
+    .canvas-element.active { outline: 2px dashed #156fe5 !important; }
+
     
-    .type-text { white-space: pre-wrap; display: inline-block; width: fit-content; line-height: 1.2; min-width: 10px; vertical-align: top; }
+.type-text{
+  white-space: pre-wrap;
+  display: inline-block;
+  line-height: 1.2;
+  overflow: visible;
+  min-width: 10px;
+  vertical-align: top;
+}
+
     .type-block { 
     display: block; 
     overflow: visible; 
@@ -301,7 +412,7 @@ $el->addChild('calShowToday', $item['calShowToday'] ?? '1');
 .canvas-element div,
 .canvas-element span {
   text-transform: none !important;
-  font-weight: normal;
+  font-weight: inherit;
 }
 .text-toolbar{
   display:flex;
@@ -394,6 +505,14 @@ foreach ($files as $p) {
 
 
         <div id="hidden-tools" style="margin-top:15px; border-top: 2px solid #f1f5f9;">
+            <div id="meta-edit-section" style="display:none; border-top:2px solid #f1f5f9; padding-top:10px; margin-top:10px;">
+  <label>ID (HTML):</label>
+  <input type="text" id="prop-html-id" placeholder="np. mainNav">
+
+  <label>Klasy CSS:</label>
+  <input type="text" id="prop-html-class" placeholder="np. hero dark rounded">
+</div>
+
             <div id="text-edit-section" style="display:none;">
                 <label>Kolor czcionki:</label>
                 <input type="color" id="prop-color">
@@ -473,21 +592,32 @@ function setAsTarget(id) {
 
              const targetBtn = (el.dataset.type === 'block' && el.dataset.isFooter !== "1") ?
   `<button class="layer-btn-target" onclick="event.stopPropagation(); setAsTarget('${el.dataset.id}')">🎯 OTWÓRZ TĄ WARSTWĘ</button>` : '';
+const domId = (el.dataset.htmlId || '').trim();
+const domClass = (el.dataset.htmlClass || '').trim();
+
+const metaTxt = [
+  domId ? `#${domId}` : '',
+  domClass ? `.${domClass.split(/\s+/).join('.')}` : ''
+].filter(Boolean).join(' ');
 
 
                 li.innerHTML = `
-                    <div class="layer-top-row" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div style="display:flex; align-items:center;">
-                            <div class="layer-color-preview" style="background-color: ${previewColor}"></div>
-                            <span>${level > 0 ? '↳ ' : ''}${el.dataset.type === 'text' ? '🔤' : '📦'} ${el.dataset.id.slice(-4)}</span>
-                        </div>
-                        <div class="layer-controls">
-                            <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', 1)">▲</button>
-                            <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', -1)">▼</button>
-                        </div>
-                    </div>
-                    ${targetBtn}
-                `;
+  <div class="layer-top-row" style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; align-items:center;">
+      <div class="layer-color-preview" style="background-color: ${previewColor}"></div>
+      <span>${level > 0 ? '↳ ' : ''}${el.dataset.type === 'text' ? '🔤' : '📦'} ${el.dataset.id.slice(-4)}</span>
+    </div>
+    <div class="layer-controls">
+      <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', 1)">▲</button>
+      <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', -1)">▼</button>
+    </div>
+  </div>
+
+  ${targetBtn}
+
+  ${metaTxt ? `<div style="font-size:11px;color:#64748b;margin-top:4px;">${metaTxt}</div>` : ''}
+  <div style="font-size:10px;color:#94a3b8;margin-top:2px;">${el.dataset.id}</div>
+`;
                 li.onclick = (e) => selectElement(el);
                 layersList.appendChild(li);
                 
@@ -632,6 +762,7 @@ if (type === 'calendar' && typeof syncCalendarInputs === "function") syncCalenda
   if (typeof syncImageInputs === "function") syncImageInputs(el);
 } else if (type === 'block') {
     if (typeof syncBlockInputs === "function") syncBlockInputs(el);
+    syncBlockUiChecks(el);
     } else if (type === 'text') {
         document.getElementById('prop-size').value = parseInt(el.style.fontSize) || 20;
         document.getElementById('prop-color').value = rgbToHex(el.style.color);
@@ -643,6 +774,15 @@ if (type === 'calendar' && typeof syncCalendarInputs === "function") syncCalenda
 }
 
     refreshLayers();
+    const metaSec = document.getElementById('meta-edit-section');
+if (metaSec) metaSec.style.display = 'block';
+
+const idInp = document.getElementById('prop-html-id');
+const clsInp = document.getElementById('prop-html-class');
+
+if (idInp) idInp.value = el.dataset.htmlId || "";
+if (clsInp) clsInp.value = el.dataset.htmlClass || "";
+
 }
 
     function deselectAll() {
@@ -698,9 +838,16 @@ canvas.onclick = (e) => {
     document.getElementById('delete-element-btn').onclick = () => { if(activeElement) { activeElement.remove(); deselectAll(); } };
 
 function getElementData(el) {
-    if (el?.dataset?.locked === "1") return;
+  if (el?.dataset?.locked === "1") return;
+
+  const wasActive = el.classList.contains('active');
+  if (wasActive) el.classList.remove('active');
 
   const cs = window.getComputedStyle(el);
+
+  if (wasActive) el.classList.add('active');
+
+
 
   const children = [];
   Array.from(el.children).forEach(child => {
@@ -731,6 +878,9 @@ if (childData) children.push(childData);
       : "none";
 
   return {
+    htmlId: el.dataset.htmlId || "",
+htmlClass: el.dataset.htmlClass || "",
+
     id: el.dataset.id,
     type: el.dataset.type,
     x: parseInt(el.style.left) || 0,
@@ -788,6 +938,7 @@ if (childData) children.push(childData);
     scrollThumbColor: el.dataset.scrollThumbColor || "#64748b",
     scrollRadius: el.dataset.scrollRadius || "999",
     isFooter: el.dataset.isFooter || "0",
+    
 footerDock: el.dataset.footerDock || "bottom",
 footerBottom: el.dataset.footerBottom || "0",
 footerLeft: el.dataset.footerLeft || "0",
@@ -804,6 +955,7 @@ btnUrl: el.dataset.btnUrl || 'https://',
 btnTarget: el.dataset.btnTarget || '_blank',
 btnScrollTargetId: el.dataset.btnScrollTargetId || '',
 btnScrollOffset: el.dataset.btnScrollOffset || '0',
+blockUi: el.dataset.blockUi || "",
 
 btnPreset: el.dataset.btnPreset || 'primary',
 btnSize: el.dataset.btnSize || 'md',
@@ -848,6 +1000,7 @@ imgSaturate: el.dataset.imgSaturate || '100',
     navLinkPadY: el.dataset.navLinkPadY || "8",
     navLinkRadius: el.dataset.navLinkRadius || "8",
     navUnderline: el.dataset.navUnderline || "0",
+blockUi: el.dataset.blockUi || '',
 
     navLinkColor: el.dataset.navLinkColor || "#ffffff",
     navHoverBg: el.dataset.navHoverBg || "rgba(255,255,255,0.12)",
@@ -930,11 +1083,13 @@ function markLocked(el){
 
 function afterCreateFromXml(el){
   if (!el) return;
-  if (el.dataset.type === "slider") window.updateSliderVisuals?.(el);
-  if (el.dataset.type === "image")  window.updateImageVisuals?.(el);
-  if (el.dataset.type === "button") window.updateButtonVisuals?.(el);
-  if (el.dataset.type === "nav")    window.updateNavVisuals?.(el);
-  if (el.dataset.isFooter === "1")  window.applyFooterStyles?.(el);
+  requestAnimationFrame(() => {
+    if (el.dataset.type === "slider") window.updateSliderVisuals?.(el);
+    if (el.dataset.type === "image")  window.updateImageVisuals?.(el);
+    if (el.dataset.type === "button") window.updateButtonVisuals?.(el);
+    if (el.dataset.type === "nav")    window.updateNavVisuals?.(el);
+    if (el.dataset.isFooter === "1")  window.applyFooterStyles?.(el);
+  });
 }
 function parseXmlElements(xmlText){
   const doc = new DOMParser().parseFromString(xmlText, "application/xml");
@@ -1004,10 +1159,22 @@ function spawnItem(item, origin){
   el.style.backdropFilter = item.backdropFilter;
   el.style.background = item.bg;
   Object.entries(item.dataset || {}).forEach(([k,v]) => el.dataset[k] = String(v));
+  applySavedMeta(el);
   if (item.type === "text") {
     el.contentEditable = "false";
     el.dataset.editing = "0";
     el.innerHTML = item.content || "";
+    el.style.fontSize = el.dataset.fontSize || "20px";
+el.style.fontFamily = el.dataset.fontFamily || "'Segoe UI', sans-serif";
+el.style.fontWeight = el.dataset.fontWeight || "400";
+el.style.fontStyle = el.dataset.fontStyle || "normal";
+el.style.textDecoration = el.dataset.textDecoration || "none";
+el.style.textAlign = el.dataset.textAlign || "left";
+el.style.lineHeight = el.dataset.lineHeight || "1.2";
+el.style.letterSpacing = el.dataset.letterSpacing || "normal";
+el.style.textTransform = el.dataset.textTransform || "none";
+el.style.padding = el.dataset.padding || "0px";
+
     el.ondblclick = (e) => { e.stopPropagation(); if (el.dataset.locked !== "1") enterTextEdit(el); };
   } else if (item.type === "image") {
     const src = item.content || "";
@@ -1203,7 +1370,80 @@ document.onmouseup = (mu) => {
 
     };
 }
-loadWithBase("<?= htmlspecialchars($selected) ?>");
+const currentFile = <?= json_encode($selected) ?>;
+window.addEventListener('load', () => loadWithBase(currentFile));
+
+function sanitizeHtmlId(raw){
+  const v = String(raw || '').trim()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-zA-Z0-9_-]/g, '_');
+  return v;
+}
+
+function sanitizeCssClass(raw){
+  return String(raw || '').trim()
+    .replace(/[^a-zA-Z0-9 _-]/g, '')
+    .replace(/\s+/g, ' ');
+}
+
+function setHtmlId(el, raw){
+  const idVal = sanitizeHtmlId(raw);
+  el.dataset.htmlId = idVal;
+
+  if (idVal) el.id = idVal;
+  else el.removeAttribute('id');
+}
+
+
+function setHtmlClass(el, raw){
+  const next = sanitizeCssClass(raw);
+  const prev = (el.dataset.htmlClass || '').trim();
+  prev.split(/\s+/).filter(Boolean).forEach(c => el.classList.remove(c));
+  next.split(/\s+/).filter(Boolean).forEach(c => el.classList.add(c));
+
+  el.dataset.htmlClass = next;
+}
+
+function applySavedMeta(el){
+  const savedId = (el.dataset.htmlId || '').trim();
+  if (savedId) el.id = savedId;
+  else el.removeAttribute('id');
+
+  const savedCls = (el.dataset.htmlClass || '').trim();
+  if (savedCls) savedCls.split(/\s+/).filter(Boolean).forEach(c => el.classList.add(c));
+}
+
+document.getElementById('prop-html-id')?.addEventListener('input', (e) => {
+  if (!activeElement) return;
+  setHtmlId(activeElement, e.target.value);
+  refreshLayers();
+});
+
+document.getElementById('prop-html-class')?.addEventListener('input', (e) => {
+  if (!activeElement) return;
+  setHtmlClass(activeElement, e.target.value);
+  refreshLayers();
+});
+function setBlockUiFromChecks(el){
+  const picks = Array.from(document.querySelectorAll('.fvOpt'))
+    .filter(c => c.checked)
+    .map(c => c.value);
+  el.dataset.blockUi = picks.join(',');
+}
+
+function syncBlockUiChecks(el){
+  if (!el.dataset.blockUi || !el.dataset.blockUi.trim()) {
+    el.dataset.blockUi = 'bg,border,radius,shadow,blur,opacity';
+  }
+  const cur = (el.dataset.blockUi || '').split(',').map(s => s.trim()).filter(Boolean);
+  document.querySelectorAll('.fvOpt').forEach(c => c.checked = cur.includes(c.value));
+}
+
+document.addEventListener('change', (e) => {
+  if (!e.target.classList.contains('fvOpt')) return;
+  if (!activeElement || activeElement.dataset.type !== 'block') return;
+  setBlockUiFromChecks(activeElement);
+});
 
 </script>
 <script src="sg_blocks.js?v=2"></script>

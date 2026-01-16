@@ -93,5 +93,34 @@
 
   <label style="color:#1e293b; font-size:12px; margin-top:12px;">Glass blur (backdrop-filter)</label>
   <input type="range" id="block-backdrop-blur" min="0" max="30" value="0">
+<div style="margin-top:12px; padding-top:10px; border-top:1px solid #e2e8f0;">
+  <div style="font-size:12px; font-weight:800; color:#0f172a; margin-bottom:8px;">
+    Opcje w Final View (dla tej ramki)
+  </div>
+
+  <label style="text-transform:none; font-weight:600; font-size:12px; color:#334155;">
+    <input type="checkbox" class="fvOpt" value="bg"> Tło
+  </label><br>
+
+  <label style="text-transform:none; font-weight:600; font-size:12px; color:#334155;">
+    <input type="checkbox" class="fvOpt" value="border"> Obramowanie
+  </label><br>
+
+  <label style="text-transform:none; font-weight:600; font-size:12px; color:#334155;">
+    <input type="checkbox" class="fvOpt" value="radius"> Zaokrąglenie
+  </label><br>
+
+  <label style="text-transform:none; font-weight:600; font-size:12px; color:#334155;">
+    <input type="checkbox" class="fvOpt" value="shadow"> Cień
+  </label><br>
+
+  <label style="text-transform:none; font-weight:600; font-size:12px; color:#334155;">
+    <input type="checkbox" class="fvOpt" value="blur"> Glass blur
+  </label><br>
+
+  <label style="text-transform:none; font-weight:600; font-size:12px; color:#334155;">
+    <input type="checkbox" class="fvOpt" value="opacity"> Przezroczystość
+  </label>
+</div>
 
 </div>

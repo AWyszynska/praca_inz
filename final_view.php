@@ -28,92 +28,147 @@ $xmlFile = ($selected === 'generated_page.xml')
 $FOOTER_PLUGIN_PART = 'functions';
 require_once __DIR__ . '/footer_plugin.php';
 
+function sg_resolve_xml_path(string $fileName, string $projectsDir, string $legacyXml): string {
+  $fileName = sg_clean_file_name($fileName);
+  if ($fileName === 'generated_page.xml') return $legacyXml;
+  return $projectsDir . DIRECTORY_SEPARATOR . $fileName;
+}
 
+function sg_load_xml_chain(string $entryPath, string $projectsDir, string $legacyXml, array &$seen = []): array {
+  if (!is_file($entryPath)) return [];
+  $xml = @simplexml_load_file($entryPath);
+  if (!$xml) return [];
 
+  $docs = [];
+  $base = trim((string)($xml->extends ?? ''));
+
+  if ($base !== '') {
+    $base = sg_clean_file_name($base);
+    if (!isset($seen[$base])) {
+      $seen[$base] = true;
+      $basePath = sg_resolve_xml_path($base, $projectsDir, $legacyXml);
+      $docs = array_merge($docs, sg_load_xml_chain($basePath, $projectsDir, $legacyXml, $seen));
+    }
+  }
+
+  $docs[] = $xml; 
+  return $docs;
+}
+
+function sg_xml_val($el, string $tag, string $default): string {
+  if (!isset($el->$tag)) return $default;
+  $v = trim((string)$el->$tag);
+  return $v !== '' ? $v : $default;
+}
 function renderElement($el) {
-    $type = (string)$el['type'];
-$isFooter = function_exists('sg_footer_is_footer') && sg_footer_is_footer($el);
-$dock = $isFooter && function_exists('sg_footer_dock')
-  ? sg_footer_dock($el)
-  : (string)($el->footerDock ?? 'bottom');
+  $type = (string)$el['type'];
 
+  $isFooter = function_exists('sg_footer_is_footer') && sg_footer_is_footer($el);
+  $dock = $isFooter && function_exists('sg_footer_dock')
+    ? sg_footer_dock($el)
+    : (string)($el->footerDock ?? 'bottom');
 
+  if ($isFooter) {
+    $dock = (string)($el->footerDock ?? 'bottom');
+    $off  = (int)($el->footerBottom ?? 0);
+    $left = (int)($el->footerLeft ?? 0);
 
+    $pos = "position:fixed; left:{$left}px; right:0px; width:calc(100% - {$left}px); height: {$el->h}; ";
+    $pos .= ($dock === 'top') ? "top:{$off}px; " : "bottom:{$off}px; ";
+  } else {
+    $pos = "position:absolute; left:" . (int)$el->x . "px; top:" . (int)$el->y . "px; width:{$el->w}; height:{$el->h}; ";
+  }
+  $ws = ($type === 'text') ? 'pre-wrap' : 'normal';
 
-    $borderRadius = (string)($el->borderRadius ?? '0px');
-    $boxShadow    = (string)($el->boxShadow ?? 'none');
-    $opacity      = (string)($el->opacity ?? '1');
-    $backdrop     = (string)($el->backdropFilter ?? 'none');
+  $isBlock   = ($type === 'block');
+  $defBg     = $isBlock ? 'rgb(255, 255, 255)' : 'transparent';
+  $defBorder = $isBlock ? '1px solid rgb(226, 232, 240)' : 'none';
+  $defRadius = $isBlock ? '16px' : '0px';
+  $defShadow = $isBlock ? 'rgba(0, 0, 0, 0.12) 0px 12px 30px 0px' : 'none';
 
-    $bg = (string)($el->bg ?? 'transparent');
+  $color          = sg_xml_val($el, 'color', '#000000');
+  $fontSize       = sg_xml_val($el, 'fontSize', '20px');
+  $fontFamily     = sg_xml_val($el, 'fontFamily', "'Segoe UI', sans-serif"); 
+  $fontWeight     = sg_xml_val($el, 'fontWeight', '400');
+  $fontStyle      = sg_xml_val($el, 'fontStyle', 'normal');
+  $textDecoration = sg_xml_val($el, 'textDecoration', 'none');
+  $textAlign      = sg_xml_val($el, 'textAlign', 'left');
+  $lineHeight     = sg_xml_val($el, 'lineHeight', '1.2');
+  $letterSpacing  = sg_xml_val($el, 'letterSpacing', 'normal');
+  $textTransform  = sg_xml_val($el, 'textTransform', 'none');
+  $padding        = sg_xml_val($el, 'padding', '0px');
 
-    $fontFamily     = (string)($el->fontFamily ?? "'Segoe UI', sans-serif");
-    $fontWeight     = (string)($el->fontWeight ?? '400');
-    $fontStyle      = (string)($el->fontStyle ?? 'normal');
-    $textDecoration = (string)($el->textDecoration ?? 'none');
-    $textAlign      = (string)($el->textAlign ?? 'left');
-    $lineHeight     = (string)($el->lineHeight ?? '1.2');
-    $letterSpacing  = (string)($el->letterSpacing ?? 'normal');
-    $textTransform  = (string)($el->textTransform ?? 'none');
+  $bg           = sg_xml_val($el, 'bg', $defBg);
+  $border       = sg_xml_val($el, 'border', $defBorder);
+  $borderRadius = sg_xml_val($el, 'borderRadius', $defRadius);
+  $boxShadow    = sg_xml_val($el, 'boxShadow', $defShadow);
 
-    $padding = (string)($el->padding ?? '0px');
+  $color      = sg_xml_val($el, 'color', '#000000');
+  $fontSize   = sg_xml_val($el, 'fontSize', '20px');
+  $fontFamily = sg_xml_val($el, 'fontFamily','Segoe UI', 'sans-serif');
+  $fontWeight     = sg_xml_val($el, 'fontWeight', '400');
+  $fontStyle      = sg_xml_val($el, 'fontStyle', 'normal');
+  $textDecoration = sg_xml_val($el, 'textDecoration', 'none');
+  $textAlign      = sg_xml_val($el, 'textAlign', 'left');
+  $lineHeight     = sg_xml_val($el, 'lineHeight', '1.2');
+  $letterSpacing  = sg_xml_val($el, 'letterSpacing', 'normal');
+  $textTransform  = sg_xml_val($el, 'textTransform', 'none');
+  $padding        = sg_xml_val($el, 'padding', '0px');
 
-$pos = $isFooter
-  ? (function_exists('sg_footer_style_prefix') ? sg_footer_style_prefix($el) : "position:fixed; left:0; right:0;")
-  : ("position: absolute; " .
-     "left: " . (int)$el->x . "px; " .
-     "top: " . (int)$el->y . "px; " .
-     "width: {$el->w}; " .
-     "height: {$el->h}; ");
+  $bg           = sg_xml_val($el, 'bg', $defBg);
+  $border       = sg_xml_val($el, 'border', $defBorder);
+  $borderRadius = sg_xml_val($el, 'borderRadius', $defRadius);
+  $boxShadow    = sg_xml_val($el, 'boxShadow', $defShadow);
 
-if ($isFooter) {
-  $dock = (string)($el->footerDock ?? 'bottom');
-  $off  = (int)($el->footerBottom ?? 0);
-  $left = (int)($el->footerLeft ?? 0);
+  $opacity  = sg_xml_val($el, 'opacity', '1');
+  $backdrop = sg_xml_val($el, 'backdropFilter', 'none');
+  $zIndex   = sg_xml_val($el, 'zIndex', '0');
 
-  $pos = "position:fixed; left:{$left}px; right:0px; width:calc(100% - {$left}px); height: {$el->h}; ";
-  $pos .= ($dock === 'top') ? "top:{$off}px; " : "bottom:{$off}px; ";
-} else {
-  $pos = "position:absolute; left:" . (int)$el->x . "px; top:" . (int)$el->y . "px; width:{$el->w}; height:{$el->h}; ";
-}
-$ws = ($type === 'text') ? 'pre-wrap' : 'normal';
+  $style =
+    $pos .
+    "color: {$color}; " .
+    "background: {$bg}; " .
+    "font-size: {$fontSize}; " .
+    "font-family: {$fontFamily}; " .
+    "font-weight: {$fontWeight}; " .
+    "font-style: {$fontStyle}; " .
+    "text-decoration: {$textDecoration}; " .
+    "text-align: {$textAlign}; " .
+    "line-height: {$lineHeight}; " .
+    "letter-spacing: {$letterSpacing}; " .
+    "text-transform: {$textTransform}; " .
+    "border: {$border}; " .
+    "z-index: {$zIndex}; " .
+    "border-radius: {$borderRadius}; " .
+    "box-shadow: {$boxShadow}; " .
+    "opacity: {$opacity}; " .
+    "backdrop-filter: {$backdrop}; " .
+    "-webkit-backdrop-filter: {$backdrop}; " .
+    "box-sizing: border-box; " .
+    "white-space: {$ws}; " .
+    "overflow: visible; " .
+    "padding: {$padding};";
 
-$style =
-  $pos .
-  "color: {$el->color}; " .
-  "background: {$bg}; " .
-  "font-size: {$el->fontSize}; " .
-  "font-family: {$fontFamily}; " .
-  "font-weight: {$fontWeight}; " .
-  "font-style: {$fontStyle}; " .
-  "text-decoration: {$textDecoration}; " .
-  "text-align: {$textAlign}; " .
-  "line-height: {$lineHeight}; " .
-  "letter-spacing: {$letterSpacing}; " .
-  "text-transform: {$textTransform}; " .
-  "border: {$el->border}; " .
-  "z-index: {$el->zIndex}; " .
-  "border-radius: {$borderRadius}; " .
-  "box-shadow: {$boxShadow}; " .
-  "opacity: {$opacity}; " .
-  "backdrop-filter: {$backdrop}; " .
-  "box-sizing: border-box; " .
-  "white-space: {$ws}; " .
-  "overflow: visible; " .
-  "padding: {$padding};";
+  $footerAttr = $isFooter
+    ? " data-footer='1' data-footer-dock='".htmlspecialchars($dock, ENT_QUOTES)."' "
+    : "";
 
+  $blockUi = trim((string)($el->blockUi ?? ''));
+  $uiAttr = ($type === 'block' && $blockUi !== '')
+    ? " data-block-ui='".htmlspecialchars($blockUi, ENT_QUOTES)."' "
+    : "";
 
-$footerAttr = $isFooter
-  ? " data-footer='1' data-footer-dock='".htmlspecialchars($dock, ENT_QUOTES)."' "
-  : "";
+  if ($type === 'button') {
+    $style .= "background: transparent; border: none; padding: 0; white-space: normal;";
+  }
 
-if ($type === 'button') {
-  $style .= "background: transparent; border: none; padding: 0; white-space: normal;";
-}
+  $htmlId = trim((string)($el->htmlId ?? ''));
+  $htmlClass = trim((string)($el->htmlClass ?? ''));
 
-echo "<div class='page-element' data-id='".htmlspecialchars((string)$el['id'], ENT_QUOTES)."' data-type='".htmlspecialchars($type, ENT_QUOTES)."'{$footerAttr} style='{$style}'>";
+  $idAttr = ($htmlId !== '') ? " id='".htmlspecialchars($htmlId, ENT_QUOTES)."'" : "";
+  $classAttr = "page-element" . ($htmlClass !== '' ? " " . htmlspecialchars($htmlClass, ENT_QUOTES) : "");
 
-
+  echo "<div{$idAttr} class='{$classAttr}' data-id='".htmlspecialchars((string)$el['id'], ENT_QUOTES)."' data-type='".htmlspecialchars($type, ENT_QUOTES)."'{$footerAttr}{$uiAttr} style='{$style}'>";
 
 
     if ($type == 'image') {
@@ -642,7 +697,9 @@ $h = ctype_digit($hRaw) ? ($hRaw.'px') : $hRaw;
     echo "</div>";
 }
 
-$xml = file_exists($xmlFile) ? simplexml_load_file($xmlFile) : null;
+$seen = [];
+$xmlDocs = sg_load_xml_chain($xmlFile, $projectsDir, $legacyXml, $seen);
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -754,12 +811,10 @@ input.sg-range::-moz-range-thumb{
 .sgbtn__icon{ font-size: 1.1em; line-height:1; }
 .sgbtn__text{ display:inline-block; }
 
-/* rozmiary */
 .sgbtn--sm{ padding:8px 10px; font-size:12px; }
 .sgbtn--md{ padding:10px 12px; font-size:13px; }
 .sgbtn--lg{ padding:12px 14px; font-size:15px; }
 
-/* ripple */
 .sgbtn__ripple{
   position:absolute;
   border-radius:999px;
@@ -788,9 +843,14 @@ input.sg-range::-moz-range-thumb{
 </head>
 <body>
 <?php
-if ($xml && (isset($xml->element) || count($xml->element) > 0)) {
-  foreach ($xml->element as $el) { renderElement($el); }
+foreach ($xmlDocs as $doc) {
+  if (isset($doc->element)) {
+    foreach ($doc->element as $el) {
+      renderElement($el);
+    }
+  }
 }
+
 ?>
 
 <script>
@@ -919,6 +979,166 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <script src="sg_sidescroll.js?v=1"></script>
 <script src="sg_footer.js?v=2"></script>
+<style>
+#fv-panel{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  width:280px;
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:14px;
+  box-shadow:0 18px 40px rgba(2,6,23,.14);
+  padding:12px;
+  z-index:9999;
+  display:none;
+  font-family:inherit;
+}
+#fv-panel .t{font-weight:800; font-size:13px; color:#0f172a; margin:0 0 10px;}
+#fv-panel label{display:block; font-size:12px; font-weight:700; color:#334155; margin-top:8px;}
+#fv-panel input[type="text"], #fv-panel input[type="number"]{width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:10px; box-sizing:border-box;}
+#fv-panel input[type="color"]{width:100%; height:38px; border:1px solid #cbd5e1; border-radius:10px; padding:0;}
+#fv-panel .row{display:flex; gap:8px;}
+#fv-panel .row > *{flex:1;}
+#fv-panel .x{position:absolute; right:10px; top:8px; border:none; background:transparent; font-size:18px; cursor:pointer;}
+</style>
+
+<div id="fv-panel">
+  <button class="x" type="button" id="fv-close">×</button>
+  <div class="t">Ramka (Final View)</div>
+
+  <div id="fv-fields"></div>
+</div>
+
+<script>
+(function(){
+  const panel = document.getElementById('fv-panel');
+  const fields = document.getElementById('fv-fields');
+  const btnClose = document.getElementById('fv-close');
+
+  let current = null;
+
+  function parseUi(el){
+    return (el.getAttribute('data-block-ui') || '')
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+  }
+
+  function show(){ panel.style.display='block'; }
+  function hide(){ panel.style.display='none'; current=null; fields.innerHTML=''; }
+
+  function addColor(label, cssProp){
+    const id = 'fv_' + cssProp;
+    fields.insertAdjacentHTML('beforeend',
+      `<label>${label}</label><input type="color" id="${id}">`
+    );
+    const inp = document.getElementById(id);
+    const cs = getComputedStyle(current);
+    let v = '#ffffff';
+    if (cssProp === 'backgroundColor') v = cs.backgroundColor;
+    if (cssProp === 'borderColor') v = cs.borderColor;
+    inp.value = rgbToHex(v);
+
+    inp.addEventListener('input', () => {
+      if (cssProp === 'backgroundColor') current.style.background = inp.value;
+      if (cssProp === 'borderColor') current.style.borderColor = inp.value;
+    });
+  }
+
+  function addNumber(label, cssProp, unit){
+    const id = 'fv_' + cssProp;
+    fields.insertAdjacentHTML('beforeend',
+      `<label>${label}</label><input type="number" id="${id}">`
+    );
+    const inp = document.getElementById(id);
+    const cs = getComputedStyle(current);
+    const raw = cs[cssProp] || '';
+    inp.value = parseFloat(raw) || 0;
+
+    inp.addEventListener('input', () => {
+      current.style[cssProp] = (parseFloat(inp.value)||0) + unit;
+    });
+  }
+
+function addText(label, cssProp){
+  const id = 'fv_' + cssProp;
+  fields.insertAdjacentHTML('beforeend',
+    `<label>${label}</label><input type="text" id="${id}">`
+  );
+  const inp = document.getElementById(id);
+  inp.value = current.style[cssProp] || getComputedStyle(current)[cssProp] || '';
+
+  inp.addEventListener('input', () => {
+    current.style[cssProp] = inp.value;
+
+    if (cssProp === 'backdropFilter') {
+      current.style.webkitBackdropFilter = inp.value;
+    }
+  });
+}
+
+
+  function rgbToHex(rgb){
+    rgb = String(rgb||'').trim();
+    if (!rgb || rgb === 'transparent') return '#ffffff';
+    if (rgb.startsWith('#')) return rgb;
+    const m = rgb.match(/\d+/g);
+    if (!m || m.length < 3) return '#ffffff';
+    return '#' + m.slice(0,3).map(n => parseInt(n,10).toString(16).padStart(2,'0')).join('');
+  }
+
+  function buildUi(el){
+    current = el;
+    fields.innerHTML = '';
+
+    const ui = parseUi(el);
+    if (!ui.length) { hide(); return; }
+    if (ui.includes('bg')) {
+      addColor('Tło', 'backgroundColor');
+    }
+    if (ui.includes('border')) {
+      fields.insertAdjacentHTML('beforeend', `<div class="row"><div id="fv_border_col"></div><div id="fv_border_w"></div></div>`);
+      const tmp = document.createElement('div');
+      tmp.innerHTML = `<label>Kolor obramowania</label><input type="color" id="fv_borderColor">`;
+      document.getElementById('fv_border_col').appendChild(tmp.firstChild);
+      document.getElementById('fv_border_col').appendChild(tmp.lastChild);
+
+      const col = document.getElementById('fv_borderColor');
+      col.value = rgbToHex(getComputedStyle(current).borderColor);
+      col.addEventListener('input', () => current.style.borderColor = col.value);
+
+      const tmp2 = document.createElement('div');
+      tmp2.innerHTML = `<label>Grubość (px)</label><input type="number" id="fv_borderW">`;
+      document.getElementById('fv_border_w').appendChild(tmp2.firstChild);
+      document.getElementById('fv_border_w').appendChild(tmp2.lastChild);
+
+      const bw = document.getElementById('fv_borderW');
+      bw.value = parseFloat(getComputedStyle(current).borderWidth) || 0;
+      bw.addEventListener('input', () => {
+        const v = (parseFloat(bw.value)||0);
+        const style = getComputedStyle(current).borderStyle || 'solid';
+        const color = getComputedStyle(current).borderColor || '#000';
+        current.style.border = `${v}px ${style} ${color}`;
+      });
+    }
+    if (ui.includes('radius')) addNumber('Zaokrąglenie (px)', 'borderRadius', 'px');
+    if (ui.includes('shadow')) addText('Box shadow', 'boxShadow');
+    if (ui.includes('blur')) addText('Backdrop filter', 'backdropFilter');
+    if (ui.includes('opacity')) addNumber('Opacity (0-1)', 'opacity', '');
+
+    show();
+  }
+
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('.page-element[data-type="block"][data-block-ui]');
+    if (!el) return;
+    buildUi(el);
+  });
+
+  btnClose.addEventListener('click', hide);
+})();
+</script>
 
 
 </body>
