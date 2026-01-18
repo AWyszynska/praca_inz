@@ -45,8 +45,16 @@
     const fx = (el.dataset.imgFlipX === "1") ? -1 : 1;
     const fy = (el.dataset.imgFlipY === "1") ? -1 : 1;
 
-    img.style.transformOrigin = "center";
-    img.style.transform = `rotate(${rot}deg) scale(${fx * scale}, ${fy * scale})`;
+
+el.style.transformOrigin = "center";
+el.style.transform = (rot !== 0) ? `rotate(${rot}deg)` : "none";
+
+el.style.transformOrigin = "center";
+el.style.transform = `rotate(${rot}deg)`;
+
+img.style.transformOrigin = "center";
+img.style.transform = `scale(${fx * scale}, ${fy * scale})`;
+
 
     img.style.filter = buildFilterFromDataset(el);
   }

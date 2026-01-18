@@ -51,7 +51,7 @@ function sg_load_xml_chain(string $entryPath, string $projectsDir, string $legac
     }
   }
 
-  $docs[] = $xml; 
+  $docs[] = $xml;
   return $docs;
 }
 
@@ -60,115 +60,211 @@ function sg_xml_val($el, string $tag, string $default): string {
   $v = trim((string)$el->$tag);
   return $v !== '' ? $v : $default;
 }
-function renderElement($el) {
-  $type = (string)$el['type'];
+function sg_normalize_box_shadow(string $s): string {
+  $s = trim($s);
+  if ($s === '' || $s === 'none') return $s;
 
-  $isFooter = function_exists('sg_footer_is_footer') && sg_footer_is_footer($el);
-  $dock = $isFooter && function_exists('sg_footer_dock')
-    ? sg_footer_dock($el)
-    : (string)($el->footerDock ?? 'bottom');
-
-  if ($isFooter) {
-    $dock = (string)($el->footerDock ?? 'bottom');
-    $off  = (int)($el->footerBottom ?? 0);
-    $left = (int)($el->footerLeft ?? 0);
-
-    $pos = "position:fixed; left:{$left}px; right:0px; width:calc(100% - {$left}px); height: {$el->h}; ";
-    $pos .= ($dock === 'top') ? "top:{$off}px; " : "bottom:{$off}px; ";
-  } else {
-    $pos = "position:absolute; left:" . (int)$el->x . "px; top:" . (int)$el->y . "px; width:{$el->w}; height:{$el->h}; ";
+  if (preg_match('/^(rgba?\\([^\\)]+\\)|#[0-9a-fA-F]{3,8})\\s+(.+)$/', $s, $m)) {
+    return trim($m[2] . ' ' . $m[1]);
   }
-  $ws = ($type === 'text') ? 'pre-wrap' : 'normal';
+  return $s;
+}
+function sg_boolish($v): bool {
+  $s = strtolower(trim((string)$v));
+  return ($s === '1' || $s === 'true' || $s === 'yes' || $s === 'on');
+}
 
-  $isBlock   = ($type === 'block');
-  $defBg     = $isBlock ? 'rgb(255, 255, 255)' : 'transparent';
-  $defBorder = $isBlock ? '1px solid rgb(226, 232, 240)' : 'none';
-  $defRadius = $isBlock ? '16px' : '0px';
-  $defShadow = $isBlock ? 'rgba(0, 0, 0, 0.12) 0px 12px 30px 0px' : 'none';
+function sg_parse_scroll_block_node($node): ?array {
+  if (!$node) return null;
 
-  $color          = sg_xml_val($el, 'color', '#000000');
-  $fontSize       = sg_xml_val($el, 'fontSize', '20px');
-  $fontFamily     = sg_xml_val($el, 'fontFamily', "'Segoe UI', sans-serif"); 
-  $fontWeight     = sg_xml_val($el, 'fontWeight', '400');
-  $fontStyle      = sg_xml_val($el, 'fontStyle', 'normal');
-  $textDecoration = sg_xml_val($el, 'textDecoration', 'none');
-  $textAlign      = sg_xml_val($el, 'textAlign', 'left');
-  $lineHeight     = sg_xml_val($el, 'lineHeight', '1.2');
-  $letterSpacing  = sg_xml_val($el, 'letterSpacing', 'normal');
-  $textTransform  = sg_xml_val($el, 'textTransform', 'none');
-  $padding        = sg_xml_val($el, 'padding', '0px');
-
-  $bg           = sg_xml_val($el, 'bg', $defBg);
-  $border       = sg_xml_val($el, 'border', $defBorder);
-  $borderRadius = sg_xml_val($el, 'borderRadius', $defRadius);
-  $boxShadow    = sg_xml_val($el, 'boxShadow', $defShadow);
-
-  $color      = sg_xml_val($el, 'color', '#000000');
-  $fontSize   = sg_xml_val($el, 'fontSize', '20px');
-  $fontFamily = sg_xml_val($el, 'fontFamily','Segoe UI', 'sans-serif');
-  $fontWeight     = sg_xml_val($el, 'fontWeight', '400');
-  $fontStyle      = sg_xml_val($el, 'fontStyle', 'normal');
-  $textDecoration = sg_xml_val($el, 'textDecoration', 'none');
-  $textAlign      = sg_xml_val($el, 'textAlign', 'left');
-  $lineHeight     = sg_xml_val($el, 'lineHeight', '1.2');
-  $letterSpacing  = sg_xml_val($el, 'letterSpacing', 'normal');
-  $textTransform  = sg_xml_val($el, 'textTransform', 'none');
-  $padding        = sg_xml_val($el, 'padding', '0px');
-
-  $bg           = sg_xml_val($el, 'bg', $defBg);
-  $border       = sg_xml_val($el, 'border', $defBorder);
-  $borderRadius = sg_xml_val($el, 'borderRadius', $defRadius);
-  $boxShadow    = sg_xml_val($el, 'boxShadow', $defShadow);
-
-  $opacity  = sg_xml_val($el, 'opacity', '1');
-  $backdrop = sg_xml_val($el, 'backdropFilter', 'none');
-  $zIndex   = sg_xml_val($el, 'zIndex', '0');
-
-  $style =
-    $pos .
-    "color: {$color}; " .
-    "background: {$bg}; " .
-    "font-size: {$fontSize}; " .
-    "font-family: {$fontFamily}; " .
-    "font-weight: {$fontWeight}; " .
-    "font-style: {$fontStyle}; " .
-    "text-decoration: {$textDecoration}; " .
-    "text-align: {$textAlign}; " .
-    "line-height: {$lineHeight}; " .
-    "letter-spacing: {$letterSpacing}; " .
-    "text-transform: {$textTransform}; " .
-    "border: {$border}; " .
-    "z-index: {$zIndex}; " .
-    "border-radius: {$borderRadius}; " .
-    "box-shadow: {$boxShadow}; " .
-    "opacity: {$opacity}; " .
-    "backdrop-filter: {$backdrop}; " .
-    "-webkit-backdrop-filter: {$backdrop}; " .
-    "box-sizing: border-box; " .
-    "white-space: {$ws}; " .
-    "overflow: visible; " .
-    "padding: {$padding};";
-
-  $footerAttr = $isFooter
-    ? " data-footer='1' data-footer-dock='".htmlspecialchars($dock, ENT_QUOTES)."' "
-    : "";
-
-  $blockUi = trim((string)($el->blockUi ?? ''));
-  $uiAttr = ($type === 'block' && $blockUi !== '')
-    ? " data-block-ui='".htmlspecialchars($blockUi, ENT_QUOTES)."' "
-    : "";
-
-  if ($type === 'button') {
-    $style .= "background: transparent; border: none; padding: 0; white-space: normal;";
+  if (isset($node->enabled) || isset($node->axis) || isset($node->track)) {
+    return [
+      'enabled'     => sg_boolish($node->enabled ?? '1'),
+      'axis'        => (string)($node->axis ?? 'y'),
+      'ySide'       => (string)($node->ySide ?? 'right'),
+      'xSide'       => (string)($node->xSide ?? 'bottom'),
+      'thickness'   => (int)($node->thickness ?? 10),
+      'gap'         => (int)($node->gap ?? 6),
+      'radius'      => (int)($node->radius ?? 10),
+      'track'       => (string)($node->track ?? 'rgba(148,163,184,.35)'),
+      'thumb'       => (string)($node->thumb ?? 'rgba(15,23,42,.55)'),
+      'thumbHover'  => (string)($node->thumbHover ?? 'rgba(15,23,42,.75)'),
+      'autoHide'    => sg_boolish($node->autoHide ?? '1'),
+      'smooth'      => sg_boolish($node->smooth ?? '1'),
+      'wheel'       => sg_boolish($node->wheel ?? '1'),
+      'wheelStep'   => (int)($node->wheelStep ?? 70),
+      'fadeHint'    => sg_boolish($node->fadeHint ?? '1'),
+      'fadeOpacity' => (float)($node->fadeOpacity ?? 0.22),
+    ];
   }
 
-  $htmlId = trim((string)($el->htmlId ?? ''));
-  $htmlClass = trim((string)($el->htmlClass ?? ''));
+  $raw = trim((string)$node);
+  if ($raw !== '' && $raw[0] === '{') {
+    $decoded = html_entity_decode($raw, ENT_QUOTES | ENT_XML1, 'UTF-8');
+    $tmp = json_decode($decoded, true);
+    if (is_array($tmp)) return $tmp;
+  }
 
-  $idAttr = ($htmlId !== '') ? " id='".htmlspecialchars($htmlId, ENT_QUOTES)."'" : "";
-  $classAttr = "page-element" . ($htmlClass !== '' ? " " . htmlspecialchars($htmlClass, ENT_QUOTES) : "");
+  return null;
+}
 
-  echo "<div{$idAttr} class='{$classAttr}' data-id='".htmlspecialchars((string)$el['id'], ENT_QUOTES)."' data-type='".htmlspecialchars($type, ENT_QUOTES)."'{$footerAttr}{$uiAttr} style='{$style}'>";
+function renderElement($el, string $parentType = '') {
+    $type = (string)$el['type'];
+$isFooter = function_exists('sg_footer_is_footer') && sg_footer_is_footer($el);
+$dock = $isFooter && function_exists('sg_footer_dock')
+  ? sg_footer_dock($el)
+  : (string)($el->footerDock ?? 'bottom');
+
+
+
+
+    $borderRadius = (string)($el->borderRadius ?? '0px');
+    $boxShadow    = (string)($el->boxShadow ?? 'none');
+    $opacity      = (string)($el->opacity ?? '1');
+    $backdrop     = (string)($el->backdropFilter ?? 'none');
+
+    $bg = (string)($el->bg ?? 'transparent');
+
+    $fontFamily     = (string)($el->fontFamily ?? "'Segoe UI', sans-serif");
+    $fontWeight     = (string)($el->fontWeight ?? '400');
+    $fontStyle      = (string)($el->fontStyle ?? 'normal');
+    $textDecoration = (string)($el->textDecoration ?? 'none');
+    $textAlign      = (string)($el->textAlign ?? 'left');
+$lineHeight = (string)($el->lineHeight ?? '1.2');
+    $letterSpacing  = (string)($el->letterSpacing ?? 'normal');
+    $textTransform  = (string)($el->textTransform ?? 'none');
+
+    $padding = (string)($el->padding ?? '0px');
+
+$pos = $isFooter
+  ? (function_exists('sg_footer_style_prefix') ? sg_footer_style_prefix($el) : "position:fixed; left:0; right:0;")
+  : ("position: absolute; " .
+     "left: " . (int)$el->x . "px; " .
+     "top: " . (int)$el->y . "px; " .
+     "width: {$el->w}; " .
+     "height: {$el->h}; ");
+
+if ($isFooter) {
+  $dock = (string)($el->footerDock ?? 'bottom');
+  $off  = (int)($el->footerBottom ?? 0);
+  $left = (int)($el->footerLeft ?? 0);
+
+  $pos = "position:fixed; left:{$left}px; right:0px; width:calc(100% - {$left}px); height: {$el->h}; ";
+  $pos .= ($dock === 'top') ? "top:{$off}px; " : "bottom:{$off}px; ";
+} else {
+  $pos = "position:absolute; left:" . (int)$el->x . "px; top:" . (int)$el->y . "px; width:{$el->w}; height:{$el->h}; ";
+}
+$ws = ($type === 'text') ? 'pre-wrap' : 'normal';
+
+  $defBg = 'transparent';
+  $defBorder = 'none';
+  $defRadius = '0px';
+  $defShadow = 'none';
+  $defColor = '#000000';
+  $defFontSize = '20px';
+
+  if ($type === 'form') {
+    $defBg = 'rgb(255, 255, 255)';
+    $defBorder = '1px solid rgb(226, 232, 240)';
+    $defRadius = '14px';
+    $defShadow = 'rgba(0, 0, 0, 0.1) 0px 10px 24px 0px';
+    $defColor = 'rgb(15, 23, 42)';
+    $defFontSize = '16px';
+  }
+
+  if ($type === 'block') {
+    $defBg = 'rgb(255, 255, 255)';
+    $defBorder = '1px solid rgb(226, 232, 240)';
+    $defRadius = '16px';
+    $defShadow = 'rgba(0, 0, 0, 0.12) 0px 12px 30px 0px';
+  }
+
+  $bg           = sg_xml_val($el, 'bg', $defBg);
+  $borderRadius = sg_xml_val($el, 'borderRadius', $defRadius);
+  $boxShadow    = sg_xml_val($el, 'boxShadow', $defShadow);
+  $boxShadow = sg_normalize_box_shadow($boxShadow);
+  $padding      = sg_xml_val($el, 'padding', '0px');
+
+  $opacity      = sg_xml_val($el, 'opacity', '1');
+  $backdrop     = sg_xml_val($el, 'backdropFilter', 'none');
+
+  $color = sg_xml_val($el, 'color', $defColor);
+$fontSize = sg_xml_val($el, 'fontSize', $defFontSize);  
+$border = sg_xml_val($el, 'border', $defBorder);
+$zIndex   = sg_xml_val($el, 'zIndex', '0');
+$hasBlockScroll = false;
+$scrollCfg = null;
+
+if ($type === 'block' && isset($el->sgScrollBlock)) {
+  $scrollCfg = sg_parse_scroll_block_node($el->sgScrollBlock);
+  $hasBlockScroll = is_array($scrollCfg) && (!isset($scrollCfg['enabled']) || $scrollCfg['enabled']);
+}
+
+$overflowCss = $hasBlockScroll ? 'auto' : 'visible';
+
+$style =
+  $pos .
+  "color: {$color}; " .
+  "background: {$bg}; " .
+  "font-size: {$fontSize}; " .
+  "font-family: {$fontFamily}; " .
+  "font-weight: {$fontWeight}; " .
+  "font-style: {$fontStyle}; " .
+  "text-decoration: {$textDecoration}; " .
+  "text-align: {$textAlign}; " .
+  "line-height: {$lineHeight}; " .
+  "letter-spacing: {$letterSpacing}; " .
+  "text-transform: {$textTransform}; " .
+  "border: {$border}; " .
+  "z-index: {$zIndex}; " .
+  "border-radius: {$borderRadius}; " .
+  "box-shadow: {$boxShadow}; " .
+  "opacity: {$opacity}; " .
+  "backdrop-filter: {$backdrop}; " .
+  "box-sizing: border-box; " .
+  "white-space: {$ws}; " .
+  "overflow: {$overflowCss}; " .
+  "padding: {$padding};";
+
+$footerAttr = $isFooter
+  ? " data-footer='1' data-footer-dock='".htmlspecialchars($dock, ENT_QUOTES)."' "
+  : "";
+
+if ($type === 'button') {
+  $style .= "background: transparent; border: none; padding: 0; white-space: normal;";
+}
+
+$htmlId = trim((string)($el->htmlId ?? ''));
+$htmlClass = trim((string)($el->htmlClass ?? ''));
+
+$idAttr = ($htmlId !== '') ? " id='".htmlspecialchars($htmlId, ENT_QUOTES)."'" : "";
+$classAttr = "page-element" . ($htmlClass !== '' ? " " . htmlspecialchars($htmlClass, ENT_QUOTES) : "");
+
+  $formAttr = "";
+  if ($type === 'form') {
+    $formAttr =
+      " data-form-type='".htmlspecialchars((string)($el->formType ?? 'text'), ENT_QUOTES)."'".
+      " data-label='".htmlspecialchars((string)($el->label ?? ''), ENT_QUOTES)."'".
+      " data-form-help-text='".htmlspecialchars((string)($el->formHelpText ?? ''), ENT_QUOTES)."'".
+      " data-form-placeholder='".htmlspecialchars((string)($el->formPlaceholder ?? ''), ENT_QUOTES)."'".
+      " data-form-required='".htmlspecialchars((string)($el->formRequired ?? '0'), ENT_QUOTES)."'".
+      " data-form-inline='".htmlspecialchars((string)($el->formInline ?? '0'), ENT_QUOTES)."'".
+      " data-form-name='".htmlspecialchars((string)($el->formName ?? ''), ENT_QUOTES)."'".
+      " data-accent-color='".htmlspecialchars((string)($el->accentColor ?? '#156fe5'), ENT_QUOTES)."'".
+      " data-form-input-radius='".htmlspecialchars((string)($el->formInputRadius ?? '10'), ENT_QUOTES)."'".
+      " data-options='".htmlspecialchars((string)($el->options ?? ''), ENT_QUOTES)."'";
+  }
+
+$scrollAttr = "";
+if ($type === 'block' && isset($el->sgScrollBlock)) {
+  $cfg = sg_parse_scroll_block_node($el->sgScrollBlock);
+  if (is_array($cfg) && (!isset($cfg['enabled']) || $cfg['enabled'])) {
+    $json = json_encode($cfg, JSON_UNESCAPED_UNICODE);
+    $scrollAttr = " data-sg-scroll-block=\"" . htmlspecialchars($json, ENT_QUOTES) . "\"";
+  }
+}
+
+echo "<div{$idAttr} class='{$classAttr}' data-id='".htmlspecialchars((string)$el['id'], ENT_QUOTES)."' data-type='".htmlspecialchars($type, ENT_QUOTES)."'{$footerAttr}{$formAttr}{$scrollAttr} style=\"".htmlspecialchars($style, ENT_QUOTES)."\">";
 
 
     if ($type == 'image') {
@@ -206,159 +302,7 @@ function renderElement($el) {
 }
 
 elseif ($type == 'form') {
-    $fType     = (string)($el->formType ?? 'text');
-    $label     = (string)($el->label ?? '');
-    $help      = (string)($el->formHelpText ?? '');
-    $placeholder = (string)($el->formPlaceholder ?? '');
-    $requiredFlag = ((string)($el->formRequired ?? '0') === '1');
-    $inlineFlag   = ((string)($el->formInline ?? '0') === '1');
-    $name     = trim((string)($el->formName ?? ''));
-    if ($name === '') $name = 'form_' . (string)$el['id'];
-
-    $accent    = (string)($el->accentColor ?? '#156fe5');
-    $fontColor = (string)($el->color ?? '#0f172a');
-
-    $radius = (int)($el->formInputRadius ?? 10);
-    $radius = max(0, min(30, $radius));
-
-    $optsRaw = (string)($el->options ?? '');
-    $options = preg_split("/\r\n|\n|\r|,/", $optsRaw);
-    $options = array_values(array_filter(array_map('trim', $options), fn($v) => $v !== ''));
-
-    $requiredAttr = $requiredFlag ? 'required' : '';
-    $mark = $requiredFlag ? "<span style='color:#ef4444; font-weight:800;'>*</span>" : "";
-
-    $base = "width:100%; font-family:inherit; font-size:inherit; color:{$fontColor}; padding:9px 10px; border:1px solid #d1d5db; border-radius:{$radius}px; box-sizing:border-box; outline:none;";
-
-    echo "<div style='padding:12px; box-sizing:border-box; width:100%; height:100%;'>";
-
-    if ($label !== '') {
-        echo "<div style='font-weight:700; font-size:14px; color:{$fontColor}; display:flex; gap:6px; align-items:baseline;'>"
-            . htmlspecialchars($label) . $mark . "</div>";
-    }
-    if ($help !== '') {
-        echo "<div style='font-size:12px; color:#64748b; margin-top:4px; line-height:1.35;'>"
-            . htmlspecialchars($help) . "</div>";
-    }
-
-    $mt = ($label !== '' || $help !== '') ? "margin-top:10px;" : "";
-    echo "<div style='{$mt}'>";
-
-    if (in_array($fType, ['text','email','number','date'], true)) {
-        $typeAttr = ($fType === 'text') ? 'text' : $fType;
-
-        $min = (string)($el->formMin ?? '');
-        $max = (string)($el->formMax ?? '');
-        $step = (string)($el->formStep ?? '');
-
-        $minAttr  = ($fType === 'number' && $min !== '') ? " min='".htmlspecialchars($min, ENT_QUOTES)."'" : "";
-        $maxAttr  = ($fType === 'number' && $max !== '') ? " max='".htmlspecialchars($max, ENT_QUOTES)."'" : "";
-        $stepAttr = ($fType === 'number' && $step !== '') ? " step='".htmlspecialchars($step, ENT_QUOTES)."'" : "";
-
-        $ph = $placeholder ?: "Wpisz odpowiedź...";
-        echo "<input type='{$typeAttr}' name='".htmlspecialchars($name, ENT_QUOTES)."' {$requiredAttr} "
-            . "placeholder='".htmlspecialchars($ph, ENT_QUOTES)."' style='{$base}'{$minAttr}{$maxAttr}{$stepAttr}>";
-    }
-    elseif ($fType === 'textarea') {
-        $rows = (int)($el->formRows ?? 3);
-        $rows = max(1, min(20, $rows));
-        $ph = $placeholder ?: "Wpisz odpowiedź...";
-        echo "<textarea name='".htmlspecialchars($name, ENT_QUOTES)."' {$requiredAttr} rows='{$rows}' "
-            . "placeholder='".htmlspecialchars($ph, ENT_QUOTES)."' style='{$base} resize:vertical;'></textarea>";
-    }
-    elseif ($fType === 'select') {
-        if (!$options) $options = ['Opcja 1', 'Opcja 2'];
-        echo "<select name='".htmlspecialchars($name, ENT_QUOTES)."' {$requiredAttr} style='{$base}'>";
-        foreach ($options as $o) echo "<option>" . htmlspecialchars($o) . "</option>";
-        echo "</select>";
-    }
-    elseif ($fType === 'radio' || $fType === 'checkbox') {
-        if (!$options) $options = ['Opcja 1', 'Opcja 2'];
-        $wrapStyle = $inlineFlag
-            ? "display:flex; flex-wrap:wrap; gap:10px;"
-            : "display:flex; flex-direction:column; gap:6px;";
-
-        echo "<div style='{$wrapStyle}'>";
-        foreach ($options as $i => $o) {
-            $id = htmlspecialchars($name . '_' . $i, ENT_QUOTES);
-            $typeAttr = $fType;
-            $req = ($requiredFlag && $typeAttr === 'radio') ? 'required' : '';
-            $nameAttr = htmlspecialchars($name, ENT_QUOTES) . ($typeAttr === 'checkbox' ? '[]' : '');
-
-            echo "<label for='{$id}' style='display:flex; align-items:center; gap:8px; cursor:pointer;'>";
-            echo "<input id='{$id}' type='{$typeAttr}' name='{$nameAttr}' value='".htmlspecialchars($o, ENT_QUOTES)."' {$req} "
-                . "style='accent-color:{$accent}; width:14px; height:14px; margin:0;'>";
-            echo "<span>" . htmlspecialchars($o) . "</span>";
-            echo "</label>";
-        }
-        echo "</div>";
-    }
-    elseif ($fType === 'yesno') {
-        echo "<div style='display:flex; gap:14px; align-items:center;'>";
-        foreach (['Tak','Nie'] as $i => $o) {
-            $id = htmlspecialchars($name . '_yn_' . $i, ENT_QUOTES);
-            echo "<label for='{$id}' style='display:flex; align-items:center; gap:8px; cursor:pointer;'>";
-            echo "<input id='{$id}' type='radio' name='".htmlspecialchars($name, ENT_QUOTES)."' value='".htmlspecialchars($o, ENT_QUOTES)."' {$requiredAttr} "
-                . "style='accent-color:{$accent}; width:14px; height:14px; margin:0;'>";
-            echo "<span>" . htmlspecialchars($o) . "</span>";
-            echo "</label>";
-        }
-        echo "</div>";
-    }
-    elseif ($fType === 'rating') {
-        $min = (int)($el->ratingMin ?? 1);
-        $max = (int)($el->ratingMax ?? 5);
-        $step = (int)($el->ratingStep ?? 1); $step = max(1, $step);
-        $left = (string)($el->ratingMinLabel ?? '');
-        $right = (string)($el->ratingMaxLabel ?? '');
-
-        echo "<div style='display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap;'>";
-        echo "<div style='font-size:12px; color:#64748b; min-width:60px;'>" . htmlspecialchars($left) . "</div>";
-        echo "<div style='display:flex; gap:12px; flex-wrap:wrap; justify-content:center;'>";
-
-        $i = 0;
-        for ($v = $min; $v <= $max; $v += $step) {
-            $id = htmlspecialchars($name . '_r_' . $i, ENT_QUOTES);
-            echo "<label for='{$id}' style='display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;'>";
-            echo "<input id='{$id}' type='radio' name='".htmlspecialchars($name, ENT_QUOTES)."' value='{$v}' {$requiredAttr} "
-                . "style='accent-color:{$accent}; width:14px; height:14px; margin:0;'>";
-            echo "<span style='font-size:11px; color:#64748b;'>" . $v . "</span>";
-            echo "</label>";
-            $i++;
-        }
-        echo "</div>";
-        echo "<div style='font-size:12px; color:#64748b; min-width:60px; text-align:right;'>" . htmlspecialchars($right) . "</div>";
-        echo "</div>";
-    }
-    elseif ($fType === 'likert') {
-        $min = (int)($el->likertMin ?? 1);
-        $max = (int)($el->likertMax ?? 5);
-        $left = (string)($el->likertLeft ?? '');
-        $right = (string)($el->likertRight ?? '');
-
-        echo "<div style='display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap;'>";
-        echo "<div style='font-size:12px; color:#64748b; width:80px;'>" . htmlspecialchars($left) . "</div>";
-        echo "<div style='display:flex; gap:12px; justify-content:center; flex-wrap:wrap;'>";
-
-        for ($v = $min; $v <= $max; $v++) {
-            $id = htmlspecialchars($name . '_l_' . $v, ENT_QUOTES);
-            echo "<label for='{$id}' style='display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;'>";
-            echo "<input id='{$id}' type='radio' name='".htmlspecialchars($name, ENT_QUOTES)."' value='{$v}' {$requiredAttr} "
-                . "style='accent-color:{$accent}; width:14px; height:14px; margin:0;'>";
-            echo "<span style='font-size:11px; color:#64748b;'>" . $v . "</span>";
-            echo "</label>";
-        }
-        echo "</div>";
-        echo "<div style='font-size:12px; color:#64748b; width:80px; text-align:right;'>" . htmlspecialchars($right) . "</div>";
-        echo "</div>";
-    }
-
-    else {
-        $ph = $placeholder ?: "Wpisz odpowiedź...";
-        echo "<input type='text' name='".htmlspecialchars($name, ENT_QUOTES)."' {$requiredAttr} placeholder='".htmlspecialchars($ph, ENT_QUOTES)."' style='{$base}'>";
-    }
-
-    echo "</div></div>";
+    echo "<div class='sg-form-inner' style='width:100%;height:100%;'></div>";
 }
 elseif ($type == 'button') {
   $text   = (string)($el->btnText ?? 'Kliknij');
@@ -646,52 +590,15 @@ echo "<div class='sg-slider-inner' style=\"--sg-track:{$track};--sg-fill:{$fill}
   if ($showMM) echo "<div class='sg-slider-minmax'><span>{$min}</span><span>{$max}</span></div>";
   echo "</div>";
 }
-elseif ($type == 'sidescroll') {
-  $mode = (string)($el->scrollTargetMode ?? 'page');
-  $tid  = (string)($el->scrollTargetId ?? '');
-  $pin  = (string)($el->scrollPinMode ?? 'fixed');
-  $side = (string)($el->scrollSide ?? 'right');
-  $top  = (int)($el->scrollOffsetTop ?? 120);
-  $off  = (int)($el->scrollOffsetSide ?? 16);
 
-$hRaw = (string)($el->scrollHeight ?? '260');
-$h = ctype_digit($hRaw) ? ($hRaw.'px') : $hRaw;
 
-  $trackW = (string)($el->scrollTrackW ?? '10');
-  $thumbH = (string)($el->scrollThumbH ?? '64');
-  $val = (string)($el->scrollValue ?? '0');
-  $tcol = (string)($el->scrollTrackColor ?? '#e2e8f0');
-  $thcol = (string)($el->scrollThumbColor ?? '#64748b');
-  $rad = (string)($el->scrollRadius ?? '999');
-
-  
-  echo "<div class='sgss-control-runtime'
-    data-scroll-target-mode='".htmlspecialchars($mode, ENT_QUOTES)."'
-    data-scroll-target-id='".htmlspecialchars($tid, ENT_QUOTES)."'
-    data-scroll-pin-mode='".htmlspecialchars($pin, ENT_QUOTES)."'
-    data-scroll-side='".htmlspecialchars($side, ENT_QUOTES)."'
-    data-scroll-offset-top='{$top}'
-    data-scroll-offset-side='{$off}'
-    data-scroll-height='".htmlspecialchars($h, ENT_QUOTES)."'
-    data-scroll-track-w='".htmlspecialchars($trackW, ENT_QUOTES)."'
-    data-scroll-thumb-h='".htmlspecialchars($thumbH, ENT_QUOTES)."'
-    data-scroll-value='".htmlspecialchars($val, ENT_QUOTES)."'
-    data-scroll-track-color='".htmlspecialchars($tcol, ENT_QUOTES)."'
-    data-scroll-thumb-color='".htmlspecialchars($thcol, ENT_QUOTES)."'
-    data-scroll-radius='".htmlspecialchars($rad, ENT_QUOTES)."'
-    style=\"position:".($pin==='fixed'?'fixed':'absolute')."; top:{$top}px; {$side}:{$off}px; height:{$h}; width:28px; pointer-events:auto;\">
-      <div class='sgss-control' style='width:100%; height:100%;'>
-        <div class='sgss-track'><div class='sgss-thumb'></div></div>
-      </div>
-  </div>";
-}
 
     else {
         echo html_entity_decode((string)$el->content);
     }
 
     if (isset($el->children->element)) {
-        foreach ($el->children->element as $child) { renderElement($child); }
+        foreach ($el->children->element as $child) { renderElement($child, $type); }
     }
 
     echo "</div>";
@@ -715,7 +622,15 @@ $xmlDocs = sg_load_xml_chain($xmlFile, $projectsDir, $legacyXml, $seen);
       position: relative;
       font-family: 'Segoe UI', Tahoma, sans-serif;
     }
-    .page-element div, .page-element p { margin: 0 !important; padding: 0 !important; }
+
+.page-element[data-type="form"] div,
+.page-element[data-type="form"] p{
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: inherit;
+}
+    .page-element[data-type="text"] p{ margin:0 !important; line-height:inherit; }
+.page-element[data-type="text"] div{ line-height:inherit; }
     input, select, textarea, button, label, span { font-family: inherit; font-size: inherit; color: inherit; }
     input[type="text"] { box-sizing: border-box; }
     .sg-slider-inner{ box-sizing:border-box; width:100%; height:100%; padding:10px; display:flex; flex-direction:column; gap:8px; }
@@ -839,36 +754,86 @@ input.sg-range::-moz-range-thumb{
   .sgbtn, .sgbtn__ripple{ animation:none !important; transition:none !important; }
 }
 
-  </style>
-</head>
-<body>
-<?php
+
+html, body{
+  height: 100%;
+  overflow: hidden; 
+}
+
+#sg-scroll{
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative; 
+}
+</style>
+
+  <?php
+$pageH = 0;
 foreach ($xmlDocs as $doc) {
-  if (isset($doc->element)) {
-    foreach ($doc->element as $el) {
-      renderElement($el);
-    }
+  $v = trim((string)($doc->pageHeight ?? ''));
+  if ($v !== '' && ctype_digit($v)) $pageH = (int)$v;
+}
+?>
+<?php
+$winCfg = null;
+
+foreach ($xmlDocs as $doc) {
+  if (!isset($doc->windowScroll)) continue;
+
+  $ws = $doc->windowScroll;
+  if (isset($ws->enabled) || isset($ws->width) || isset($ws->track)) {
+    $enabledRaw = strtolower(trim((string)($ws->enabled ?? '1')));
+    $thinRaw    = strtolower(trim((string)($ws->firefoxThin ?? '0')));
+
+    $winCfg = [
+      'enabled'     => ($enabledRaw === '1' || $enabledRaw === 'true'),
+      'firefoxThin' => ($thinRaw === '1' || $thinRaw === 'true'),
+      'width'       => (int)($ws->width ?? 12),
+      'radius'      => (int)($ws->radius ?? 10),
+      'track'       => (string)($ws->track ?? 'rgba(203,213,225,0.25)'),
+      'thumb'       => (string)($ws->thumb ?? 'rgba(15,23,42,0.55)'),
+      'thumbHover'  => (string)($ws->thumbHover ?? 'rgba(15,23,42,0.75)'),
+    ];
+
+    continue; 
+  }
+  $raw = trim((string)$ws);
+  if ($raw !== '' && substr($raw, 0, 1) === '{') {
+    $decoded = html_entity_decode($raw, ENT_QUOTES | ENT_XML1, 'UTF-8');
+    $tmp = json_decode($decoded, true);
+    if (is_array($tmp)) $winCfg = $tmp;
   }
 }
 
+if (!$winCfg) {
+  $winCfg = [
+    'enabled' => true,
+    'firefoxThin' => false,
+    'width' => 12,
+    'radius' => 10,
+    'track' => 'rgba(203,213,225,0.25)',
+    'thumb' => 'rgba(15,23,42,0.55)',
+    'thumbHover' => 'rgba(15,23,42,0.75)',
+  ];
+}
 ?>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  let maxBottom = 0;
 
-  document.querySelectorAll('.page-element').forEach(el => {
-    const st = getComputedStyle(el);
-    if (st.position === 'fixed') return;               
-    if (el.dataset.type === 'sidescroll') return;      
+</head>
+<body>
+  <div id="sg-scroll">
+    <?php
+    foreach ($xmlDocs as $doc) {
+      if (isset($doc->element)) {
+        foreach ($doc->element as $el) renderElement($el);
+      }
+    }
+    ?>
+    <div id="sg-scroll-spacer" style="height:1px;"></div>
+  </div>
 
-    const bottom = el.offsetTop + el.offsetHeight;
-    if (bottom > maxBottom) maxBottom = bottom;
-  });
 
-  document.body.style.minHeight = (maxBottom + 80) + 'px';
-});
-</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -891,9 +856,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  if (padTop) document.body.style.paddingTop = padTop + 'px';
-  if (padBottom) document.body.style.paddingBottom = padBottom + 'px';
+const sc = document.getElementById('sg-scroll');
+if (!sc) return;
+
+if (padTop) sc.style.paddingTop = padTop + 'px';
+if (padBottom) sc.style.paddingBottom = padBottom + 'px';
+
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const winCfg = <?= json_encode($winCfg, JSON_UNESCAPED_UNICODE) ?>;
+
+  if (window.sg_sideblock_window) {
+    window.sg_sideblock_window(winCfg, "#sg-scroll");
+  }
+  document.querySelectorAll('.page-element[data-type="block"][data-sg-scroll-block]')
+    .forEach((el) => window.sg_sidescroll_blok?.(el));
+});
+
+
 </script>
 <script>
 (function(){
@@ -956,8 +938,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const el = resolveTarget(target);
       if (!el) return;
 
-      const y = el.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+const sc = document.getElementById('sg-scroll');
+
+if (sc) {
+  const scRect = sc.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  const y = (elRect.top - scRect.top) + sc.scrollTop - offset;
+  sc.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+} else {
+  const y = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+}
+
 
       setTimeout(() => flash(el), 350);
       return;
@@ -965,181 +957,67 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 </script>
-<script src="sg_calendar.js?v=1"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.sg-calendar-runtime[data-type="calendar"]').forEach((el) => {
-    if (window.updateCalendarVisuals) window.updateCalendarVisuals(el);
-  });
-});
-</script>
 
 
 
 
-<script src="sg_sidescroll.js?v=1"></script>
-<script src="sg_footer.js?v=2"></script>
+
+<?php
+$__v = function(string $f){
+  $p = __DIR__ . DIRECTORY_SEPARATOR . $f;
+  return @filemtime($p) ?: time();
+};
+?>
+<script src="sg_sideblock_window.js?v=<?= $__v('sg_sideblock_window.js') ?>"></script>
+<script src="sg_sidescroll_blok.js?v=<?= $__v('sg_sidescroll_blok.js') ?>"></script>
+
+<script src="sg_footer.js?v=<?= $__v('sg_footer.js') ?>"></script>
+<script src="sg_calendar.js?v=<?= $__v('sg_calendar.js') ?>"></script>
+
 <style>
-#fv-panel{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  width:280px;
-  background:#fff;
-  border:1px solid #e2e8f0;
-  border-radius:14px;
-  box-shadow:0 18px 40px rgba(2,6,23,.14);
-  padding:12px;
-  z-index:9999;
-  display:none;
-  font-family:inherit;
-}
-#fv-panel .t{font-weight:800; font-size:13px; color:#0f172a; margin:0 0 10px;}
-#fv-panel label{display:block; font-size:12px; font-weight:700; color:#334155; margin-top:8px;}
-#fv-panel input[type="text"], #fv-panel input[type="number"]{width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:10px; box-sizing:border-box;}
-#fv-panel input[type="color"]{width:100%; height:38px; border:1px solid #cbd5e1; border-radius:10px; padding:0;}
-#fv-panel .row{display:flex; gap:8px;}
-#fv-panel .row > *{flex:1;}
-#fv-panel .x{position:absolute; right:10px; top:8px; border:none; background:transparent; font-size:18px; cursor:pointer;}
+  .sg-form-inner input:focus,
+  .sg-form-inner select:focus,
+  .sg-form-inner textarea:focus{
+    border-color: var(--sg-accent, #156fe5);
+    box-shadow: 0 0 0 4px rgba(21,111,229,0.18);
+    outline:none;
+  }
 </style>
 
-<div id="fv-panel">
-  <button class="x" type="button" id="fv-close">×</button>
-  <div class="t">Ramka (Final View)</div>
 
-  <div id="fv-fields"></div>
-</div>
+<?php $vAnk = @filemtime(__DIR__ . '/sg_ankieta.js') ?: time(); ?>
+<script>window.SG_MODE='final';</script>
+<script src="sg_ankieta.js?v=<?= $vAnk ?>"></script>
 
 <script>
-(function(){
-  const panel = document.getElementById('fv-panel');
-  const fields = document.getElementById('fv-fields');
-  const btnClose = document.getElementById('fv-close');
+document.addEventListener('DOMContentLoaded', () => {
+  const forced = <?= (int)$pageH ?>;
 
-  let current = null;
-
-  function parseUi(el){
-    return (el.getAttribute('data-block-ui') || '')
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
-  }
-
-  function show(){ panel.style.display='block'; }
-  function hide(){ panel.style.display='none'; current=null; fields.innerHTML=''; }
-
-  function addColor(label, cssProp){
-    const id = 'fv_' + cssProp;
-    fields.insertAdjacentHTML('beforeend',
-      `<label>${label}</label><input type="color" id="${id}">`
-    );
-    const inp = document.getElementById(id);
-    const cs = getComputedStyle(current);
-    let v = '#ffffff';
-    if (cssProp === 'backgroundColor') v = cs.backgroundColor;
-    if (cssProp === 'borderColor') v = cs.borderColor;
-    inp.value = rgbToHex(v);
-
-    inp.addEventListener('input', () => {
-      if (cssProp === 'backgroundColor') current.style.background = inp.value;
-      if (cssProp === 'borderColor') current.style.borderColor = inp.value;
-    });
-  }
-
-  function addNumber(label, cssProp, unit){
-    const id = 'fv_' + cssProp;
-    fields.insertAdjacentHTML('beforeend',
-      `<label>${label}</label><input type="number" id="${id}">`
-    );
-    const inp = document.getElementById(id);
-    const cs = getComputedStyle(current);
-    const raw = cs[cssProp] || '';
-    inp.value = parseFloat(raw) || 0;
-
-    inp.addEventListener('input', () => {
-      current.style[cssProp] = (parseFloat(inp.value)||0) + unit;
-    });
-  }
-
-function addText(label, cssProp){
-  const id = 'fv_' + cssProp;
-  fields.insertAdjacentHTML('beforeend',
-    `<label>${label}</label><input type="text" id="${id}">`
-  );
-  const inp = document.getElementById(id);
-  inp.value = current.style[cssProp] || getComputedStyle(current)[cssProp] || '';
-
-  inp.addEventListener('input', () => {
-    current.style[cssProp] = inp.value;
-
-    if (cssProp === 'backdropFilter') {
-      current.style.webkitBackdropFilter = inp.value;
-    }
-  });
+if (forced > 0) {
+  const spacer = document.getElementById('sg-scroll-spacer');
+  if (!spacer) return;
+  spacer.style.height = forced + 'px';
+  return;
 }
+const sc = document.getElementById('sg-scroll');
+if (!sc) return;
+const spacer = document.getElementById('sg-scroll-spacer');
+if (!spacer) return;
 
-
-  function rgbToHex(rgb){
-    rgb = String(rgb||'').trim();
-    if (!rgb || rgb === 'transparent') return '#ffffff';
-    if (rgb.startsWith('#')) return rgb;
-    const m = rgb.match(/\d+/g);
-    if (!m || m.length < 3) return '#ffffff';
-    return '#' + m.slice(0,3).map(n => parseInt(n,10).toString(16).padStart(2,'0')).join('');
-  }
-
-  function buildUi(el){
-    current = el;
-    fields.innerHTML = '';
-
-    const ui = parseUi(el);
-    if (!ui.length) { hide(); return; }
-    if (ui.includes('bg')) {
-      addColor('Tło', 'backgroundColor');
-    }
-    if (ui.includes('border')) {
-      fields.insertAdjacentHTML('beforeend', `<div class="row"><div id="fv_border_col"></div><div id="fv_border_w"></div></div>`);
-      const tmp = document.createElement('div');
-      tmp.innerHTML = `<label>Kolor obramowania</label><input type="color" id="fv_borderColor">`;
-      document.getElementById('fv_border_col').appendChild(tmp.firstChild);
-      document.getElementById('fv_border_col').appendChild(tmp.lastChild);
-
-      const col = document.getElementById('fv_borderColor');
-      col.value = rgbToHex(getComputedStyle(current).borderColor);
-      col.addEventListener('input', () => current.style.borderColor = col.value);
-
-      const tmp2 = document.createElement('div');
-      tmp2.innerHTML = `<label>Grubość (px)</label><input type="number" id="fv_borderW">`;
-      document.getElementById('fv_border_w').appendChild(tmp2.firstChild);
-      document.getElementById('fv_border_w').appendChild(tmp2.lastChild);
-
-      const bw = document.getElementById('fv_borderW');
-      bw.value = parseFloat(getComputedStyle(current).borderWidth) || 0;
-      bw.addEventListener('input', () => {
-        const v = (parseFloat(bw.value)||0);
-        const style = getComputedStyle(current).borderStyle || 'solid';
-        const color = getComputedStyle(current).borderColor || '#000';
-        current.style.border = `${v}px ${style} ${color}`;
-      });
-    }
-    if (ui.includes('radius')) addNumber('Zaokrąglenie (px)', 'borderRadius', 'px');
-    if (ui.includes('shadow')) addText('Box shadow', 'boxShadow');
-    if (ui.includes('blur')) addText('Backdrop filter', 'backdropFilter');
-    if (ui.includes('opacity')) addNumber('Opacity (0-1)', 'opacity', '');
-
-    show();
-  }
-
-  document.addEventListener('click', (e) => {
-    const el = e.target.closest('.page-element[data-type="block"][data-block-ui]');
-    if (!el) return;
-    buildUi(el);
+  let maxBottom = 0;
+  document.querySelectorAll('.page-element').forEach(el => {
+    const st = getComputedStyle(el);
+    if (st.position === 'fixed') return;
+    const bottom = el.offsetTop + el.offsetHeight;
+    if (bottom > maxBottom) maxBottom = bottom;
   });
+  spacer.style.height = (maxBottom + 80) + 'px';
+});
 
-  btnClose.addEventListener('click', hide);
-})();
 </script>
+
 
 
 </body>
+
 </html>

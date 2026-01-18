@@ -48,4 +48,18 @@
         background: #156fe5; 
         content: "ZAMKNIJ WARSTWĘ";
     }
+    .layer-controls { display:flex; gap:6px; align-items:center; }
+
+.layer-btn{
+  width:22px; height:22px;
+  border:none; border-radius:6px;
+  background:#2563eb; color:#fff;
+  cursor:pointer; font-size:12px; line-height:1;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.layer-btn:hover{ background:#1d4ed8; }
+
+.layer-btn-edit{ background:#0ea5e9; }
+.layer-btn-edit:hover{ background:#0284c7; }
+
 </style>

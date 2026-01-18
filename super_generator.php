@@ -14,37 +14,63 @@ function sg_clean_file_name(string $name): string {
   if (!preg_match('/\.xml$/i', $name)) $name .= '.xml';
   return $name;
 }
-function sg_norm_css_value(string $s): string {
-  $s = trim($s);
-  if ($s === '') return '';
-  $s = str_replace('"', "'", $s);
-  $s = preg_replace('/\s+/', ' ', $s);
-  $s = preg_replace('/,\s+/', ',', $s);
-  return $s;
+
+function sg_add_scroll_block_xml(SimpleXMLElement $elNode, string $raw): void {
+  $raw = trim($raw);
+  if ($raw === '') return;
+  $cfg = null;
+  if ($raw !== '' && $raw[0] === '{') {
+    $cfg = json_decode(html_entity_decode($raw, ENT_QUOTES | ENT_XML1, 'UTF-8'), true);
+  }
+  if (!is_array($cfg)) {
+    $elNode->addChild('sgScrollBlock', htmlspecialchars($raw, ENT_QUOTES | ENT_XML1, 'UTF-8'));
+    return;
+  }
+
+  $sb = $elNode->addChild('sgScrollBlock');
+  $keys = [
+    'enabled','axis','ySide','xSide',
+    'thickness','gap','radius','thumbSize',
+    'track','thumb','thumbHover',
+    'autoHide','smooth','wheel','wheelStep',
+    'fadeHint','fadeOpacity'
+  ];
+
+  foreach ($keys as $k) {
+    if (!array_key_exists($k, $cfg)) continue;
+
+    $v = $cfg[$k];
+
+    if (is_bool($v)) $v = $v ? '1' : '0';
+    else $v = (string)$v;
+
+    $sb->addChild($k, htmlspecialchars($v, ENT_QUOTES | ENT_XML1, 'UTF-8'));
+  }
 }
 
 function sg_add_child_compact(SimpleXMLElement $node, string $name, $val, $default = null, bool $escape = false): void {
   $v = (string)($val ?? '');
 
-  if ($default === null) {
-    if (trim($v) === '') return;
-  } else {
-    $dv = (string)$default;
-
-    $cmpV = $v;
-    $cmpD = $dv;
-    $toNorm = ['bg','border','borderRadius','boxShadow','fontFamily','color','backdropFilter'];
-    if (in_array($name, $toNorm, true)) {
-      $cmpV = sg_norm_css_value($v);
-      $cmpD = sg_norm_css_value($dv);
-    }
-
-    if ($cmpV === $cmpD) return;
-  }
+  if ($default === null && $v === '') return;
+  if ($default !== null && $v === (string)$default) return;
 
   $node->addChild($name, $escape ? htmlspecialchars($v, ENT_QUOTES | ENT_XML1, 'UTF-8') : $v);
 }
+function sg_add_window_scroll_tags(SimpleXMLElement $xml, array $cfg): void {
+  $ws = $xml->addChild('windowScroll');
 
+  $enabled = (!empty($cfg['enabled']) && $cfg['enabled'] !== 'false') ? '1' : '0';
+  $ffThin  = (!empty($cfg['firefoxThin']) && $cfg['firefoxThin'] !== 'false') ? '1' : '0';
+
+  $ws->addChild('enabled', $enabled);
+  $ws->addChild('firefoxThin', $ffThin);
+  $ws->addChild('width', (string)($cfg['width'] ?? 12));
+  $ws->addChild('radius', (string)($cfg['radius'] ?? 10));
+
+  $ws->addChild('track', htmlspecialchars((string)($cfg['track'] ?? 'rgba(203,213,225,0.25)'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+  $ws->addChild('thumb', htmlspecialchars((string)($cfg['thumb'] ?? 'rgba(15,23,42,0.55)'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+  $ws->addChild('thumbHover', htmlspecialchars((string)($cfg['thumbHover'] ?? 'rgba(15,23,42,0.75)'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+}
 
 $requested = isset($_GET['file']) ? (string)$_GET['file'] : '';
 if ($requested !== '') {
@@ -84,6 +110,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $elements = json_decode($_POST['elements'], true);
     $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><customPage></customPage>');
     $xml->addChild('generatedAt', date('Y-m-d H:i:s'));
+    $pageH = (int)($_POST['pageHeight'] ?? 2000);
+if ($pageH < 800) $pageH = 800;
+$xml->addChild('pageHeight', (string)$pageH);
+$winScroll = [];
+if (!empty($_POST['windowScroll'])) {
+  $tmp = json_decode((string)$_POST['windowScroll'], true);
+  if (is_array($tmp)) $winScroll = $tmp;
+}
+
+if ($winScroll) {
+  sg_add_window_scroll_tags($xml, $winScroll);
+}
+
+
     $rawBase = trim((string)($_POST['baseFile'] ?? ''));
 $baseFile = $rawBase !== '' ? sg_clean_file_name($rawBase) : '';
 if ($baseFile !== '' && $baseFile !== $selected) {
@@ -112,27 +152,13 @@ function saveRecursive($items, $xmlNode) {
     $el->addChild('w', $item['w'] ?? 'auto');
     $el->addChild('h', $item['h'] ?? 'auto');
 
-$defBg = 'transparent';
-$defBorder = 'none';
-$defRadius = '0px';
-$defShadow = 'none';
-$defOpacity = '1';
-$defBackdrop = 'none';
-
-if ($type === 'block') {
-  $defBg     = 'rgb(255, 255, 255)';
-  $defBorder = '1px solid rgb(226, 232, 240)';
-  $defRadius = '16px';
-  $defShadow = 'rgba(0, 0, 0, 0.12) 0px 12px 30px 0px';
-}
-
-sg_add_child_compact($el, 'bg', $item['bg'] ?? $defBg, $defBg);
-sg_add_child_compact($el, 'border', $item['border'] ?? $defBorder, $defBorder);
-sg_add_child_compact($el, 'zIndex', $item['zIndex'] ?? '0', '0');
-sg_add_child_compact($el, 'borderRadius', $item['borderRadius'] ?? $defRadius, $defRadius);
-sg_add_child_compact($el, 'boxShadow', $item['boxShadow'] ?? $defShadow, $defShadow);
-sg_add_child_compact($el, 'opacity', $item['opacity'] ?? $defOpacity, $defOpacity);
-sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackdrop, $defBackdrop);
+    sg_add_child_compact($el, 'bg', $item['bg'] ?? 'transparent', 'transparent');
+    sg_add_child_compact($el, 'border', $item['border'] ?? 'none', 'none');
+    sg_add_child_compact($el, 'zIndex', $item['zIndex'] ?? '0', '0');
+    sg_add_child_compact($el, 'borderRadius', $item['borderRadius'] ?? '0px', '0px');
+    sg_add_child_compact($el, 'boxShadow', $item['boxShadow'] ?? 'none', 'none');
+    sg_add_child_compact($el, 'opacity', $item['opacity'] ?? '1', '1');
+    sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? 'none', 'none');
 
     switch ($type) {
 
@@ -141,8 +167,7 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
 
         sg_add_child_compact($el, 'color', $item['color'] ?? 'rgb(0, 0, 0)', 'rgb(0, 0, 0)');
         sg_add_child_compact($el, 'fontSize', $item['fontSize'] ?? '20px', '20px');
-        sg_add_child_compact($el, 'fontFamily', $item['fontFamily'] ?? "'Segoe UI', sans-serif", "'Segoe UI', sans-serif");
-
+        sg_add_child_compact($el, 'fontFamily', $item['fontFamily'] ?? '"Segoe UI", sans-serif', '"Segoe UI", sans-serif');
 
         sg_add_child_compact($el, 'fontWeight', $item['fontWeight'] ?? '400', '400');
         sg_add_child_compact($el, 'fontStyle', $item['fontStyle'] ?? 'normal', 'normal');
@@ -231,10 +256,6 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
         sg_add_child_compact($el, 'navActiveMode', $item['navActiveMode'] ?? 'query_page', 'query_page');
         break;
 
-      case 'block':
-          sg_add_child_compact($el, 'blockUi', $item['blockUi'] ?? '', '', true);
-      break;
-
       case 'calendar':
         sg_add_child_compact($el, 'calYear', $item['calYear'] ?? '2026', '2026');
         sg_add_child_compact($el, 'calMonth', $item['calMonth'] ?? '1', '1');
@@ -280,25 +301,12 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
         sg_add_child_compact($el, 'sliderThumbS', $item['sliderThumbS'] ?? '18', '18');
         break;
 
-      case 'sidescroll':
-        sg_add_child_compact($el, 'scrollTargetMode', $item['scrollTargetMode'] ?? 'page', 'page');
-        sg_add_child_compact($el, 'scrollTargetId', $item['scrollTargetId'] ?? '', '', true);
 
-        sg_add_child_compact($el, 'scrollPinMode', $item['scrollPinMode'] ?? 'fixed', 'fixed');
-        sg_add_child_compact($el, 'scrollSide', $item['scrollSide'] ?? 'right', 'right');
+case 'block':
+  sg_add_scroll_block_xml($el, $item['sgScrollBlock'] ?? '');
 
-        sg_add_child_compact($el, 'scrollOffsetTop', $item['scrollOffsetTop'] ?? '120', '120');
-        sg_add_child_compact($el, 'scrollOffsetSide', $item['scrollOffsetSide'] ?? '16', '16');
-        sg_add_child_compact($el, 'scrollHeight', $item['scrollHeight'] ?? '260', '260');
+  break;
 
-        sg_add_child_compact($el, 'scrollTrackW', $item['scrollTrackW'] ?? '10', '10');
-        sg_add_child_compact($el, 'scrollThumbH', $item['scrollThumbH'] ?? '64', '64');
-        sg_add_child_compact($el, 'scrollValue', $item['scrollValue'] ?? '0', '0');
-
-        sg_add_child_compact($el, 'scrollTrackColor', $item['scrollTrackColor'] ?? '#e2e8f0', '#e2e8f0');
-        sg_add_child_compact($el, 'scrollThumbColor', $item['scrollThumbColor'] ?? '#64748b', '#64748b');
-        sg_add_child_compact($el, 'scrollRadius', $item['scrollRadius'] ?? '999', '999');
-        break;
 
       case 'form':
         sg_add_child_compact($el, 'formType', $item['formType'] ?? 'text', 'text');
@@ -333,7 +341,6 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
         break;
 
       default:
-
         if (($item['isFooter'] ?? '0') === '1') {
           sg_add_child_compact($el, 'isFooter', '1', '0');
           sg_add_child_compact($el, 'footerDock', $item['footerDock'] ?? 'bottom', 'bottom');
@@ -342,6 +349,7 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
         }
         break;
     }
+
     if (!empty($item['children'])) {
       $childrenNode = $el->addChild('children');
       saveRecursive($item['children'], $childrenNode);
@@ -364,8 +372,8 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
     <title>Praca inzynierska</title>
 <style>
     :root { --panel-w: 320px; --accent: #2bb021; --dark: #1e293b; }
-    body { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: white; }
-    #preview-canvas { position: absolute; inset: 0; z-index: 1; background: white; }
+    body { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: auto; background: white; }
+    #preview-canvas { position: relative; width: 100%; height: var(--page-h); background: white; }
     #controls-panel { 
         position: absolute; top: 20px; right: 20px; width: var(--panel-w);
         background: white; border: 1px solid #cbd5e1; border-radius: 8px;
@@ -381,17 +389,31 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
     
 .type-text{
   white-space: pre-wrap;
-  display: inline-block;
+  display: block;
+  box-sizing: border-box;
   line-height: 1.2;
-  overflow: visible;
-  min-width: 10px;
-  vertical-align: top;
+
+  min-width: 60px;
+  min-height: 28px;
+
+  overflow: auto;
+  resize: both;
+
+  max-width: none;          
+  overflow-wrap: anywhere;  
+  word-break: break-word;     
 }
+
+.type-text:focus{ outline:none; }
+.type-text[data-editing="1"]{ cursor:text; }
 
     .type-block { 
     display: block; 
     overflow: visible; 
     position: absolute; 
+}
+.type-block.sg-scroll-frame{
+  overflow: auto !important;
 }
 
     .btn { width: 100%; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; transition: 0.2s; }
@@ -412,7 +434,7 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
 .canvas-element div,
 .canvas-element span {
   text-transform: none !important;
-  font-weight: inherit;
+  font-weight: normal;
 }
 .text-toolbar{
   display:flex;
@@ -456,7 +478,14 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
         <button id="add-image-btn" class="btn" style="background: #6366f1; color: white;"> DODAJ ZDJĘCIE</button>
             <input type="file" id="image-upload-input" style="display:none" accept="image/*">
             <button id="add-form-btn" class="btn" style="background: #f59e0b; color: white;"> DODAJ FORMULARZ</button>
-            <button id="add-sidescroll-btn" class="btn" style="background:#0ea5e9; color:white;"> DODAJ SUWAK BOCZNY</button>
+<button id="open-window-scroll-btn" class="btn" style="background:#0ea5e9; color:white;">
+  SCROLL OKNA (WINDOW)
+</button>
+
+<button id="open-block-scroll-btn" class="btn" style="background:#0284c7; color:white;">
+  SCROLL RAMKI (BLOCK)
+</button>
+
 
             <button id="add-slider-btn" class="btn" style="background:#06b6d4; color:white;"> DODAJ ZSUWAK</button>
 <button id="add-footer-bottom-btn" class="btn" style="background:#111827;color:white;">
@@ -474,6 +503,11 @@ sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? $defBackd
 
 
         <button id="generate-btn" class="btn btn-save">ZAPISZ ZMIANY W XML</button>
+<div style="margin-top:10px; border-top:1px solid #e5e7eb; padding-top:10px;">
+  <label>Długość strony (px)</label>
+  <input type="range" id="page-height" min="800" max="12000" step="100" value="2000">
+  <input type="number" id="page-height-num" min="800" max="12000" step="100" value="2000">
+</div>
 
 <div style="margin-top:10px; border-top:1px solid #e5e7eb; padding-top:10px;">
   <div style="font-size:12px; color:#334155; font-weight:700; margin-bottom:6px;">Tło (baza pliku)</div>
@@ -519,13 +553,37 @@ foreach ($files as $p) {
                 <label>Rozmiar (px):</label>
                 <input type="number" id="prop-size" value="20">
                 <?php include 'font_manager.php'; ?>
+                <div style="margin-top:10px; padding-top:10px; border-top:1px solid #e5e7eb;">
+  <div style="font-size:11px; color:#64748b; font-weight:700; margin-bottom:6px; text-transform:uppercase;">
+    Pole tekstu (rozmiar)
+  </div>
+
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button type="button" class="tool-btn" onclick="sgTextBoxResize(-20,0)">Szer -</button>
+    <button type="button" class="tool-btn" onclick="sgTextBoxResize(20,0)">Szer +</button>
+    <button type="button" class="tool-btn" onclick="sgTextBoxResize(0,-20)">Wys -</button>
+    <button type="button" class="tool-btn" onclick="sgTextBoxResize(0,20)">Wys +</button>
+
+    <span class="tool-sep"></span>
+
+    <button type="button" class="tool-btn" onclick="sgTextBoxAutoHeight()">Auto wysokość</button>
+    <button type="button" class="tool-btn" onclick="sgTextBoxFitToFrame()">Dopasuj do ramki</button>
+  </div>
+</div>
+
             </div>
             <?php include 'block_manager.php'; ?>
             <?php include 'image_manager.php'; ?>
             <?php include 'ankieta_manager.php'; ?>
 
             <?php include 'slider_manager.php'; ?>
-            <?php include 'sidescroll_manager.php'; ?>
+            <?php
+require_once __DIR__ . '/sidescroll_menager_window.php';
+require_once __DIR__ . '/sidescroll_menager_block.php';
+
+sidescroll_menager_window();
+sidescroll_menager_block();
+?>
             <?php include 'footer_manager.php'; ?>
 <?php include 'button_manager.php'; ?>
 <?php include 'nav_menager.php'; ?>
@@ -600,6 +658,10 @@ const metaTxt = [
   domClass ? `.${domClass.split(/\s+/).join('.')}` : ''
 ].filter(Boolean).join(' ');
 
+const editBtn = (el.dataset.type === 'text')
+  ? `<button class="layer-btn layer-btn-edit" title="Edytuj tekst"
+       onclick="event.stopPropagation(); sgStartTextEdit('${el.dataset.id}')">✎</button>`
+  : '';
 
                 li.innerHTML = `
   <div class="layer-top-row" style="display:flex; justify-content:space-between; align-items:center;">
@@ -607,10 +669,13 @@ const metaTxt = [
       <div class="layer-color-preview" style="background-color: ${previewColor}"></div>
       <span>${level > 0 ? '↳ ' : ''}${el.dataset.type === 'text' ? '🔤' : '📦'} ${el.dataset.id.slice(-4)}</span>
     </div>
-    <div class="layer-controls">
-      <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', 1)">▲</button>
-      <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', -1)">▼</button>
-    </div>
+<div class="layer-controls">
+  ${editBtn}
+  <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', 1)">▲</button>
+  <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', -1)">▼</button>
+</div>
+
+
   </div>
 
   ${targetBtn}
@@ -664,7 +729,7 @@ if (type === 'calendar') {
     addMode = null;
     return;
   }
-if (type === 'sidescroll') { createSideScrollElement(x, y); addMode=null; return; }
+
 
   zCounter++;
   const div = document.createElement('div');
@@ -680,7 +745,11 @@ if (type === 'sidescroll') { createSideScrollElement(x, y); addMode=null; return
         div.innerText = "Wpisz tekst...";
         div.style.fontSize = "20px";
         div.style.fontFamily = "'Segoe UI', sans-serif";
+          div.style.width  = "220px";
+  div.style.height = "90px";
         div.ondblclick = (e) => { e.stopPropagation(); enterTextEdit(div); };
+
+
     } else {
         div.style.width = "200px";
         div.style.height = "100px";
@@ -729,6 +798,7 @@ if (type === 'sidescroll') { createSideScrollElement(x, y); addMode=null; return
 
 function selectElement(el) {
     if (el?.dataset?.locked === "1") return;
+
     if (activeElement && activeElement !== el && activeElement.dataset.type === 'text' && activeElement.dataset.editing === "1") {
     exitTextEdit(activeElement);
 }
@@ -745,8 +815,7 @@ function selectElement(el) {
     document.getElementById('image-edit-section').style.display = (type === 'image') ? 'block' : 'none';
     document.getElementById('form-edit-section').style.display = (type === 'form') ? 'block' : 'none';
     document.getElementById('slider-edit-section').style.display = (type === 'slider') ? 'block' : 'none';
-    document.getElementById('sidescroll-edit-section').style.display = (type === 'sidescroll') ? 'block' : 'none';
-if (type === 'sidescroll' && typeof syncSideScrollInputs === "function") syncSideScrollInputs(el);
+
 document.getElementById('button-edit-section').style.display = (type === 'button') ? 'block' : 'none';
 if (type === 'button' && typeof syncButtonInputs === "function") syncButtonInputs(el);
 document.getElementById('nav-edit-section').style.display = (type === 'nav') ? 'block' : 'none';
@@ -762,7 +831,6 @@ if (type === 'calendar' && typeof syncCalendarInputs === "function") syncCalenda
   if (typeof syncImageInputs === "function") syncImageInputs(el);
 } else if (type === 'block') {
     if (typeof syncBlockInputs === "function") syncBlockInputs(el);
-    syncBlockUiChecks(el);
     } else if (type === 'text') {
         document.getElementById('prop-size').value = parseInt(el.style.fontSize) || 20;
         document.getElementById('prop-color').value = rgbToHex(el.style.color);
@@ -779,6 +847,7 @@ if (metaSec) metaSec.style.display = 'block';
 
 const idInp = document.getElementById('prop-html-id');
 const clsInp = document.getElementById('prop-html-class');
+document.dispatchEvent(new CustomEvent('sg:selected', { detail: { el } }));
 
 if (idInp) idInp.value = el.dataset.htmlId || "";
 if (clsInp) clsInp.value = el.dataset.htmlClass || "";
@@ -800,7 +869,30 @@ if (clsInp) clsInp.value = el.dataset.htmlClass || "";
 document.getElementById('add-text-btn').onclick = () => { addMode = 'text'; };
 
 document.getElementById('add-form-btn').onclick = () => { addMode = 'form'; }; 
-document.getElementById('add-sidescroll-btn').onclick = () => { addMode = 'sidescroll'; };
+document.getElementById('open-window-scroll-btn').onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  hiddenTools.style.display = 'block';
+  const panel = document.getElementById('sgWindowScrollPanel');
+  if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+document.getElementById('open-block-scroll-btn').onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  hiddenTools.style.display = 'block';
+
+  if (!activeElement || activeElement.dataset.type !== 'block') {
+    alert('Zaznacz ramkę (BLOCK), żeby edytować scroll.');
+    return;
+  }
+
+  document.dispatchEvent(new CustomEvent('sg:selected', { detail: { el: activeElement } }));
+
+  const panel = document.getElementById('sgScrollBlockPanel');
+  if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
 document.getElementById('add-button-btn').onclick = () => { addMode = 'button'; };
 document.getElementById('add-calendar-btn').onclick = (e) => {
   e.preventDefault();
@@ -821,6 +913,7 @@ document.getElementById('add-nav-btn').onclick = (e) => {
 
   createElement(cx, cy, 'nav');
 };
+
 
 
 canvas.onclick = (e) => { 
@@ -919,26 +1012,14 @@ htmlClass: el.dataset.htmlClass || "",
     sliderShowValue: el.dataset.sliderShowValue || "1",
     sliderShowMinMax: el.dataset.sliderShowMinMax || "0",
     sliderPreset: el.dataset.sliderPreset || "soft",
+    sgScrollBlock: el.dataset.sgScrollBlock || "",
     sliderTrack: el.dataset.sliderTrack || "#e2e8f0",
     sliderFill: el.dataset.sliderFill || "#156fe5",
     sliderThumb: el.dataset.sliderThumb || "#156fe5",
     sliderTrackH: el.dataset.sliderTrackH || "8",
     sliderThumbS: el.dataset.sliderThumbS || "18",
-    scrollTargetMode: el.dataset.scrollTargetMode || "page",
-    scrollTargetId: el.dataset.scrollTargetId || "",
-    scrollPinMode: el.dataset.scrollPinMode || "fixed",
-    scrollSide: el.dataset.scrollSide || "right",
-    scrollOffsetTop: el.dataset.scrollOffsetTop || "120",
-    scrollOffsetSide: el.dataset.scrollOffsetSide || "16",
-    scrollHeight: el.dataset.scrollHeight || "260",
-    scrollTrackW: el.dataset.scrollTrackW || "10",
-    scrollThumbH: el.dataset.scrollThumbH || "64",
-    scrollValue: el.dataset.scrollValue || "0",
-    scrollTrackColor: el.dataset.scrollTrackColor || "#e2e8f0",
-    scrollThumbColor: el.dataset.scrollThumbColor || "#64748b",
-    scrollRadius: el.dataset.scrollRadius || "999",
+
     isFooter: el.dataset.isFooter || "0",
-    
 footerDock: el.dataset.footerDock || "bottom",
 footerBottom: el.dataset.footerBottom || "0",
 footerLeft: el.dataset.footerLeft || "0",
@@ -955,7 +1036,6 @@ btnUrl: el.dataset.btnUrl || 'https://',
 btnTarget: el.dataset.btnTarget || '_blank',
 btnScrollTargetId: el.dataset.btnScrollTargetId || '',
 btnScrollOffset: el.dataset.btnScrollOffset || '0',
-blockUi: el.dataset.blockUi || "",
 
 btnPreset: el.dataset.btnPreset || 'primary',
 btnSize: el.dataset.btnSize || 'md',
@@ -980,7 +1060,6 @@ btnGradient: el.dataset.btnGradient || '0',
 btnGradFrom: el.dataset.btnGradFrom || '#156fe5',
 btnGradTo: el.dataset.btnGradTo || '#22c55e',
 btnGradAngle: el.dataset.btnGradAngle || '135',
-
 btnName: el.dataset.btnName || '',
 btnDisabled: el.dataset.btnDisabled || '0',
 
@@ -1000,7 +1079,6 @@ imgSaturate: el.dataset.imgSaturate || '100',
     navLinkPadY: el.dataset.navLinkPadY || "8",
     navLinkRadius: el.dataset.navLinkRadius || "8",
     navUnderline: el.dataset.navUnderline || "0",
-blockUi: el.dataset.blockUi || '',
 
     navLinkColor: el.dataset.navLinkColor || "#ffffff",
     navHoverBg: el.dataset.navHoverBg || "rgba(255,255,255,0.12)",
@@ -1048,6 +1126,8 @@ Array.from(canvas.children).forEach(el => {
         fd.append('action', 'generate_xml');
         fd.append('elements', JSON.stringify(elementsData));
         fd.append('baseFile', window.sgBaseFile || '');
+        fd.append('pageHeight', String(SG_PAGE_H));
+        fd.append('windowScroll', document.getElementById('sgWinScrollJson')?.value || '{}');
         fetch('super_generator.php', { method: 'POST', body: fd }).then(res => res.text()).then(data => alert(data));
     };
 window.sgBaseFile = '';
@@ -1087,7 +1167,13 @@ function afterCreateFromXml(el){
     if (el.dataset.type === "slider") window.updateSliderVisuals?.(el);
     if (el.dataset.type === "image")  window.updateImageVisuals?.(el);
     if (el.dataset.type === "button") window.updateButtonVisuals?.(el);
+    if (el.dataset.type === "form") window.updateFormVisuals?.(el);
+
     if (el.dataset.type === "nav")    window.updateNavVisuals?.(el);
+
+if (el.dataset.type === "block" && (el.dataset.sgScrollBlock || "").trim() !== "") {
+  window.sg_sidescroll_blok?.(el);
+}
     if (el.dataset.isFooter === "1")  window.applyFooterStyles?.(el);
   });
 }
@@ -1123,12 +1209,51 @@ function xmlElToItem(node){
     children: []
   };
   const skip = new Set(["x","y","w","h","content","color","bg","border","zIndex","borderRadius","boxShadow","opacity","backdropFilter"]);
-  Array.from(node.children).forEach(ch => {
-    const k = ch.tagName;
-    if (skip.has(k)) return;
-    if (k === "children") return;
-    item.dataset[k] = ch.textContent ?? "";
-  });
+Array.from(node.children).forEach(ch => {
+  const k = ch.tagName;
+  if (skip.has(k)) return;
+  if (k === "children") return;
+
+  if (k === "sgScrollBlock") {
+    const hasTags = ch.querySelector("enabled, axis, thickness, track, thumb");
+    if (hasTags) {
+      const get = (tag, def="") => (ch.querySelector(tag)?.textContent || def).trim();
+      const asBool = (v, def=false) => {
+        const s = String(v ?? "").trim().toLowerCase();
+        if (s === "1" || s === "true") return true;
+        if (s === "0" || s === "false") return false;
+        return def;
+      };
+
+      const cfg = {
+        enabled: asBool(get("enabled","1"), true),
+        axis: get("axis","y"),
+        ySide: get("ySide","right"),
+        xSide: get("xSide","bottom"),
+        thickness: parseInt(get("thickness","10"),10) || 10,
+        gap: parseInt(get("gap","6"),10) || 6,
+        radius: parseInt(get("radius","10"),10) || 10,
+        track: get("track","rgba(148,163,184,.35)"),
+        thumb: get("thumb","rgba(15,23,42,.55)"),
+        thumbHover: get("thumbHover","rgba(15,23,42,.75)"),
+        autoHide: asBool(get("autoHide","1"), true),
+        smooth: asBool(get("smooth","1"), true),
+        wheel: asBool(get("wheel","1"), true),
+        wheelStep: parseInt(get("wheelStep","70"),10) || 70,
+        fadeHint: asBool(get("fadeHint","1"), true),
+        fadeOpacity: parseFloat(get("fadeOpacity","0.22")) || 0.22
+      };
+
+      item.dataset[k] = JSON.stringify(cfg);
+      return;
+    }
+    item.dataset[k] = (ch.textContent || "").trim();
+    return;
+  }
+
+  item.dataset[k] = (ch.textContent ?? "");
+});
+
 
   const childrenNode = node.querySelector(":scope > children");
   if (childrenNode) {
@@ -1176,6 +1301,8 @@ el.style.textTransform = el.dataset.textTransform || "none";
 el.style.padding = el.dataset.padding || "0px";
 
     el.ondblclick = (e) => { e.stopPropagation(); if (el.dataset.locked !== "1") enterTextEdit(el); };
+
+
   } else if (item.type === "image") {
     const src = item.content || "";
     el.innerHTML = `<img src="${src.replaceAll('"','&quot;')}" alt="" style="width:100%;height:100%;object-fit:${el.dataset.imgFit||'cover'};">`;
@@ -1196,7 +1323,11 @@ el.style.padding = el.dataset.padding || "0px";
 function renderXmlToCanvas(xmlText, origin){
   const rootEls = parseXmlElements(xmlText);
   const items = rootEls.map(xmlElToItem);
-  items.forEach(item => canvas.appendChild(spawnItem(item, origin)));
+
+  items.forEach(item => {
+
+    canvas.appendChild(spawnItem(item, origin));
+  });
 }
 
 function clearChildFromCanvas(){
@@ -1208,6 +1339,9 @@ async function loadWithBase(childFile){
   clearBaseFromCanvas();
 
   const childXml = await fetchXmlFile(childFile);
+  const ph = parsePageHeight(childXml);
+if (ph) applyPageHeight(ph);
+
   const baseFile = parseExtends(childXml);
 
   if (baseFile){
@@ -1223,6 +1357,32 @@ async function loadWithBase(childFile){
   }
 
   renderXmlToCanvas(childXml, "child");
+  let winCfg = parseWindowScroll(childXml);
+if (!winCfg && baseFile) {
+  const baseXml2 = await fetchXmlFile(baseFile);
+  winCfg = parseWindowScroll(baseXml2);
+}
+
+if (!winCfg) {
+  winCfg = {
+    enabled: true,
+    firefoxThin: false,
+    width: 12,
+    radius: 10,
+    track: "rgba(203,213,225,0.25)",
+    thumb: "rgba(15,23,42,0.55)",
+    thumbHover: "rgba(15,23,42,0.75)"
+  };
+}
+
+window.sgWindowScrollConfig = winCfg;
+
+const winJson = document.getElementById("sgWinScrollJson");
+if (winJson) winJson.value = JSON.stringify(winCfg);
+if (window.sgWinScrollLoad) window.sgWinScrollLoad(winCfg);
+else if (window.sg_sideblock_window) window.sg_sideblock_window(winCfg);
+
+
 
   refreshLayers();
 }
@@ -1303,12 +1463,21 @@ function rgbToHex(rgb) {
 }
 
 function enterTextEdit(el) {
-    if (!el || el.dataset.type !== 'text') return;
-    el.dataset.editing = "1";
-    el.contentEditable = "true";
-    el.style.cursor = "text";
-    el.style.userSelect = "text";   
-    el.focus();
+  if (!el || el.dataset.type !== 'text') return;
+  if (typeof selectElement === 'function') selectElement(el);
+
+  el.dataset.editing = "1";
+  el.contentEditable = "true";
+  el.style.cursor = "text";
+  el.style.userSelect = "text";
+  el.focus();
+
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  range.collapse(false);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
 }
 
 function exitTextEdit(el) {
@@ -1320,58 +1489,87 @@ function exitTextEdit(el) {
 }
 
 
-function setupElementMovement(div, type) {
-    div.onmousedown = (e) => {
-e.stopPropagation();
+function setupElementMovement(el, type) {
+  el.onmousedown = (e) => {
+    e.stopPropagation();
+    if (el?.dataset?.locked === "1") return;
 
-if (type === 'text' && div.dataset.editing === "1") {
-    return;
-}
+    if (typeof selectElement === "function") selectElement(el);
 
-selectElement(div);
+    if (type === "text" && el.dataset.editing === "1") return;
+    if (type === "block" && e.target !== el) return;
 
-        let startX = e.clientX;
-let startY = e.clientY;
-let origX = div.offsetLeft;
-let origY = div.offsetTop;
-let isMoving = false;
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startLeft = el.offsetLeft;
+    const startTop = el.offsetTop;
 
-document.onmousemove = (me) => {
-    if (!isMoving && (Math.abs(me.clientX - startX) > 5 || Math.abs(me.clientY - startY) > 5)) {
-        isMoving = true;
-    }
-    if (isMoving) {
-        div.style.left = (origX + (me.clientX - startX)) + 'px';
-        div.style.top  = (origY + (me.clientY - startY)) + 'px';
-        div.style.pointerEvents = 'none';
-    }
-};
+    let moved = false;
 
-document.onmouseup = (mu) => {
-    document.onmousemove = null;
-    div.style.pointerEvents = 'auto';
+    document.onmousemove = (me) => {
+      const dx = me.clientX - startX;
+      const dy = me.clientY - startY;
 
-    if (isMoving) {
-        let target = document.elementFromPoint(mu.clientX, mu.clientY);
-        let parentFrame = target ? target.closest('.type-block') : null;
+      if (!moved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) moved = true;
+      if (!moved) return;
 
-        if (parentFrame && parentFrame !== div) {
-            if (div.parentElement !== parentFrame) {
-                nestElement(div.dataset.id, parentFrame.dataset.id);
-            }
-        } else if (!parentFrame && div.parentElement !== canvas) {
-            unNestElement(div);
-        }
-    }
+      el.style.left = (startLeft + dx) + "px";
+      el.style.top  = (startTop + dy) + "px";
 
-    document.onmouseup = null;
-    refreshLayers();
-};
+      el.style.pointerEvents = "none";
 
+      if (type === "block") window.sg_sidescroll_blok?.(el);
     };
+
+    document.onmouseup = (mu) => {
+      document.onmousemove = null;
+      document.onmouseup = null;
+
+      el.style.pointerEvents = "auto";
+
+      if (moved) {
+        const hit = document.elementFromPoint(mu.clientX, mu.clientY);
+        const targetFrame = hit ? hit.closest(".type-block") : null;
+
+        if (targetFrame && targetFrame !== el) {
+          if (el.parentElement !== targetFrame) {
+            nestElement(el.dataset.id, targetFrame.dataset.id);
+          }
+        } else if (!targetFrame && el.parentElement !== canvas) {
+          unNestElement(el);
+        }
+      }
+
+      if (type === "block") window.sg_sidescroll_blok?.(el);
+      refreshLayers();
+    };
+  };
 }
+
+
+
 const currentFile = <?= json_encode($selected) ?>;
 window.addEventListener('load', () => loadWithBase(currentFile));
+let SG_PAGE_H = 2000;
+
+function applyPageHeight(v){
+  SG_PAGE_H = Math.max(800, parseInt(v || "2000", 10) || 2000);
+  document.documentElement.style.setProperty('--page-h', SG_PAGE_H + 'px');
+  const r = document.getElementById('page-height');
+  const n = document.getElementById('page-height-num');
+  if (r) r.value = SG_PAGE_H;
+  if (n) n.value = SG_PAGE_H;
+}
+
+document.getElementById('page-height')?.addEventListener('input', (e)=> applyPageHeight(e.target.value));
+document.getElementById('page-height-num')?.addEventListener('input', (e)=> applyPageHeight(e.target.value));
+applyPageHeight(2000);
+
+
+document.getElementById('page-height')?.addEventListener('input', (e) => {
+  const v = parseInt(e.target.value || "2000", 10) || 2000;
+  document.documentElement.style.setProperty('--page-h', v + 'px');
+});
 
 function sanitizeHtmlId(raw){
   const v = String(raw || '').trim()
@@ -1398,7 +1596,9 @@ function setHtmlId(el, raw){
 function setHtmlClass(el, raw){
   const next = sanitizeCssClass(raw);
   const prev = (el.dataset.htmlClass || '').trim();
+
   prev.split(/\s+/).filter(Boolean).forEach(c => el.classList.remove(c));
+
   next.split(/\s+/).filter(Boolean).forEach(c => el.classList.add(c));
 
   el.dataset.htmlClass = next;
@@ -1424,40 +1624,189 @@ document.getElementById('prop-html-class')?.addEventListener('input', (e) => {
   setHtmlClass(activeElement, e.target.value);
   refreshLayers();
 });
-function setBlockUiFromChecks(el){
-  const picks = Array.from(document.querySelectorAll('.fvOpt'))
-    .filter(c => c.checked)
-    .map(c => c.value);
-  el.dataset.blockUi = picks.join(',');
-}
+function parseWindowScroll(xmlText){
+  try{
+    const doc = new DOMParser().parseFromString(xmlText, "application/xml");
+    const ws = doc.querySelector("customPage > windowScroll");
+    if (!ws) return null;
 
-function syncBlockUiChecks(el){
-  if (!el.dataset.blockUi || !el.dataset.blockUi.trim()) {
-    el.dataset.blockUi = 'bg,border,radius,shadow,blur,opacity';
+    const hasTags = ws.querySelector("enabled, width, track, thumb");
+    if (hasTags) {
+      const get = (tag, def="") => (ws.querySelector(tag)?.textContent || def).trim();
+      const asBool = (v, def=false) => {
+        const s = String(v ?? "").trim().toLowerCase();
+        if (s === "1" || s === "true") return true;
+        if (s === "0" || s === "false") return false;
+        return def;
+      };
+
+      return {
+        enabled: asBool(get("enabled","1"), true),
+        firefoxThin: asBool(get("firefoxThin","0"), false),
+        width: parseInt(get("width","12"),10) || 12,
+        radius: parseInt(get("radius","10"),10) || 10,
+        track: get("track","rgba(203,213,225,0.25)"),
+        thumb: get("thumb","rgba(15,23,42,0.55)"),
+        thumbHover: get("thumbHover","rgba(15,23,42,0.75)")
+      };
+    }
+
+    const raw = (ws.textContent || "").trim();
+    if (!raw || raw[0] !== "{") return null;
+    const cfg = JSON.parse(raw);
+    return (cfg && typeof cfg === "object") ? cfg : null;
+  }catch(e){
+    return null;
   }
-  const cur = (el.dataset.blockUi || '').split(',').map(s => s.trim()).filter(Boolean);
-  document.querySelectorAll('.fvOpt').forEach(c => c.checked = cur.includes(c.value));
 }
 
-document.addEventListener('change', (e) => {
-  if (!e.target.classList.contains('fvOpt')) return;
-  if (!activeElement || activeElement.dataset.type !== 'block') return;
-  setBlockUiFromChecks(activeElement);
+
+function parsePageHeight(xmlText){
+  try{
+    const doc = new DOMParser().parseFromString(xmlText, "application/xml");
+    const n = doc.querySelector("customPage > pageHeight");
+    const v = n ? parseInt((n.textContent||"").trim(),10) : 0;
+    return (v && v>0) ? v : 0;
+  }catch(e){ return 0; }
+}
+function sg_find_canvas_by_data_id(id) {
+  const all = document.querySelectorAll('.canvas-element');
+  for (const el of all) {
+    if (el.dataset && el.dataset.id === id) return el;
+  }
+  return null;
+}
+
+window.sgStartTextEdit = function (id) {
+  const el = sg_find_canvas_by_data_id(id);
+  if (!el) return;
+  selectElement(el);
+  if (el.dataset.type === 'text') enterTextEdit(el);
+};
+
+document.addEventListener('mousedown', (e) => {
+  const el = activeElement;
+  if (!el) return;
+  if (el.dataset.type !== 'text') return;
+  if (el.dataset.editing !== '1') return;
+  if (el.contains(e.target)) return;
+
+  const inUi = e.target.closest('#controls-panel, #layers-panel');
+  if (inUi) return;
+
+  exitTextEdit(el);
+  selectElement(el);
+}, true);
+
+document.addEventListener('keydown', (e) => {
+  const el = activeElement;
+  if (!el) return;
+
+  const focused = document.activeElement;
+  const tag = focused && focused.tagName ? focused.tagName.toUpperCase() : '';
+  if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) return;
+  if (focused && focused.isContentEditable) return;
+
+  const isText = el.dataset.type === 'text';
+  const isEditing = isText && el.dataset.editing === '1';
+
+  if (isEditing) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      exitTextEdit(el);
+      selectElement(el);
+    }
+    return;
+  }
+
+  if (isText && e.key === 'Enter') {
+    e.preventDefault();
+    enterTextEdit(el);
+    return;
+  }
+
+  const step = e.shiftKey ? 10 : 1;
+  let dx = 0, dy = 0;
+
+  if (e.key === 'ArrowLeft') dx = -step;
+  else if (e.key === 'ArrowRight') dx = step;
+  else if (e.key === 'ArrowUp') dy = -step;
+  else if (e.key === 'ArrowDown') dy = step;
+  else return;
+
+  e.preventDefault();
+
+  const curLeft = parseInt(el.style.left || '0', 10) || 0;
+  const curTop = parseInt(el.style.top || '0', 10) || 0;
+
+  el.style.left = (curLeft + dx) + 'px';
+  el.style.top = (curTop + dy) + 'px';
 });
 
-</script>
-<script src="sg_blocks.js?v=2"></script>
-<script src="sg_slider.js?v=1"></script>
-<script src="sg_sidescroll.js?v=1"></script>
+window.sgTextBoxResize = function(dx, dy){
+  const el = activeElement;
+  if (!el || el.dataset.type !== "text") return;
 
-<script src="font.js"></script>
-<script src="sg_footer.js?v=2"></script>
-<script src="sg_images.js"></script>
-<script src="sg_ankieta.js?v=1"></script>
-<script src="sg_button.js?v=1"></script>
-<script src="sg_nav.js"></script>
-<script src="sg_calendar.js?v=1"></script>
-<script src="sg_guides.js?v=1"></script>
+  const r = el.getBoundingClientRect();
+
+  const curW = parseInt(el.style.width || r.width, 10) || Math.round(r.width);
+  const curH = parseInt(el.style.height || r.height, 10) || Math.round(r.height);
+
+  const nextW = Math.max(60, curW + dx);
+  const nextH = Math.max(28, curH + dy);
+
+  el.style.width  = nextW + "px";
+  el.style.height = nextH + "px";
+};
+
+window.sgTextBoxAutoHeight = function(){
+  const el = activeElement;
+  if (!el || el.dataset.type !== "text") return;
+
+  el.style.height = "auto";
+  const h = Math.max(28, el.scrollHeight + 4);
+  el.style.height = h + "px";
+};
+
+window.sgTextBoxFitToFrame = function(){
+  const el = activeElement;
+  if (!el || el.dataset.type !== "text") return;
+
+  const p = el.parentElement;
+  if (!p || !p.classList.contains("type-block")) {
+    alert("Tekst nie jest w ramce (BLOCK). Najpierw zagnieźdź tekst w ramce.");
+    return;
+  }
+
+  const w = Math.max(60, p.clientWidth - 10);
+  const h = Math.max(28, p.clientHeight - 10);
+
+  el.style.width  = w + "px";
+  el.style.height = h + "px";
+};
+
+</script>
+<script>window.SG_MODE = "builder";</script>
+<?php
+$__v = function(string $f){
+  $p = __DIR__ . DIRECTORY_SEPARATOR . $f;
+  return @filemtime($p) ?: time();
+};
+?>
+<script src="sg_blocks.js?v=<?= $__v('sg_blocks.js') ?>"></script>
+<script src="sg_slider.js?v=<?= $__v('sg_slider.js') ?>"></script>
+<script src="sg_sideblock_window.js?v=<?= $__v('sg_sideblock_window.js') ?>"></script>
+<script src="sg_sidescroll_blok.js?v=<?= $__v('sg_sidescroll_blok.js') ?>"></script>
+
+
+<script src="font.js?v=<?= $__v('font.js') ?>"></script>
+<script src="sg_footer.js?v=<?= $__v('sg_footer.js') ?>"></script>
+<script src="sg_images.js?v=<?= $__v('sg_images.js') ?>"></script>
+<script src="sg_ankieta.js?v=<?= $__v('sg_ankieta.js') ?>"></script>
+<script src="sg_button.js?v=<?= $__v('sg_button.js') ?>"></script>
+<script src="sg_nav.js?v=<?= $__v('sg_nav.js') ?>"></script>
+<script src="sg_calendar.js?v=<?= $__v('sg_calendar.js') ?>"></script>
+<script src="sg_guides.js?v=<?= $__v('sg_guides.js') ?>"></script>
 
 </body>
 </html>

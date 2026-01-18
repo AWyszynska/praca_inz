@@ -72,14 +72,29 @@
 
     if (!el.dataset.accentColor) el.dataset.accentColor = "#156fe5";
     if (el.dataset.formInputRadius === undefined) el.dataset.formInputRadius = "10";
-
     if (!el.style.fontSize) el.style.fontSize = "16px";
     if (!el.style.color) el.style.color = "#0f172a";
-    if (!el.style.backgroundColor) el.style.backgroundColor = "#ffffff";
+    const bg = String(el.style.background || "").trim();
+    if (!el.style.backgroundColor && (bg === "" || bg === "none" || bg === "transparent")) {
+      el.style.backgroundColor = "#ffffff";
+    }
+    if (bg === "transparent") {
+      el.style.background = "";
+    }
+
     if (!el.style.border || el.style.border === "none") el.style.border = "1px solid #e2e8f0";
-    if (!el.style.borderRadius) el.style.borderRadius = "14px";
+
+    if (!el.style.borderRadius || String(el.style.borderRadius).trim() === "0px") el.style.borderRadius = "14px";
+
     if (!el.style.boxShadow || el.style.boxShadow === "none") el.style.boxShadow = "0px 10px 24px 0px rgba(0,0,0,0.10)";
 
+    const __isFinal = String(window.SG_MODE || '').toLowerCase() === 'final';
+    if (__isFinal) {
+      if (!el.style.overflow || el.style.overflow === 'visible') el.style.overflow = 'hidden';
+    } else {
+      if (!el.style.overflow) el.style.overflow = 'visible';
+    }
+    
     if (!el.style.width) el.style.width = "320px";
   }
 
@@ -120,6 +135,8 @@
   function updateFormVisuals(el) {
     if (!isForm(el)) return;
     ensureDefaults(el);
+
+    const __isFinal = String(window.SG_MODE || "").toLowerCase() === "final";
 
     const type = el.dataset.formType || "text";
     const label = el.dataset.label || "";
@@ -163,7 +180,6 @@
     if (type === "radio" || type === "checkbox") {
       const inputType = type;
       const opts = (options.length ? options : ["Opcja 1", "Opcja 2"]);
-
       const rowStyle = inline
         ? "display:flex; flex-wrap:wrap; gap:10px;"
         : "display:flex; flex-direction:column; gap:6px;";
@@ -172,7 +188,7 @@
         <div style="${rowStyle} margin-top:2px;">
           ${opts.map((o) => `
             <label style="display:flex; align-items:center; gap:8px; font-size:${fs}px; color:inherit; pointer-events:none;">
-              <input type="${inputType}" disabled style="accent-color:${accent}; width:14px; height:14px; margin:0;" />
+              <input type="${inputType}" disabled style="accent-color:${accent}; width:14px; height:14px; margin:0;border-radius:${Math.min(radius,6)}px;" />
               <span>${escapeHtml(o)}</span>
             </label>
           `).join("\n")}
@@ -246,7 +262,7 @@
     }
 
     el.innerHTML = `
-      <div class="sg-form-inner" style="padding:12px; box-sizing:border-box; width:100%; height:100%; pointer-events:none;">
+      <div class="sg-form-inner" style="padding:12px; box-sizing:border-box; width:100%; height:100%; pointer-events:none; border-radius:inherit; background:transparent; overflow:${__isFinal ? "hidden" : "visible"};" >
         ${header}
         <div style="margin-top:${label || help ? 10 : 0}px; color:inherit;">
           ${field}
@@ -294,6 +310,8 @@
   window.syncFormInputs = function syncFormInputs(el) {
     if (!isForm(el)) return;
     ensureDefaults(el);
+
+    const __isFinal = String(window.SG_MODE || "").toLowerCase() === "final";
 
     const type = el.dataset.formType || "text";
     const fs = parseInt(el.style.fontSize || "16", 10) || 16;
@@ -585,6 +603,8 @@
       tries++;
       hookSelectElement();
       hookGetElementData();
+      document.querySelectorAll('.canvas-element[data-type="form"]').forEach(el => updateFormVisuals(el));
+
       if (window.selectElement?.__sgFormHooked && window.getElementData?.__sgFormHooked) clearInterval(t);
       if (tries >= 80) clearInterval(t);
     }, 100);

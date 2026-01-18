@@ -89,3 +89,14 @@
   </div>
 
 </div>
+<script>
+  document.getElementById('edit-page-sidescroll-btn')?.addEventListener('click', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    window.sgEditPageSideScroll?.();
+  });
+
+  document.getElementById('add-frame-sidescroll-btn')?.addEventListener('click', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    window.sgAddSideScrollToFrame?.();
+  });
+</script>
