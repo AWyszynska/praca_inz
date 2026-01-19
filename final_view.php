@@ -178,7 +178,11 @@ $ws = ($type === 'text') ? 'pre-wrap' : 'normal';
     $defRadius = '16px';
     $defShadow = 'rgba(0, 0, 0, 0.12) 0px 12px 30px 0px';
   }
-
+if ($isFooter) {
+  $defBorder = 'none';
+  $defRadius = '0px';
+  $defShadow = 'none';
+}
   $bg           = sg_xml_val($el, 'bg', $defBg);
   $borderRadius = sg_xml_val($el, 'borderRadius', $defRadius);
   $boxShadow    = sg_xml_val($el, 'boxShadow', $defShadow);
@@ -306,8 +310,9 @@ elseif ($type == 'form') {
 }
 elseif ($type == 'button') {
   $text   = (string)($el->btnText ?? 'Kliknij');
-$action = (string)($el->btnAction ?? 'link');
-$url    = (string)($el->btnUrl ?? 'https://');
+$action = (string)($el->btnAction ?? 'none');
+$url = trim((string)($el->btnUrl ?? ''));
+if ($url === 'https://' || $url === 'http://') $url = '';
 $target = (string)($el->btnTarget ?? '_blank');
 
 
@@ -359,14 +364,26 @@ $target = (string)($el->btnTarget ?? '_blank');
   $inner = $iconPos === 'right'
     ? "<span class='sgbtn__text'>".htmlspecialchars($text)."</span>{$iconHtml}"
     : "{$iconHtml}<span class='sgbtn__text'>".htmlspecialchars($text)."</span>";
+$btnTitle = trim((string)($el->btnTitle ?? ''));
+$btnAria  = trim((string)($el->btnAria ?? ($el->btnAriaLabel ?? '')));
+$btnType  = strtolower(trim((string)($el->btnType ?? ($el->btnHtmlType ?? 'button'))));
+$btnName  = trim((string)($el->btnName ?? ''));
 
-  echo "<button type='button' class='sgbtn sgbtn--".htmlspecialchars($preset, ENT_QUOTES)." sgbtn--".htmlspecialchars($size, ENT_QUOTES)."'"
-    . " data-action='".htmlspecialchars($action, ENT_QUOTES)."'"
-    . " data-url='".htmlspecialchars($url, ENT_QUOTES)."'"
-    . " data-target='".htmlspecialchars($target, ENT_QUOTES)."'"
-    . " data-scroll-target='".htmlspecialchars($scrollTarget, ENT_QUOTES)."'"
-    . " data-scroll-offset='".(int)$scrollOffset."'"
-    . $disabledAttr
+$typeSafe = in_array($btnType, ['button','submit','reset'], true) ? $btnType : 'button';
+
+$titleAttr = ($btnTitle !== '') ? " title='".htmlspecialchars($btnTitle, ENT_QUOTES)."'" : "";
+$ariaAttr  = ($btnAria  !== '') ? " aria-label='".htmlspecialchars($btnAria, ENT_QUOTES)."'" : "";
+$nameAttr  = ($btnName  !== '') ? " name='".htmlspecialchars($btnName, ENT_QUOTES)."'" : "";
+
+
+echo "<button type='".htmlspecialchars($typeSafe, ENT_QUOTES)."' class='sgbtn sgbtn--".htmlspecialchars($preset, ENT_QUOTES)." sgbtn--".htmlspecialchars($size, ENT_QUOTES)."'"
+  . " data-action='".htmlspecialchars($action, ENT_QUOTES)."'"
+  . " data-url='".htmlspecialchars($url, ENT_QUOTES)."'"
+  . " data-target='".htmlspecialchars($target, ENT_QUOTES)."'"
+  . " data-scroll-target='".htmlspecialchars($scrollTarget, ENT_QUOTES)."'"
+  . " data-scroll-offset='".(int)$scrollOffset."'"
+  . $titleAttr . $ariaAttr . $nameAttr
+  . $disabledAttr
     . " style=\""
       . "--sgbtn-bg:".htmlspecialchars($bgStr, ENT_QUOTES).";"
       . "--sgbtn-color:".htmlspecialchars($color, ENT_QUOTES).";"
@@ -391,115 +408,282 @@ elseif ($type == 'nav') {
     echo html_entity_decode($rawContent);
   } else {
 
-    $lines = preg_split("/\r\n|\n|\r/", (string)($el->navItems ?? ''));
-    $items = [];
-    foreach ($lines as $ln) {
-      $ln = trim($ln);
-      if ($ln === '') continue;
-      $parts = explode('|', $ln, 2);
-      $label = trim($parts[0] ?? 'Link');
-      $href  = trim($parts[1] ?? '#');
-      $items[] = ['label'=>$label, 'href'=>$href];
+  $lines = preg_split("/\r\n|\n|\r/", (string)($el->navItems ?? ''));
+  $items = [];
+  foreach ($lines as $ln) {
+    $ln = trim($ln);
+    if ($ln === '') continue;
+    $parts = explode('|', $ln);
+    $label = trim($parts[0] ?? 'Link');
+    $href  = trim($parts[1] ?? '#');
+    $key   = trim($parts[2] ?? '');
+
+    if ($key === '') {
+      $key = $href !== '' ? $href : $label;
     }
-    if (!$items) $items = [['label'=>'Home','href'=>'?page=home']];
 
-    $idSafe = preg_replace('/[^a-zA-Z0-9_-]/', '_', (string)$el['id']);
-    $cls = "sgnav_" . $idSafe;
+    $items[] = ['label'=>$label, 'href'=>$href, 'key'=>$key];
+  }
+  if (!$items) $items = [['label'=>'Home','href'=>'?page=home','key'=>'home']];
 
-    $orientation = (string)($el->navOrientation ?? 'horizontal');
-    $align = (string)($el->navAlign ?? 'left');
-    $gap = (int)($el->navGap ?? 10);
-    $pad = (int)($el->navPad ?? 10);
+  $idSafe = preg_replace('/[^a-zA-Z0-9_-]/', '_', (string)$el['id']);
+  $cls = "sgnav_" . $idSafe;
 
-    $lpX = (int)($el->navLinkPadX ?? 12);
-    $lpY = (int)($el->navLinkPadY ?? 8);
-    $lr  = (int)($el->navLinkRadius ?? 8);
-    $underline = ((string)($el->navUnderline ?? '0') === '1') ? 'underline' : 'none';
+  $orientation = (string)($el->navOrientation ?? 'horizontal'); 
+  $align = (string)($el->navAlign ?? 'left'); 
 
-    $linkColor = (string)($el->navLinkColor ?? '#ffffff');
-    $hoverBg = (string)($el->navHoverBg ?? 'rgba(255,255,255,0.12)');
-    $hoverColor = (string)($el->navHoverColor ?? '#ffffff');
-    $activeBg = (string)($el->navActiveBg ?? 'rgba(255,255,255,0.18)');
-    $activeColor = (string)($el->navActiveColor ?? '#ffffff');
+  $gap = (int)($el->navGap ?? 10);
+  $pad = (int)($el->navPad ?? 10);
 
-    $activeMode = (string)($el->navActiveMode ?? 'query_page');
+  $lpX = (int)($el->navLinkPadX ?? 12);
+  $lpY = (int)($el->navLinkPadY ?? 8);
+  $lr  = (int)($el->navLinkRadius ?? 8);
+  $underline = ((string)($el->navUnderline ?? '0') === '1');
 
-    $flexDir = ($orientation === 'vertical') ? 'column' : 'row';
-    $justify = ($align === 'center') ? 'center' : (($align === 'right') ? 'flex-end' : 'flex-start');
-    $alignItems = ($orientation === 'vertical') ? $justify : 'center';
+  $linkColor  = (string)($el->navLinkColor ?? '#ffffff');
+  $hoverBg    = (string)($el->navHoverBg ?? 'rgba(255,255,255,0.12)');
+  $hoverColor = (string)($el->navHoverColor ?? '#ffffff');
+  $activeBg   = (string)($el->navActiveBg ?? 'rgba(255,255,255,0.18)');
+  $activeColor= (string)($el->navActiveColor ?? '#ffffff');
 
-    echo "<style>
-      .{$cls}{
-        width:100%; height:100%;
-        box-sizing:border-box;
-        padding:{$pad}px;
-        display:flex;
-        flex-direction:{$flexDir};
-        justify-content:{$justify};
-        align-items:{$alignItems};
-        gap:{$gap}px;
-      }
-      .{$cls} a,
-      .{$cls} a:visited{
-        font: inherit;
-        line-height: 1;
-        margin: 0;
-        box-sizing:border-box;
+  $activeMode = (string)($el->navActiveMode ?? 'query_page'); 
+  $layout   = (string)($el->navLayout ?? 'pills');    
+  $hookMode = (string)($el->navHookMode ?? 'none');   
+  $wrap     = ((string)($el->navWrap ?? '0') === '1');
+  $stretch  = ((string)($el->navStretch ?? '0') === '1');
+  $divider  = ((string)($el->navDivider ?? '0') === '1');
 
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        padding:{$lpY}px {$lpX}px;
-        border-radius:{$lr}px;
-        color:".htmlspecialchars($linkColor, ENT_QUOTES).";
-        text-decoration:{$underline};
-        background:transparent;
-        white-space:nowrap;
-        border:1px solid rgba(255,255,255,0.08);
-        box-shadow:0 6px 14px rgba(0,0,0,0.10);
-        transition:background .15s ease, color .15s ease, transform .12s ease;
-      }
-      .{$cls} a:hover{
-        background:".htmlspecialchars($hoverBg, ENT_QUOTES).";
-        color:".htmlspecialchars($hoverColor, ENT_QUOTES).";
-        transform:translateY(-1px);
-      }
-      .{$cls} a.active{
-        background:".htmlspecialchars($activeBg, ENT_QUOTES).";
-        color:".htmlspecialchars($activeColor, ENT_QUOTES).";
-      }
-    </style>";
+  $justifyMode  = (string)($el->navJustify ?? 'start');  
+  $vJustifyMode = (string)($el->navVJustify ?? 'top');   
 
-    echo "<nav class='{$cls}' data-active-mode='".htmlspecialchars($activeMode, ENT_QUOTES)."'>";
-    foreach ($items as $it) {
-      echo "<a href='".htmlspecialchars($it['href'], ENT_QUOTES)."'>".htmlspecialchars($it['label'])."</a>";
+  $linkBorderW = (int)($el->navLinkBorderW ?? 1);
+  $linkBorderColor = (string)($el->navLinkBorderColor ?? 'rgba(255,255,255,0.10)');
+$shadowRaw = strtolower(trim((string)($el->navLinkShadow ?? 'soft')));
+
+if ($shadowRaw === '0' || $shadowRaw === 'false' || $shadowRaw === 'none' || $shadowRaw === 'off') {
+  $linkShadow = 'none';
+} elseif ($shadowRaw === 'strong') {
+  $linkShadow = '0 12px 28px rgba(0,0,0,0.18)';
+} else { 
+  $linkShadow = '0 6px 14px rgba(0,0,0,0.10)';
+}
+
+
+  $navName = trim((string)($el->navName ?? ''));
+  $navHtmlId = trim((string)($el->navHtmlId ?? ''));
+  $navHtmlClass = trim((string)($el->navHtmlClass ?? ''));
+
+  $brandText = trim((string)($el->navBrandText ?? ''));
+  $brandHref = trim((string)($el->navBrandHref ?? '#'));
+
+  $flexDir = ($orientation === 'vertical') ? 'column' : 'row';
+
+  $justifyMap = [
+    'start' => 'flex-start',
+    'center' => 'center',
+    'end' => 'flex-end',
+    'between' => 'space-between',
+    'around' => 'space-around',
+    'evenly' => 'space-evenly',
+  ];
+  $vJustifyMap = [
+    'top' => 'flex-start',
+    'center' => 'center',
+    'bottom' => 'flex-end',
+    'between' => 'space-between',
+  ];
+
+  $justify = ($orientation === 'vertical')
+    ? ($vJustifyMap[$vJustifyMode] ?? 'flex-start')
+    : ($justifyMap[$justifyMode] ?? 'flex-start');
+
+  $alignItems = 'center';
+  if ($orientation === 'vertical') {
+    if ($align === 'center') $alignItems = 'center';
+    else if ($align === 'right') $alignItems = 'flex-end';
+    else $alignItems = 'flex-start';
+  }
+
+  $wrapCss = ($wrap && $orientation !== 'vertical') ? 'wrap' : 'nowrap';
+  $linkFlex = $stretch ? '1 1 0' : '0 0 auto';
+
+  $navIdAttr = $navHtmlId !== '' ? " id='".htmlspecialchars($navHtmlId, ENT_QUOTES)."'" : "";
+  $navNameAttr = $navName !== '' ? " data-nav-name='".htmlspecialchars($navName, ENT_QUOTES)."'" : "";
+  $extraClass = $navHtmlClass !== '' ? " ".htmlspecialchars($navHtmlClass, ENT_QUOTES) : "";
+
+  $dividerRule = '';
+  if ($divider) {
+    if ($orientation === 'vertical') {
+      $dividerRule = ".{$cls} .sgnav__links a + a{ border-top:1px solid rgba(255,255,255,0.10); }";
+    } else {
+      $dividerRule = ".{$cls} .sgnav__links a + a{ border-left:1px solid rgba(255,255,255,0.10); }";
     }
-    echo "</nav>";
+  }
 
-    echo "<script>(function(){
-      try{
-        var nav=document.querySelector('nav.{$cls}'); if(!nav) return;
-        var mode=nav.getAttribute('data-active-mode')||'none';
-        var links=nav.querySelectorAll('a');
-        links.forEach(a=>a.classList.remove('active'));
+  $layoutCss = "";
+  if ($layout === 'underline') {
+    $layoutCss = "
+      .{$cls} .sgnav__links a{ background:transparent; border-color:transparent; box-shadow:none; border-radius:10px; }
+      .{$cls} .sgnav__links a:hover{ background:transparent; }
+      .{$cls} .sgnav__links a.active{ background:transparent; }
+      .{$cls} .sgnav__links a .sgnav__u{ display:block; height:2px; margin-top:6px; border-radius:999px; background:transparent; }
+      .{$cls} .sgnav__links a.active .sgnav__u{ background:".htmlspecialchars($activeColor, ENT_QUOTES)."; opacity:.9; }
+    ";
+  } else if ($layout === 'tabs') {
+    $layoutCss = "
+      .{$cls} .sgnav__links a{ background:transparent; box-shadow:none; border-color:rgba(255,255,255,0.14); }
+      .{$cls} .sgnav__links a.active{ background:".htmlspecialchars($activeBg, ENT_QUOTES)."; }
+    ";
+  } else if ($layout === 'sidebar') {
+    $layoutCss = "
+      .{$cls}{ align-items:stretch; }
+      .{$cls} .sgnav__links{ width:100%; }
+      .{$cls} .sgnav__links a{ width:100%; justify-content:flex-start; }
+    ";
+  }
+
+  echo "<style>
+    .{$cls}{
+      width:100%; height:100%;
+      box-sizing:border-box;
+      padding:{$pad}px;
+      display:flex;
+      flex-direction:{$flexDir};
+      gap:{$gap}px;
+      align-items:".($orientation==='vertical' ? $alignItems : "center").";
+    }
+    .{$cls} .sgnav__brand{
+      display:flex; align-items:center;
+      font-weight:700;
+      text-decoration:none;
+      color:".htmlspecialchars($linkColor, ENT_QUOTES).";
+      padding:{$lpY}px {$lpX}px;
+      border-radius:{$lr}px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.06);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+      white-space:nowrap;
+    }
+    .{$cls} .sgnav__links{
+      display:flex;
+      flex-direction:{$flexDir};
+      flex-wrap:{$wrapCss};
+      justify-content:{$justify};
+      align-items:".($orientation==='vertical' ? $alignItems : "center").";
+      gap:{$gap}px;
+      width:100%;
+      height:100%;
+    }
+
+    .{$cls} .sgnav__links a,
+    .{$cls} .sgnav__links a:visited{
+      font: inherit;
+      line-height: 1;
+      margin: 0;
+      box-sizing:border-box;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      padding:{$lpY}px {$lpX}px;
+      border-radius:{$lr}px;
+
+      color:".htmlspecialchars($linkColor, ENT_QUOTES).";
+      text-decoration:".($underline ? "underline" : "none").";
+      background:transparent;
+
+      white-space:nowrap;
+      border:{$linkBorderW}px solid ".htmlspecialchars($linkBorderColor, ENT_QUOTES).";
+      box-shadow: {$linkShadow};
+      transition:background .15s ease, color .15s ease, transform .12s ease;
+      flex: {$linkFlex};
+    }
+    .{$cls} .sgnav__links a:hover{
+      background:".htmlspecialchars($hoverBg, ENT_QUOTES).";
+      color:".htmlspecialchars($hoverColor, ENT_QUOTES).";
+      transform:translateY(-1px);
+    }
+    .{$cls} .sgnav__links a.active{
+      background:".htmlspecialchars($activeBg, ENT_QUOTES).";
+      color:".htmlspecialchars($activeColor, ENT_QUOTES).";
+    }
+
+    {$dividerRule}
+    {$layoutCss}
+  </style>";
+
+  echo "<nav{$navIdAttr} class='{$cls} sgnav sgnav--".htmlspecialchars($layout, ENT_QUOTES).$extraClass."' data-hook-mode='".htmlspecialchars($hookMode, ENT_QUOTES)."' data-active-mode='".htmlspecialchars($activeMode, ENT_QUOTES)."'{$navNameAttr}>";
+
+  if ($brandText !== '') {
+    echo "<a class='sgnav__brand' href='".htmlspecialchars($brandHref, ENT_QUOTES)."'>".htmlspecialchars($brandText)."</a>";
+  }
+
+  echo "<div class='sgnav__links'>";
+  foreach ($items as $it) {
+    $k = htmlspecialchars($it['key'], ENT_QUOTES);
+    echo "<a href='".htmlspecialchars($it['href'], ENT_QUOTES)."' data-key='{$k}'>"
+      . htmlspecialchars($it['label'])
+      . ($layout === 'underline' ? "<span class='sgnav__u'></span>" : "")
+      . "</a>";
+  }
+  echo "</div></nav>";
+  echo "<script>(function(){
+    try{
+      var nav = document.querySelector('nav.{$cls}');
+      if(!nav) return;
+
+      var hookMode = nav.getAttribute('data-hook-mode') || 'none';
+      var mode = nav.getAttribute('data-active-mode') || 'none';
+      var navName = nav.getAttribute('data-nav-name') || '';
+
+      function clearActive(){
+        nav.querySelectorAll('a').forEach(function(a){ a.classList.remove('active'); });
+      }
+
+      function setActive(){
+        clearActive();
         if(mode==='query_page'){
           var sp=new URLSearchParams(location.search||'');
           var page=sp.get('page')||'';
           if(!page) return;
-          links.forEach(function(a){
-            var m=(a.getAttribute('href')||'').match(/[?&]page=([^&]+)/i);
+          nav.querySelectorAll('a').forEach(function(a){
+            var h=(a.getAttribute('href')||'');
+            var m=h.match(/[?&]page=([^&]+)/i);
             if(m && m[1]===page) a.classList.add('active');
           });
         }else if(mode==='url'){
           var cur=location.pathname+location.search;
-          links.forEach(function(a){
+          nav.querySelectorAll('a').forEach(function(a){
             var h=a.getAttribute('href')||'';
             if(h && (h===cur || cur.indexOf(h)!==-1)) a.classList.add('active');
           });
         }
-      }catch(e){}
-    })();</script>";
-  }
+      }
+
+      setActive();
+
+      nav.addEventListener('click', function(e){
+        var a = e.target.closest('a');
+        if(!a) return;
+
+        if(hookMode === 'event'){
+          e.preventDefault();
+          var detail = {
+            navName: navName,
+            key: a.getAttribute('data-key') || '',
+            href: a.getAttribute('href') || '',
+            label: (a.textContent||'').trim(),
+            el: nav
+          };
+          window.dispatchEvent(new CustomEvent('sg:navigate', { detail: detail }));
+        }
+      }, true);
+
+    }catch(e){}
+  })();</script>";
+}
+
 }
 elseif ($type == 'calendar') {
   $y  = (int)($el->calYear ?? date('Y'));
@@ -921,15 +1105,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const action = btn.dataset.action || 'none';
 
-    if (action === 'link') {
-      const url = (btn.dataset.url || '').trim();
-      const target = (btn.dataset.target || '_self').trim();
-      if (!url) return;
+if (action === 'link') {
+  const url = (btn.dataset.url || '').trim();
+  const target = (btn.dataset.target || '_self').trim();
+  if (!url || url === 'https://' || url === 'http://') return;
 
-      if (target === '_blank') window.open(url, '_blank', 'noopener,noreferrer');
-      else window.location.href = url;
-      return;
-    }
+  if (target === '_blank') window.open(url, '_blank', 'noopener,noreferrer');
+  else window.location.href = url;
+  return;
+}
+
 
     if (action === 'scroll') {
       const target = (btn.dataset.scrollTarget || '').trim();

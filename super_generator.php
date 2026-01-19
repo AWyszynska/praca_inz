@@ -234,27 +234,51 @@ function saveRecursive($items, $xmlNode) {
 
         sg_add_child_compact($el, 'btnName', $item['btnName'] ?? '', '', true);
         sg_add_child_compact($el, 'btnDisabled', $item['btnDisabled'] ?? '0', '0');
+                sg_add_child_compact($el, 'btnHtmlType', $item['btnHtmlType'] ?? 'button', 'button');
+        sg_add_child_compact($el, 'btnAriaLabel', $item['btnAriaLabel'] ?? '', '', true);
+        sg_add_child_compact($el, 'btnTitle', $item['btnTitle'] ?? '', '', true);
+        sg_add_child_compact($el, 'btnLoading', $item['btnLoading'] ?? '0', '0');
         break;
 
-      case 'nav':
-        sg_add_child_compact($el, 'navItems', $item['navItems'] ?? '', '', true);
-        sg_add_child_compact($el, 'navOrientation', $item['navOrientation'] ?? 'horizontal', 'horizontal');
-        sg_add_child_compact($el, 'navAlign', $item['navAlign'] ?? 'left', 'left');
-        sg_add_child_compact($el, 'navGap', $item['navGap'] ?? '10', '10');
-        sg_add_child_compact($el, 'navPad', $item['navPad'] ?? '10', '10');
+case 'nav':
+  sg_add_child_compact($el, 'navItems', $item['navItems'] ?? '', '', true);
 
-        sg_add_child_compact($el, 'navLinkPadX', $item['navLinkPadX'] ?? '12', '12');
-        sg_add_child_compact($el, 'navLinkPadY', $item['navLinkPadY'] ?? '8', '8');
-        sg_add_child_compact($el, 'navLinkRadius', $item['navLinkRadius'] ?? '8', '8');
-        sg_add_child_compact($el, 'navUnderline', $item['navUnderline'] ?? '0', '0');
+  sg_add_child_compact($el, 'navOrientation', $item['navOrientation'] ?? 'horizontal', 'horizontal');
+  sg_add_child_compact($el, 'navAlign', $item['navAlign'] ?? 'left', 'left');
 
-        sg_add_child_compact($el, 'navLinkColor', $item['navLinkColor'] ?? '#ffffff', '#ffffff');
-        sg_add_child_compact($el, 'navHoverBg', $item['navHoverBg'] ?? 'rgba(255,255,255,0.12)', 'rgba(255,255,255,0.12)', true);
-        sg_add_child_compact($el, 'navHoverColor', $item['navHoverColor'] ?? '#ffffff', '#ffffff');
-        sg_add_child_compact($el, 'navActiveBg', $item['navActiveBg'] ?? 'rgba(255,255,255,0.18)', 'rgba(255,255,255,0.18)', true);
-        sg_add_child_compact($el, 'navActiveColor', $item['navActiveColor'] ?? '#ffffff', '#ffffff');
-        sg_add_child_compact($el, 'navActiveMode', $item['navActiveMode'] ?? 'query_page', 'query_page');
-        break;
+  sg_add_child_compact($el, 'navGap', $item['navGap'] ?? '10', '10');
+  sg_add_child_compact($el, 'navPad', $item['navPad'] ?? '10', '10');
+  sg_add_child_compact($el, 'navLinkPadX', $item['navLinkPadX'] ?? '12', '12');
+  sg_add_child_compact($el, 'navLinkPadY', $item['navLinkPadY'] ?? '8', '8');
+  sg_add_child_compact($el, 'navLinkRadius', $item['navLinkRadius'] ?? '8', '8');
+  sg_add_child_compact($el, 'navUnderline', $item['navUnderline'] ?? '0', '0');
+
+  sg_add_child_compact($el, 'navLinkColor', $item['navLinkColor'] ?? '#ffffff', '#ffffff');
+  sg_add_child_compact($el, 'navHoverBg', $item['navHoverBg'] ?? 'rgba(255,255,255,0.12)', 'rgba(255,255,255,0.12)', true);
+  sg_add_child_compact($el, 'navHoverColor', $item['navHoverColor'] ?? '#ffffff', '#ffffff');
+  sg_add_child_compact($el, 'navActiveBg', $item['navActiveBg'] ?? 'rgba(255,255,255,0.18)', 'rgba(255,255,255,0.18)', true);
+  sg_add_child_compact($el, 'navActiveColor', $item['navActiveColor'] ?? '#ffffff', '#ffffff');
+  sg_add_child_compact($el, 'navActiveMode', $item['navActiveMode'] ?? 'query_page', 'query_page');
+  sg_add_child_compact($el, 'navLayout', $item['navLayout'] ?? 'pills', 'pills');
+  sg_add_child_compact($el, 'navHookMode', $item['navHookMode'] ?? 'none', 'none');
+
+  sg_add_child_compact($el, 'navJustify', $item['navJustify'] ?? 'start', 'start');
+  sg_add_child_compact($el, 'navVJustify', $item['navVJustify'] ?? 'top', 'top');
+
+  sg_add_child_compact($el, 'navWrap', $item['navWrap'] ?? '0', '0');
+  sg_add_child_compact($el, 'navStretch', $item['navStretch'] ?? '0', '0');
+  sg_add_child_compact($el, 'navDivider', $item['navDivider'] ?? '0', '0');
+  sg_add_child_compact($el, 'navLinkBorderW', $item['navLinkBorderW'] ?? '1', '1');
+  sg_add_child_compact($el, 'navLinkBorderColor', $item['navLinkBorderColor'] ?? '#ffffff', '#ffffff');
+  sg_add_child_compact($el, 'navLinkShadow', $item['navLinkShadow'] ?? '0', '0');
+  sg_add_child_compact($el, 'navName', $item['navName'] ?? '', '', true);
+  sg_add_child_compact($el, 'navHtmlId', $item['navHtmlId'] ?? '', '', true);
+  sg_add_child_compact($el, 'navHtmlClass', $item['navHtmlClass'] ?? '', '', true);
+  sg_add_child_compact($el, 'navBrandText', $item['navBrandText'] ?? '', '', true);
+  sg_add_child_compact($el, 'navBrandHref', $item['navBrandHref'] ?? '', '', true);
+
+  break;
+
 
       case 'calendar':
         sg_add_child_compact($el, 'calYear', $item['calYear'] ?? '2026', '2026');
@@ -304,10 +328,14 @@ function saveRecursive($items, $xmlNode) {
 
 case 'block':
   sg_add_scroll_block_xml($el, $item['sgScrollBlock'] ?? '');
+  if (($item['isFooter'] ?? '0') === '1') {
+    sg_add_child_compact($el, 'isFooter', '1', '0');
+    sg_add_child_compact($el, 'footerDock', $item['footerDock'] ?? 'bottom', 'bottom');
+    sg_add_child_compact($el, 'footerBottom', $item['footerBottom'] ?? '0', '0');
+    sg_add_child_compact($el, 'footerLeft', $item['footerLeft'] ?? '0', '0');
+  }
 
   break;
-
-
       case 'form':
         sg_add_child_compact($el, 'formType', $item['formType'] ?? 'text', 'text');
         sg_add_child_compact($el, 'label', $item['label'] ?? '', '', true);
@@ -600,6 +628,8 @@ var layersList = document.getElementById('layers-list');
 
 var activeElement = null;
 var activeContainer = canvas;
+window.activeContainer = activeContainer;
+
 var addMode = null;
 var savedRange = null;
 var zCounter = 10;
@@ -607,31 +637,47 @@ var zCounter = 10;
 
 function setAsTarget(id) {
   const el = document.querySelector(`[data-id="${id}"]`);
-  if (!el || el.dataset.type !== 'block') return;
-  selectElement(el);
+  if (!el) return;
 
-  if (activeContainer === el) {
-    resetToCanvas();
-  } else {
-    activeContainer = el;
-    const display = document.getElementById('current-target-display');
-    if (display) display.innerText = "Ramka (" + id.slice(-4) + ")";
+  const t = (el.dataset.type || "");
+  if (t !== "block" && t !== "button") return;
 
-    if (activeElement && activeElement !== el) {
-      if (confirm("Czy przenieść zaznaczony element do tej ramki?")) {
-        nestElement(activeElement.dataset.id, el.dataset.id);
-      }
-    }
+  activeContainer = el;
+  window.activeContainer = activeContainer;
+
+  const display =
+    document.getElementById("current-target") ||
+    document.getElementById("current-target-display");
+
+  if (display) {
+    const label =
+      (t === "button") ? "Guzik" :
+      (el.dataset.isFooter === "1") ? "Stopka" :
+      "Ramka";
+    display.innerText = `${label} (${String(id).slice(-4)})`;
   }
-  refreshLayers();
+
+  if (typeof refreshLayers === "function") refreshLayers();
+}
+function resetToCanvas() {
+  activeContainer = canvas;
+  window.activeContainer = activeContainer;
+
+  const display =
+    document.getElementById("current-target") ||
+    document.getElementById("current-target-display");
+
+  if (display) display.innerText = "Główny ekran";
+
+  if (typeof refreshLayers === "function") refreshLayers();
+}
+function toggleTarget(id){
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (!el) return;
+  if (window.activeContainer === el) resetToCanvas();
+  else setAsTarget(id);
 }
 
-    function resetToCanvas() {
-    activeContainer = canvas;
-    const display = document.getElementById('current-target-display');
-    if(display) display.innerText = "Główny ekran";
-    refreshLayers();
-}
 
     function refreshLayers() {
         layersList.innerHTML = '';
@@ -648,8 +694,22 @@ function setAsTarget(id) {
 
                 const previewColor = el.dataset.type === 'text' ? (el.style.color || '#000000') : (el.style.backgroundColor || '#ffffff');
 
-             const targetBtn = (el.dataset.type === 'block' && el.dataset.isFooter !== "1") ?
-  `<button class="layer-btn-target" onclick="event.stopPropagation(); setAsTarget('${el.dataset.id}')">🎯 OTWÓRZ TĄ WARSTWĘ</button>` : '';
+const isTargetable = (el.dataset.type === "block" || el.dataset.type === "button");
+
+const targetLabel =
+  (el.dataset.type === "button") ? "OTWÓRZ GUZIK" :
+  (el.dataset.isFooter === "1") ? "OTWÓRZ STOPKĘ" :
+  "OTWÓRZ RAMKĘ";
+
+const targetBtn = isTargetable
+  ? `<button class="layer-btn-target"
+        onclick="event.stopPropagation(); ${isTarget ? "resetToCanvas()" : `setAsTarget('${el.dataset.id}')`}">
+        ${isTarget ? "✅ ZAMKNIJ WARSTWĘ" : `🎯 ${targetLabel}`}
+     </button>`
+  : '';
+
+
+
 const domId = (el.dataset.htmlId || '').trim();
 const domClass = (el.dataset.htmlClass || '').trim();
 
@@ -667,7 +727,16 @@ const editBtn = (el.dataset.type === 'text')
   <div class="layer-top-row" style="display:flex; justify-content:space-between; align-items:center;">
     <div style="display:flex; align-items:center;">
       <div class="layer-color-preview" style="background-color: ${previewColor}"></div>
-      <span>${level > 0 ? '↳ ' : ''}${el.dataset.type === 'text' ? '🔤' : '📦'} ${el.dataset.id.slice(-4)}</span>
+      <span>
+  ${level > 0 ? '↳ ' : ''}
+  ${el.dataset.type === 'text' ? '🔤' : (el.dataset.isFooter === "1" ? '🧷' : '📦')}
+  ${
+    el.dataset.isFooter === "1"
+      ? ("Stopka " + ((el.dataset.footerDock || "bottom") === "top" ? "↑" : "↓"))
+      : el.dataset.id.slice(-4)
+  }
+</span>
+
     </div>
 <div class="layer-controls">
   ${editBtn}
@@ -694,41 +763,83 @@ const editBtn = (el.dataset.type === 'text')
         const allElements = document.querySelectorAll('.canvas-element');
         document.getElementById('layers-empty-msg').style.display = allElements.length === 0 ? 'block' : 'none';
     }
+function sg_forceIntoTarget(targetEl) {
+  if (!targetEl || targetEl === canvas) return;
+
+  const created =
+    window.activeElement ||
+    document.querySelector('.canvas-element.active') ||
+    null;
+
+  if (!created || created === targetEl) return;
+
+  if (created.parentElement !== targetEl) {
+    nestElement(created.dataset.id, targetEl.dataset.id);
+  }
+  if (targetEl.dataset && targetEl.dataset.isFooter === "1") {
+    const pad = 8;
+
+    const curX = parseInt(created.style.left || "0", 10) || 0;
+    const curY = parseInt(created.style.top || "0", 10) || 0;
+
+    const maxX = Math.max(pad, targetEl.clientWidth - created.offsetWidth - pad);
+    const maxY = Math.max(pad, targetEl.clientHeight - created.offsetHeight - pad);
+
+    const nextX = Math.min(Math.max(curX, pad), maxX);
+    const nextY = Math.min(Math.max(curY, pad), maxY);
+
+    created.style.left = nextX + "px";
+    created.style.top  = nextY + "px";
+  }
+
+  refreshLayers();
+}
 
 function createElement(x, y, type) {
-if (type === 'button') {
-  if (typeof createButtonElement === "function") {
-    createButtonElement(x, y);
-  } else {
-    alert("Brakuje funkcji createButtonElement() - sprawdź czy sg_button.js się ładuje.");
+  const targetEl = activeContainer;
+
+  if (type === 'button') {
+    if (typeof createButtonElement === "function") {
+      createButtonElement(x, y);
+      sg_forceIntoTarget(targetEl);
+    } else alert("Brakuje createButtonElement()");
+    addMode = null;
+    return;
   }
-  addMode = null;
-  return;
-}
-if (type === 'nav') {
-  if (typeof createNavElement === "function") createNavElement(x, y);
-  else alert("Brakuje createNavElement() - sprawdź czy sg_nav.js się ładuje.");
-  addMode = null;
-  return;
-}
-if (type === 'calendar') {
-  if (typeof createCalendarElement === "function") createCalendarElement(x, y);
-  else alert("Brakuje createCalendarElement() - sprawdź czy sg_calendar.js się ładuje.");
-  addMode = null;
-  return;
-}
+
+  if (type === 'nav') {
+    if (typeof createNavElement === "function") {
+      createNavElement(x, y);
+      sg_forceIntoTarget(targetEl);
+    } else alert("Brakuje createNavElement()");
+    addMode = null;
+    return;
+  }
+
+  if (type === 'calendar') {
+    if (typeof createCalendarElement === "function") {
+      createCalendarElement(x, y);
+      sg_forceIntoTarget(targetEl);
+    } else alert("Brakuje createCalendarElement()");
+    addMode = null;
+    return;
+  }
 
   if (type === 'block') {
     createBlockElement(x, y);
+    sg_forceIntoTarget(targetEl);
     addMode = null;
     return;
   }
 
   if (type === 'slider') {
     createSliderElement(x, y);
+    sg_forceIntoTarget(targetEl);
     addMode = null;
     return;
   }
+
+
 
 
   zCounter++;
@@ -770,19 +881,29 @@ if (type === 'calendar') {
 }
 
 
-    function nestElement(childId, parentId) {
-    const child = document.querySelector(`[data-id="${childId}"]`);
-    const parent = document.querySelector(`[data-id="${parentId}"]`);
-    if (!child || !parent || child === parent) return;
+function nestElement(childId, parentId) {
+  const child = document.querySelector(`[data-id="${childId}"]`);
+  const parent = document.querySelector(`[data-id="${parentId}"]`);
+  if (!child || !parent || child === parent) return;
 
-    const pRect = parent.getBoundingClientRect();
-    const cRect = child.getBoundingClientRect();
+  const parentType = String(parent.dataset.type || "");
+  const isButton = parentType === "button";
+  if (isButton) {
+    const isOpen = (window.activeContainer === parent);
+    const alreadyInside = (child.parentElement === parent);
+    if (!isOpen && !alreadyInside) {
+      return;
+    }
+  }
 
-    child.style.left = (cRect.left - pRect.left) + 'px';
-    child.style.top = (cRect.top - pRect.top) + 'px';
-    
-    parent.appendChild(child);
-    refreshLayers();
+  const pRect = parent.getBoundingClientRect();
+  const cRect = child.getBoundingClientRect();
+
+  child.style.left = (cRect.left - pRect.left) + "px";
+  child.style.top  = (cRect.top  - pRect.top)  + "px";
+
+  parent.appendChild(child);
+  if (typeof refreshLayers === "function") refreshLayers();
 }
 
     function unNestElement(el) {
@@ -797,62 +918,68 @@ if (type === 'calendar') {
 
 
 function selectElement(el) {
-    if (el?.dataset?.locked === "1") return;
+  if (el?.dataset?.locked === "1") return;
 
-    if (activeElement && activeElement !== el && activeElement.dataset.type === 'text' && activeElement.dataset.editing === "1") {
+  if (activeElement && activeElement !== el && activeElement.dataset.type === 'text' && activeElement.dataset.editing === "1") {
     exitTextEdit(activeElement);
-}
-    if(activeElement) activeElement.classList.remove('active');
-    activeElement = el;
-    el.classList.add('active');
-    hiddenTools.style.display = 'block';
-    document.getElementById('delete-element-btn').style.display = 'block';
-    
-    const type = el.dataset.type; 
+  }
 
-    document.getElementById('text-edit-section').style.display = (type === 'text') ? 'block' : 'none';
-    document.getElementById('block-edit-section').style.display = (type === 'block') ? 'block' : 'none';
-    document.getElementById('image-edit-section').style.display = (type === 'image') ? 'block' : 'none';
-    document.getElementById('form-edit-section').style.display = (type === 'form') ? 'block' : 'none';
-    document.getElementById('slider-edit-section').style.display = (type === 'slider') ? 'block' : 'none';
+  if (activeElement) activeElement.classList.remove('active');
 
-document.getElementById('button-edit-section').style.display = (type === 'button') ? 'block' : 'none';
-if (type === 'button' && typeof syncButtonInputs === "function") syncButtonInputs(el);
-document.getElementById('nav-edit-section').style.display = (type === 'nav') ? 'block' : 'none';
-if (type === 'nav' && typeof syncNavInputs === "function") syncNavInputs(el);
-const calSec = document.getElementById('calendar-edit-section');
-if (calSec) calSec.style.display = (type === 'calendar') ? 'block' : 'none';
-if (type === 'calendar' && typeof syncCalendarInputs === "function") syncCalendarInputs(el);
+  activeElement = el;
+  window.activeElement = el;
 
+  el.classList.add('active');
 
-    if (type === 'form') {
-  if (typeof syncFormInputs === "function") syncFormInputs(el);
-} else if (type === 'image') {
-  if (typeof syncImageInputs === "function") syncImageInputs(el);
-} else if (type === 'block') {
+  hiddenTools.style.display = 'block';
+  document.getElementById('delete-element-btn').style.display = 'block';
+
+  const type = el.dataset.type;
+
+  document.getElementById('text-edit-section').style.display = (type === 'text') ? 'block' : 'none';
+  document.getElementById('block-edit-section').style.display = (type === 'block') ? 'block' : 'none';
+  document.getElementById('image-edit-section').style.display = (type === 'image') ? 'block' : 'none';
+  document.getElementById('form-edit-section').style.display = (type === 'form') ? 'block' : 'none';
+  document.getElementById('slider-edit-section').style.display = (type === 'slider') ? 'block' : 'none';
+
+  document.getElementById('button-edit-section').style.display = (type === 'button') ? 'block' : 'none';
+  if (type === 'button' && typeof syncButtonInputs === "function") syncButtonInputs(el);
+
+  document.getElementById('nav-edit-section').style.display = (type === 'nav') ? 'block' : 'none';
+  if (type === 'nav' && typeof syncNavInputs === "function") syncNavInputs(el);
+
+  const calSec = document.getElementById('calendar-edit-section');
+  if (calSec) calSec.style.display = (type === 'calendar') ? 'block' : 'none';
+  if (type === 'calendar' && typeof syncCalendarInputs === "function") syncCalendarInputs(el);
+
+  if (type === 'form') {
+    if (typeof syncFormInputs === "function") syncFormInputs(el);
+  } else if (type === 'image') {
+    if (typeof syncImageInputs === "function") syncImageInputs(el);
+  } else if (type === 'block') {
     if (typeof syncBlockInputs === "function") syncBlockInputs(el);
-    } else if (type === 'text') {
-        document.getElementById('prop-size').value = parseInt(el.style.fontSize) || 20;
-        document.getElementById('prop-color').value = rgbToHex(el.style.color);
-        if (typeof updateTextToolbarState === "function") updateTextToolbarState();
+  } else if (type === 'text') {
+    document.getElementById('prop-size').value = parseInt(el.style.fontSize) || 20;
+    document.getElementById('prop-color').value = rgbToHex(el.style.color);
+    if (typeof updateTextToolbarState === "function") updateTextToolbarState();
+  } else if (type === 'slider') {
+    if (typeof syncSliderInputs === "function") syncSliderInputs(el);
+  }
 
-    }
-     else if (type === 'slider') {
-  if (typeof syncSliderInputs === "function") syncSliderInputs(el);
+  const metaSec = document.getElementById('meta-edit-section');
+  if (metaSec) metaSec.style.display = 'block';
+
+  const idInp = document.getElementById('prop-html-id');
+  const clsInp = document.getElementById('prop-html-class');
+
+  document.dispatchEvent(new CustomEvent('sg:selected', { detail: { el } }));
+
+  if (idInp) idInp.value = el.dataset.htmlId || "";
+  if (clsInp) clsInp.value = el.dataset.htmlClass || "";
+
+  refreshLayers();
 }
 
-    refreshLayers();
-    const metaSec = document.getElementById('meta-edit-section');
-if (metaSec) metaSec.style.display = 'block';
-
-const idInp = document.getElementById('prop-html-id');
-const clsInp = document.getElementById('prop-html-class');
-document.dispatchEvent(new CustomEvent('sg:selected', { detail: { el } }));
-
-if (idInp) idInp.value = el.dataset.htmlId || "";
-if (clsInp) clsInp.value = el.dataset.htmlClass || "";
-
-}
 
     function deselectAll() {
         if (activeElement && activeElement.dataset.type === 'text' && activeElement.dataset.editing === "1") {
@@ -917,10 +1044,12 @@ document.getElementById('add-nav-btn').onclick = (e) => {
 
 
 canvas.onclick = (e) => { 
-    if (addMode === 'form') { 
-        createFormElement(e.clientX, e.clientY); 
-        addMode = null; 
-    } else if (addMode) { 
+    if (addMode === 'form') {
+  const targetEl = activeContainer;
+  createFormElement(e.clientX, e.clientY);
+  sg_forceIntoTarget(targetEl);
+  addMode = null;
+}else if (addMode) { 
         createElement(e.clientX, e.clientY, addMode); 
         addMode = null; 
     } else if (e.target === canvas) { 
@@ -1087,6 +1216,27 @@ imgSaturate: el.dataset.imgSaturate || '100',
     navActiveColor: el.dataset.navActiveColor || "#ffffff",
 
     navActiveMode: el.dataset.navActiveMode || "query_page",
+    navLayout: el.dataset.navLayout || "pills",
+navHookMode: el.dataset.navHookMode || "none",
+
+navJustify: el.dataset.navJustify || "start",
+navVJustify: el.dataset.navVJustify || "top",
+
+navWrap: el.dataset.navWrap || "0",
+navStretch: el.dataset.navStretch || "0",
+navDivider: el.dataset.navDivider || "0",
+
+navLinkBorderW: el.dataset.navLinkBorderW || "1",
+navLinkBorderColor: el.dataset.navLinkBorderColor || "#ffffff",
+navLinkShadow: el.dataset.navLinkShadow || "soft",
+
+navName: el.dataset.navName || "",
+navHtmlId: el.dataset.navHtmlId || "",
+navHtmlClass: el.dataset.navHtmlClass || "",
+
+navBrandText: el.dataset.navBrandText || "",
+navBrandHref: el.dataset.navBrandHref || "#",
+
 calYear: el.dataset.calYear || "2026",
 calMonth: el.dataset.calMonth || "1",
 calWeekStart: el.dataset.calWeekStart || "mon",
@@ -1094,7 +1244,10 @@ calTheme: el.dataset.calTheme || "blue",
 calBgA: el.dataset.calBgA || "",
 calBgB: el.dataset.calBgB || "",
 calAccent: el.dataset.calAccent || "",
-
+btnHtmlType: el.dataset.btnHtmlType || 'button',
+btnAriaLabel: el.dataset.btnAriaLabel || '',
+btnTitle: el.dataset.btnTitle || '',
+btnLoading: el.dataset.btnLoading || '0',
 calRadius: el.dataset.calRadius || "30",
 calOuterPad: el.dataset.calOuterPad || "22",
 calGap: el.dataset.calGap || "10",
@@ -1412,26 +1565,45 @@ document.getElementById('clear-base-btn').onclick = (e) => {
   refreshLayers();
 };
 
-    function changeOrder(id, dir) {
-    const el = document.querySelector(`[data-id="${id}"]`);
-    if (!el) return;
+function changeOrder(id, dir) {
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (!el) return;
 
-    if (dir === 1) { 
-        const siblings = Array.from(el.parentElement.children).filter(s => s !== el && s.classList.contains('type-block'));
-        if (siblings.length > 0) {
-            nestElement(el.dataset.id, siblings[0].dataset.id);
-        } else {
-            el.style.zIndex = (parseInt(el.style.zIndex) || 0) + 1;
-        }
-    } else { 
-        if (el.parentElement !== canvas) {
-            unNestElement(el);
-        } else {
-            el.style.zIndex = Math.max(0, (parseInt(el.style.zIndex) || 0) - 1);
-        }
+  const isContainer = (x) =>
+    x && x !== canvas &&
+    x.classList?.contains("canvas-element") &&
+    (x.dataset.type === "block" || x.dataset.type === "button");
+
+  if (dir === 1) {
+    if (isContainer(activeContainer) && activeContainer !== el) {
+      nestElement(el.dataset.id, activeContainer.dataset.id);
+      refreshLayers();
+      return;
     }
-    refreshLayers();
+    const siblings = Array.from(el.parentElement.children).filter(s =>
+      s !== el &&
+      s.classList.contains("canvas-element") &&
+      (s.dataset.type === "block" || s.dataset.type === "button")
+    );
+
+    if (siblings.length > 0) {
+      nestElement(el.dataset.id, siblings[0].dataset.id);
+    } else {
+      el.style.zIndex = (parseInt(el.style.zIndex) || 0) + 1;
+    }
+  } else {
+    if (el.parentElement !== canvas) {
+      unNestElement(el);
+    } else {
+      el.style.zIndex = Math.max(0, (parseInt(el.style.zIndex) || 0) - 1);
+    }
+  }
+
+  refreshLayers();
 }
+
+
+
 
     function makeDraggable(panelId, handleId) {
         const p = document.getElementById(panelId), h = document.getElementById(handleId);
@@ -1497,12 +1669,18 @@ function setupElementMovement(el, type) {
     if (typeof selectElement === "function") selectElement(el);
 
     if (type === "text" && el.dataset.editing === "1") return;
-    if (type === "block" && e.target !== el) return;
+    if ((type === "block" || type === "button") && e.target !== el) {
+      const child = e.target.closest(".canvas-element");
+      if (child && child !== el) return;
+    }
 
     const startX = e.clientX;
     const startY = e.clientY;
     const startLeft = el.offsetLeft;
     const startTop = el.offsetTop;
+    const startParentFrame = (el.parentElement && el.parentElement.closest)
+      ? el.parentElement.closest(".type-block, .type-button")
+      : null;
 
     let moved = false;
 
@@ -1515,7 +1693,6 @@ function setupElementMovement(el, type) {
 
       el.style.left = (startLeft + dx) + "px";
       el.style.top  = (startTop + dy) + "px";
-
       el.style.pointerEvents = "none";
 
       if (type === "block") window.sg_sidescroll_blok?.(el);
@@ -1529,22 +1706,38 @@ function setupElementMovement(el, type) {
 
       if (moved) {
         const hit = document.elementFromPoint(mu.clientX, mu.clientY);
-        const targetFrame = hit ? hit.closest(".type-block") : null;
-
+        const targetFrame = hit ? hit.closest(".type-block, .type-button") : null;
         if (targetFrame && targetFrame !== el) {
           if (el.parentElement !== targetFrame) {
             nestElement(el.dataset.id, targetFrame.dataset.id);
           }
-        } else if (!targetFrame && el.parentElement !== canvas) {
-          unNestElement(el);
+        } else {
+          if (startParentFrame && startParentFrame !== canvas) {
+            const r = startParentFrame.getBoundingClientRect();
+            const inside =
+              mu.clientX >= r.left && mu.clientX <= r.right &&
+              mu.clientY >= r.top  && mu.clientY <= r.bottom;
+
+            if (inside) {
+              if (el.parentElement !== startParentFrame) {
+                nestElement(el.dataset.id, startParentFrame.dataset.id);
+              }
+            } else {
+              if (el.parentElement !== canvas) unNestElement(el);
+            }
+          } else {
+            if (el.parentElement !== canvas) unNestElement(el);
+          }
         }
       }
+
 
       if (type === "block") window.sg_sidescroll_blok?.(el);
       refreshLayers();
     };
   };
 }
+
 
 
 

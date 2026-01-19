@@ -253,23 +253,52 @@ function findBestSnapY(top, h, targetsY) {
           div.style.pointerEvents = "auto";
 
           hideGuides(parent);
-          if (isMoving) {
-            let target = document.elementFromPoint(mu.clientX, mu.clientY);
-            let parentFrame = target ? target.closest(".type-block") : null;
+if (isMoving) {
+  const canvasEl = window.canvas || document.getElementById("preview-canvas");
 
-            if (parentFrame && parentFrame !== div) {
-              if (div.parentElement !== parentFrame) {
-                if (typeof window.nestElement === "function") {
-                  window.nestElement(div.dataset.id, parentFrame.dataset.id);
-                }
-              }
-            } else {
-              const canvas = window.canvas || document.getElementById("preview-canvas");
-              if (!parentFrame && div.parentElement !== canvas) {
-                if (typeof window.unNestElement === "function") window.unNestElement(div);
-              }
-            }
-          }
+  const isButton = (el) => !!el && el.classList?.contains("type-button") && el.dataset?.type === "button";
+  const isBlock  = (el) => !!el && el.classList?.contains("type-block")  && el.dataset?.type === "block";
+
+  const allowDropIntoButton = (btn) => {
+    if (!isButton(btn)) return true;
+    const isOpen = (typeof window.activeContainer !== "undefined" && window.activeContainer === btn);
+    const alreadyInside = (div.parentElement === btn);
+    return isOpen || alreadyInside;
+  };
+
+  const pickContainer = (hit) => {
+    if (!hit) return null;
+    let c = hit.closest(".type-block, .type-button");
+    if (!c || c === div) return null;
+
+    if (isButton(c) && !allowDropIntoButton(c)) return null;
+    if (!isBlock(c) && !isButton(c)) return null;
+
+    return c;
+  };
+
+  const hit = document.elementFromPoint(mu.clientX, mu.clientY);
+  const dropContainer = pickContainer(hit);
+
+  if (dropContainer) {
+    if (div.parentElement !== dropContainer) {
+      if (typeof window.nestElement === "function") {
+        window.nestElement(div.dataset.id, dropContainer.dataset.id);
+      }
+    }
+  } else {
+    if (div.parentElement && div.parentElement !== canvasEl) {
+      const pr = div.parentElement.getBoundingClientRect();
+      const stillInside =
+        (mu.clientX >= pr.left && mu.clientX <= pr.right && mu.clientY >= pr.top && mu.clientY <= pr.bottom);
+
+      if (!stillInside) {
+        if (typeof window.unNestElement === "function") window.unNestElement(div);
+      }
+    }
+  }
+}
+
 
           document.onmouseup = null;
           if (typeof window.refreshLayers === "function") window.refreshLayers();

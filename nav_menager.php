@@ -1,4 +1,3 @@
-
 <div id="nav-edit-section" style="display:none; margin-top:14px;">
   <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin:12px 0 8px;">
     <h3 style="margin:0; font-size:13px; color:#0f172a;">Panel nawigacyjny</h3>
@@ -12,8 +11,30 @@
     </div>
   </div>
 
-  <label>Pozycje menu (każda linia: Etykieta|href)</label>
+  <label>Pozycje menu</label>
+  <div style="font-size:12px; color:#64748b; margin:-2px 0 8px; line-height:1.35;">
+    Każda linia: <b>Etykieta|href</b> albo <b>Etykieta|href|key</b> (key to identyfikator do łatwego podpinania nawigacji).
+  </div>
   <textarea id="nav-items" rows="6" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; box-sizing:border-box; font-size:13px;"></textarea>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+    <div>
+      <label>Styl</label>
+      <select id="nav-layout">
+        <option value="pills" selected>Pills (domyślny)</option>
+        <option value="tabs">Tabs</option>
+        <option value="underline">Underline</option>
+        <option value="sidebar">Sidebar</option>
+      </select>
+    </div>
+    <div>
+      <label>Zachowanie kliknięcia</label>
+      <select id="nav-hook-mode">
+        <option value="none" selected>Normalne linki</option>
+        <option value="event">Emituj event (do podpięcia własnej nawigacji)</option>
+      </select>
+    </div>
+  </div>
 
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
     <div>
@@ -30,6 +51,51 @@
         <option value="center">Środek</option>
         <option value="right">Prawo</option>
       </select>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+    <div>
+      <label>Rozmieszczenie (poziomy)</label>
+      <select id="nav-justify">
+        <option value="start" selected>Start (lewo)</option>
+        <option value="center">Center</option>
+        <option value="end">End (prawo)</option>
+        <option value="between">Space-between</option>
+        <option value="around">Space-around</option>
+        <option value="evenly">Space-evenly</option>
+      </select>
+    </div>
+    <div>
+      <label>Rozmieszczenie (pionowy)</label>
+      <select id="nav-v-justify">
+        <option value="top" selected>Top</option>
+        <option value="center">Center</option>
+        <option value="bottom">Bottom</option>
+      </select>
+    </div>
+  </div>
+  <div style="font-size:12px; color:#64748b; margin:6px 0 0; line-height:1.35;">
+    <b>Poziomy:</b> steruje rozkładem linków w poziomie (justify-content).<br>
+    <b>Pionowy:</b> steruje rozkładem linków w pionie (justify-content).
+  </div>
+
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:6px;">
+    <div>
+      <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-size:12px; color:#0f172a; margin-top:6px;">
+        <input type="checkbox" id="nav-wrap" style="width:auto;"> zawijaj (wrap)
+      </label>
+    </div>
+    <div>
+      <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-size:12px; color:#0f172a; margin-top:6px;">
+        <input type="checkbox" id="nav-stretch" style="width:auto;"> rozciągnij linki
+      </label>
+    </div>
+    <div>
+      <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-size:12px; color:#0f172a; margin-top:6px;">
+        <input type="checkbox" id="nav-divider" style="width:auto;"> separatory
+      </label>
     </div>
   </div>
 
@@ -149,12 +215,74 @@
         <input type="number" id="nav-link-radius" min="0" max="40" value="8">
       </div>
     </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
+      <div>
+        <label>Border linku (px)</label>
+        <input type="number" id="nav-link-border-w" min="0" max="10" value="1">
+      </div>
+      <div>
+        <label>Border kolor</label>
+        <input type="color" id="nav-link-border-color" value="#ffffff">
+      </div>
+      <div>
+        <label>Cień linków</label>
+        <select id="nav-link-shadow">
+          <option value="none">Brak</option>
+          <option value="soft" selected>Soft</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:10px; padding-top:10px; border-top:1px solid #e2e8f0;">
+    
+
+    <div style="margin:6px 0 10px;">
+      <label>Nazwa / hook (opcjonalnie)</label>
+      <input type="text" id="nav-name" placeholder="np. mainNav">
+      <div style="font-size:12px; color:#64748b; margin-top:4px; line-height:1.35;">
+        Dostępne potem w HTML jako <code>data-nav-name</code> i w evencie <code>sg:navigate</code> (detail.navName).
+      </div>
+    </div>
+    
+    <div style="margin:6px 0 10px;">
+      <label>Nazwa / hook (opcjonalnie)</label>
+      <input type="text" id="nav-name" placeholder="np. mainNav">
+      <div style="font-size:12px; color:#64748b; margin-top:4px; line-height:1.35;">
+        Dostępne potem w HTML jako <code>data-nav-name</code> i w evencie <code>sg:navigate</code> (detail.navName).
+      </div>
+    </div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div>
+        <label>HTML id (opcjonalnie)</label>
+        <input type="text" id="nav-html-id" placeholder="np. mainNav">
+      </div>
+      <div>
+        <label>HTML class (opcjonalnie)</label>
+        <input type="text" id="nav-html-class" placeholder="np. nav nav--main">
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+      <div>
+        <label>Brand tekst (opcjonalnie)</label>
+        <input type="text" id="nav-brand-text" placeholder="np. LOGO">
+      </div>
+      <div>
+        <label>Brand href</label>
+        <input type="text" id="nav-brand-href" value="#">
+      </div>
+    </div>
+    <div style="margin-top:8px; font-size:12px; color:#64748b; line-height:1.35;">
+      Jeśli ustawisz <b>Emituj event</b>, kliknięcie linku wyśle <code>sg:navigate</code> z danymi (key/href/label/navName).
+    </div>
   </div>
 
   <div style="margin-top:10px; font-size:12px; color:#64748b; line-height:1.35;">
     <b>XML (nowe znaczniki – do dopisania w super_generator.php / saveRecursive):</b><br>
-    navItems, navOrientation, navAlign, navGap, navPad,<br>
-    navLinkPadX, navLinkPadY, navLinkRadius, navUnderline,<br>
-    navLinkColor, navHoverBg, navHoverColor, navActiveBg, navActiveColor, navActiveMode
+    navItems, navLayout, navHookMode, navName, navOrientation, navAlign, navJustify, navVJustify, navWrap, navStretch, navDivider, navGap, navPad,<br>
+    navLinkPadX, navLinkPadY, navLinkRadius, navUnderline, navLinkBorderW, navLinkBorderColor, navLinkShadow,<br>
+    navLinkColor, navHoverBg, navHoverColor, navActiveBg, navActiveColor, navActiveMode,<br>
+    navHtmlId, navHtmlClass, navBrandText, navBrandHref
   </div>
 </div>

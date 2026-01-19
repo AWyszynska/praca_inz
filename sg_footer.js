@@ -5,7 +5,11 @@
 
   function applyFooterStyles(el) {
     if (!el) return;
+
     const dock = el.dataset.footerDock || "bottom";
+el.dataset.footerDock = dock;
+if (!el.dataset.footerBottom) el.dataset.footerBottom = "0";
+if (!el.dataset.footerLeft) el.dataset.footerLeft = "0";
     const off = parseInt(el.dataset.footerBottom || "0", 10) || 0;
     const left = parseInt(el.dataset.footerLeft || "0", 10) || 0;
     el.style.position = "fixed";
@@ -17,6 +21,7 @@
     el.style.bottom = "";
     if (dock === "top") el.style.top = off + "px";
     else el.style.bottom = off + "px";
+    
   }
 
   function syncFooterInputs(el) {
@@ -34,12 +39,30 @@
     const sec = document.getElementById("footer-edit-section");
     if (sec) sec.style.display = show ? "block" : "none";
   }
+function syncFooterTargetButtons(el) {
+  const openBtn = document.getElementById("footer-open-as-target");
+  const closeBtn = document.getElementById("footer-close-target");
+  if (!openBtn || !closeBtn) return;
+
+  const isOpen = (typeof window.activeContainer !== "undefined" && window.activeContainer === el);
+  openBtn.disabled = false;
+  closeBtn.disabled = !isOpen;
+
+  openBtn.textContent = isOpen ? "✅ Stopka jest otwarta" : "🎯 Otwórz (dodawaj do stopki)";
+}
 
 function findFooter(dock) {
+  if (dock === "bottom") {
+    return document.querySelector(
+      `.canvas-element[data-is-footer="1"][data-footer-dock="bottom"],
+       .canvas-element[data-is-footer="1"]:not([data-footer-dock])`
+    );
+  }
   return document.querySelector(
     `.canvas-element[data-is-footer="1"][data-footer-dock="${dock}"]`
   );
 }
+
 
 
   function createFooter(dock) {
@@ -116,25 +139,49 @@ function initFooterUI() {
       createFooter("bottom");
     });
   }
-  hookSetAsTarget();
+
   hookSelectElement();
   hookGetElementData();
+  hookTargetChange();
+
   let tries = 0;
   const t = setInterval(() => {
     tries++;
 
-    hookSetAsTarget();
+
     hookSelectElement();
     hookGetElementData();
-    if (
-      window.setAsTarget?.__footerHooked &&
-      window.selectElement?.__footerHooked &&
-      window.getElementData?.__footerHooked
-    ) {
-      clearInterval(t);
-    }
+if (
+  window.selectElement?.__footerHooked &&
+  window.getElementData?.__footerHooked &&
+  window.__footerTargetHooked
+) {
+  clearInterval(t);
+}
+
     if (tries >= 100) clearInterval(t);
   }, 100);
+  const openBtn = document.getElementById("footer-open-as-target");
+if (openBtn && openBtn.dataset.bound !== "1") {
+  openBtn.dataset.bound = "1";
+  openBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const el = window.activeElement;
+    if (el && isFooter(el) && typeof window.setAsTarget === "function") {
+      window.setAsTarget(el.dataset.id);
+    }
+  });
+}
+
+const closeBtn = document.getElementById("footer-close-target");
+if (closeBtn && closeBtn.dataset.bound !== "1") {
+  closeBtn.dataset.bound = "1";
+  closeBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (typeof window.resetToCanvas === "function") window.resetToCanvas();
+  });
+}
+
 }
 
 
@@ -161,23 +208,7 @@ if (document.readyState === "loading") {
       applyFooterStyles(el);
     }
   });
-  function hookSetAsTarget() {
-    if (typeof window.setAsTarget !== "function") return;
-    if (window.setAsTarget.__footerHooked) return;
 
-    const orig = window.setAsTarget;
-    window.setAsTarget = function (id) {
-      const el = document.querySelector(`[data-id="${id}"]`);
-      if (el && el.dataset?.isFooter === "1") {
-        if (typeof window.selectElement === "function") window.selectElement(el);
-        if (typeof window.refreshLayers === "function") window.refreshLayers();
-        return;
-      }
-      return orig(id);
-    };
-
-    window.setAsTarget.__footerHooked = true;
-  }
 
 
 function hookSelectElement() {
@@ -185,16 +216,20 @@ function hookSelectElement() {
   if (window.selectElement.__footerHooked) return;
 
   const origSelect = window.selectElement;
-  window.selectElement = function (el) {
-    origSelect(el);
-    if (isFooter(el)) {
-      showFooterPanel(true);
-      syncFooterInputs(el);
-      applyFooterStyles(el);
-    } else {
-      showFooterPanel(false);
-    }
-  };
+window.selectElement = function (el) {
+  const r = origSelect(el);
+
+  if (isFooter(el)) {
+    showFooterPanel(true);
+    syncFooterInputs(el);
+    applyFooterStyles(el);
+    syncFooterTargetButtons(el);
+  } else {
+    showFooterPanel(false);
+  }
+
+  return r;
+};
 
   window.selectElement.__footerHooked = true;
 }
@@ -218,6 +253,39 @@ function hookGetElementData() {
   };
 
   window.getElementData.__footerHooked = true;
+}
+function hookTargetChange() {
+  if (typeof window.setAsTarget === "function" && !window.setAsTarget.__footerUiHooked) {
+    const orig = window.setAsTarget;
+    window.setAsTarget = function (id) {
+      const r = orig(id);
+
+      const ae = window.activeElement;
+      if (ae && isFooter(ae)) syncFooterTargetButtons(ae);
+      const fb = findFooter("bottom"); if (fb) syncFooterTargetButtons(fb);
+      const ft = findFooter("top");    if (ft) syncFooterTargetButtons(ft);
+
+      return r;
+    };
+    window.setAsTarget.__footerUiHooked = true;
+  }
+  if (typeof window.resetToCanvas === "function" && !window.resetToCanvas.__footerUiHooked) {
+    const origR = window.resetToCanvas;
+    window.resetToCanvas = function () {
+      const r = origR();
+
+      const ae = window.activeElement;
+      if (ae && isFooter(ae)) syncFooterTargetButtons(ae);
+
+      const fb = findFooter("bottom"); if (fb) syncFooterTargetButtons(fb);
+      const ft = findFooter("top");    if (ft) syncFooterTargetButtons(ft);
+
+      return r;
+    };
+    window.resetToCanvas.__footerUiHooked = true;
+  }
+  window.__footerTargetHooked = true;
+
 }
 
   window.applyFooterStyles = applyFooterStyles;

@@ -1,5 +1,10 @@
 
 <div id="footer-edit-section" style="display:none;">
+  <div style="display:flex; gap:8px; margin-bottom:10px;">
+  <button type="button" class="tool-btn" id="footer-open-as-target">🎯 Otwórz (dodawaj do stopki)</button>
+  <button type="button" class="tool-btn" id="footer-close-target">↩ Wróć na ekran</button>
+</div>
+
   <label>Stopka: pozycja (dock)</label>
   <select id="footer-dock">
     <option value="bottom">Dół</option>
