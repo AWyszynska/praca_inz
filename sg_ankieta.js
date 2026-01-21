@@ -79,6 +79,10 @@
     if (el.dataset.formRequired === undefined) el.dataset.formRequired = "0";
     if (el.dataset.formInline === undefined) el.dataset.formInline = "0";
     if (el.dataset.formName === undefined) el.dataset.formName = "";
+if (el.dataset.passMinLen === undefined) el.dataset.passMinLen = "0";
+if (el.dataset.passReveal === undefined) el.dataset.passReveal = "1";
+if (el.dataset.passMeter === undefined) el.dataset.passMeter = "1";
+if (el.dataset.passAutocomplete === undefined) el.dataset.passAutocomplete = "";
 
     if (el.dataset.formRows === undefined) el.dataset.formRows = "3";
     if (el.dataset.formMin === undefined) el.dataset.formMin = "";
@@ -119,20 +123,51 @@
     if (!el.dataset.formPlaceholderColor) el.dataset.formPlaceholderColor = "#94a3b8";
     if (el.dataset.formFocusRing === undefined) el.dataset.formFocusRing = "4";
     if (el.dataset.formFocusOpacity === undefined) el.dataset.formFocusOpacity = "18";
-
+if (el.dataset.formNoBg === undefined) el.dataset.formNoBg = "0";
     if (!el.dataset.accentColor) el.dataset.accentColor = "#156fe5";
     if (!el.style.fontSize) el.style.fontSize = "16px";
     if (!el.style.color) el.style.color = "#0f172a";
 
-    const bg = String(el.style.background || "").trim();
-    if (!el.style.backgroundColor && (bg === "" || bg === "none" || bg === "transparent")) {
-      el.style.backgroundColor = "#ffffff";
-    }
-    if (bg === "transparent") el.style.background = "";
+const noBg = (String(el.dataset.formNoBg || "0") === "1");
 
-    if (!el.style.border || el.style.border === "none") el.style.border = "1px solid #e2e8f0";
-    if (!el.style.borderRadius || String(el.style.borderRadius).trim() === "0px") el.style.borderRadius = "14px";
-    if (!el.style.boxShadow || el.style.boxShadow === "none") el.style.boxShadow = "0px 10px 24px 0px rgba(0,0,0,0.10)";
+if (noBg) {
+  if (el.dataset.formPrevBg === undefined) el.dataset.formPrevBg = "";
+  if (el.dataset.formPrevBorder === undefined) el.dataset.formPrevBorder = "";
+  if (el.dataset.formPrevShadow === undefined) el.dataset.formPrevShadow = "";
+  if (el.dataset.formPrevRadius === undefined) el.dataset.formPrevRadius = "";
+
+  if (!String(el.dataset.formPrevBg).trim()) {
+    const prevBg = String(el.style.backgroundColor || el.style.background || "").trim();
+    if (prevBg) el.dataset.formPrevBg = prevBg;
+  }
+  if (!String(el.dataset.formPrevBorder).trim()) {
+    const prevBorder = String(el.style.border || "").trim();
+    if (prevBorder) el.dataset.formPrevBorder = prevBorder;
+  }
+  if (!String(el.dataset.formPrevShadow).trim()) {
+    const prevShadow = String(el.style.boxShadow || "").trim();
+    if (prevShadow) el.dataset.formPrevShadow = prevShadow;
+  }
+  if (!String(el.dataset.formPrevRadius).trim()) {
+    const prevRadius = String(el.style.borderRadius || "").trim();
+    if (prevRadius) el.dataset.formPrevRadius = prevRadius;
+  }
+  el.style.background = "rgba(0,0,0,0)";
+  el.style.backgroundColor = "rgba(0,0,0,0)";
+  el.style.border = "none";
+  el.style.boxShadow = "none";
+  el.style.borderRadius = "0px";
+} else {
+  const bg = String(el.style.background || "").trim();
+  if (!el.style.backgroundColor && (bg === "" || bg === "none" || bg === "transparent")) {
+    el.style.backgroundColor = "#ffffff";
+  }
+  if (bg === "transparent") el.style.background = "";
+  if (!el.style.border || el.style.border === "none") el.style.border = "1px solid #e2e8f0";
+  if (!el.style.borderRadius || String(el.style.borderRadius).trim() === "0px") el.style.borderRadius = "14px";
+  if (!el.style.boxShadow || el.style.boxShadow === "none") el.style.boxShadow = "0px 10px 24px 0px rgba(0,0,0,0.10)";
+}
+
 
     if (isFinal) {
       if (!el.style.overflow || el.style.overflow === "visible") el.style.overflow = "hidden";
@@ -152,12 +187,15 @@
     show("form-options-container", ["select", "radio", "checkbox"].includes(type));
     show("form-inline-row", ["radio", "checkbox"].includes(type));
 
-    show("form-placeholder-row", ["text", "textarea", "email", "number", "date"].includes(type));
+    show("form-placeholder-row", ["text", "textarea", "email", "number", "date", "password"].includes(type));
+show("form-password-container", type === "password");
+
     show("form-textarea-container", type === "textarea");
     show("form-number-container", type === "number");
 
     show("form-rating-container", type === "rating");
     show("form-likert-container", type === "likert");
+show("form-no-bg-row", ["radio", "checkbox"].includes(type));
 
     show("form-email-presets", type === "email");
   }
@@ -176,6 +214,8 @@
     if (k === "phone") return "📞";
     if (k === "search") return "🔎";
     if (k === "pin") return "📍";
+    if (k === "lock") return "🔒";
+
     return "";
   }
 
@@ -412,6 +452,56 @@
       </div>
     `;
   }
+function passScore(value) {
+  const s = String(value || "");
+  let points = 0;
+  if (s.length >= 8) points++;
+  if (s.length >= 12) points++;
+  if (/[a-z]/.test(s) && /[A-Z]/.test(s)) points++;
+  if (/\d/.test(s)) points++;
+  if (/[^a-zA-Z0-9]/.test(s)) points++;
+
+  const pct = clamp(Math.round((points / 5) * 100), 0, 100);
+
+  let label = "";
+  if (!s) label = "";
+  else if (points <= 1) label = "Słabe";
+  else if (points <= 3) label = "Średnie";
+  else label = "Mocne";
+
+  return { pct, label };
+}
+
+function bindPasswordUi(host) {
+  if (!host) return;
+
+  const btn = host.querySelector(".sg-pass-toggle");
+  const input = host.querySelector("input.sg-pass-input");
+  const bar = host.querySelector(".sg-pass-meter-bar");
+  const text = host.querySelector(".sg-pass-meter-text");
+
+  if (btn && input && btn.dataset.__sgBound !== "1") {
+    btn.dataset.__sgBound = "1";
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const next = input.getAttribute("type") === "password" ? "text" : "password";
+      input.setAttribute("type", next);
+      btn.textContent = next === "password" ? "👁" : "🙈";
+    }, true);
+  }
+
+  if (input && bar && input.dataset.__sgMeterBound !== "1") {
+    input.dataset.__sgMeterBound = "1";
+    const update = () => {
+      const { pct, label } = passScore(input.value);
+      bar.style.width = pct + "%";
+      if (text) text.textContent = label ? `Siła: ${label}` : "";
+    };
+    input.addEventListener("input", update, true);
+    update();
+  }
+}
 
   function updateFormVisuals(el) {
     if (!isForm(el)) return;
@@ -452,6 +542,7 @@
     const placeColor = el.dataset.formPlaceholderColor || "#94a3b8";
     const focusRing = clamp(parseInt(el.dataset.formFocusRing || "4", 10) || 4, 0, 20);
     const focusOpacity = clamp(parseInt(el.dataset.formFocusOpacity || "18", 10) || 18, 0, 60) / 100;
+    
 
     const name = (el.dataset.formName || "").trim() || (type === "email" ? "email" : "");
 
@@ -468,6 +559,63 @@
     `;
 
     let field = "";
+if (type === "password") {
+  const minLen = clamp(parseInt(el.dataset.passMinLen || "0", 10) || 0, 0, 128);
+  const auto = String(el.dataset.passAutocomplete || "").trim();
+  const reveal = el.dataset.passReveal !== "0";
+  const meter = el.dataset.passMeter !== "0";
+
+  const minAttr = isFinal && minLen > 0 ? ` minlength="${minLen}"` : "";
+  const autoAttr = isFinal && auto ? ` autocomplete="${escapeHtml(auto)}"` : "";
+
+  const inputHtml = buildInputHtml({
+    tag: "input",
+    attrs: ` type="password" class="sg-pass-input"${minAttr}${autoAttr}`,
+    placeholder: placeholder || "Wpisz hasło...",
+    fs,
+    inputStyle,
+    radius,
+    bg: inputBg,
+    borderColor: inputBorder,
+    borderStyle: inputBorderStyle,
+    borderW: inputBorderW,
+    shadow: inputShadow,
+    padX,
+    padY,
+    icon,
+    iconSide,
+    iconMode,
+    iconBg,
+    iconColor,
+    required,
+    name: name || "password",
+  });
+
+  const toggleBtn = reveal
+    ? `<button type="button" class="sg-pass-toggle"
+          style="min-width:44px; padding:0 12px; border-radius:${Math.max(8, Math.min(18, radius))}px;
+                 border:1px solid ${escapeHtml(inputBorder)}; background:${escapeHtml(inputBg)};
+                 box-shadow:${shadowCss(inputShadow)}; font-size:${Math.max(14, Math.round(fs * 1.0))}px;
+                 cursor:${isFinal ? "pointer" : "default"}; ${isFinal ? "" : "pointer-events:none;"}">👁</button>`
+    : "";
+
+  const meterBar = meter
+    ? `
+        <div class="sg-pass-meter" style="margin-top:8px; height:8px; width:100%; background:rgba(15,23,42,0.08); border-radius:999px; overflow:hidden;">
+          <div class="sg-pass-meter-bar" style="height:100%; width:0%; background:${escapeHtml(accent)}; border-radius:999px;"></div>
+        </div>
+        <div class="sg-pass-meter-text" style="font-size:11px; color:#64748b; margin-top:4px;"></div>
+      `
+    : "";
+
+  field = `
+    <div class="sg-pass-shell" style="display:flex; gap:8px; align-items:stretch;">
+      <div style="flex:1; min-width:0;">${inputHtml}</div>
+      ${toggleBtn}
+    </div>
+    ${meterBar}
+  `;
+}
 
     if (["text", "email", "number", "date"].includes(type)) {
       const inputType = (type === "text") ? "text" : type;
@@ -681,6 +829,9 @@
         </div>
       </div>
     `;
+if (isFinal && type === "password") {
+  bindPasswordUi(el);
+}
 
     if (!isFinal) {
       el.querySelectorAll("input, select, textarea, label, button").forEach((n) => {
@@ -745,6 +896,10 @@
     if ($("form-min")) $("form-min").value = el.dataset.formMin || "";
     if ($("form-max")) $("form-max").value = el.dataset.formMax || "";
     if ($("form-step")) $("form-step").value = el.dataset.formStep || "";
+if ($("pass-minlen")) $("pass-minlen").value = parseInt(el.dataset.passMinLen || "0", 10) || 0;
+if ($("pass-autocomplete")) $("pass-autocomplete").value = el.dataset.passAutocomplete || "";
+if ($("pass-reveal")) $("pass-reveal").checked = el.dataset.passReveal !== "0";
+if ($("pass-meter")) $("pass-meter").checked = el.dataset.passMeter !== "0";
 
     if ($("rating-min")) $("rating-min").value = parseInt(el.dataset.ratingMin || "1", 10) || 1;
     if ($("rating-max")) $("rating-max").value = parseInt(el.dataset.ratingMax || "5", 10) || 5;
@@ -760,6 +915,7 @@
     if ($("form-font-size")) $("form-font-size").value = fs;
     if ($("form-text-color")) $("form-text-color").value = (typeof rgbToHex === "function") ? rgbToHex(el.style.color) : "#0f172a";
     if ($("form-accent-color")) $("form-accent-color").value = el.dataset.accentColor || "#156fe5";
+if ($("form-no-bg")) $("form-no-bg").checked = el.dataset.formNoBg === "1";
 
     if ($("form-marker-text")) $("form-marker-text").value = el.dataset.formMarkerText || "";
     if ($("form-marker-style")) $("form-marker-style").value = el.dataset.formMarkerStyle || "none";
@@ -824,6 +980,16 @@
         if (!String(el.dataset.formIcon || "").trim()) el.dataset.formIcon = "mail";
         if (!String(el.dataset.formName || "").trim()) el.dataset.formName = "email";
       }
+if (nextType === "password") {
+  const mt = String(el.dataset.formMarkerText || "").trim();
+  const ms = String(el.dataset.formMarkerStyle || "none").trim();
+  if (!mt) el.dataset.formMarkerText = "HASŁO";
+  if (ms === "none") el.dataset.formMarkerStyle = "outline";
+  if (!String(el.dataset.formIcon || "").trim()) el.dataset.formIcon = "lock";
+  if (!String(el.dataset.formName || "").trim()) el.dataset.formName = "password";
+  if (!String(el.dataset.formPlaceholder || "").trim()) el.dataset.formPlaceholder = "Wpisz hasło...";
+  if (!String(el.dataset.passAutocomplete || "").trim()) el.dataset.passAutocomplete = "new-password";
+}
 
       updatePanelVisibility(nextType);
       updateFormVisuals(el);
@@ -857,6 +1023,13 @@
       updateFormVisuals(el);
       refreshLayers?.();
     });
+on("form-no-bg", "change", (e) => {
+  const el = activeForm(); if (!el) return;
+  el.dataset.formNoBg = e.target.checked ? "1" : "0";
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
+
 
     on("form-inline", "change", (e) => {
       const el = activeForm(); if (!el) return;
@@ -1027,6 +1200,33 @@
         refreshLayers?.();
       });
     });
+on("pass-minlen", "input", (e) => {
+  const el = activeForm(); if (!el) return;
+  el.dataset.passMinLen = String(clamp(parseInt(e.target.value || "0", 10) || 0, 0, 128));
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
+
+on("pass-autocomplete", "change", (e) => {
+  const el = activeForm(); if (!el) return;
+  el.dataset.passAutocomplete = String(e.target.value || "");
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
+
+on("pass-reveal", "change", (e) => {
+  const el = activeForm(); if (!el) return;
+  el.dataset.passReveal = e.target.checked ? "1" : "0";
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
+
+on("pass-meter", "change", (e) => {
+  const el = activeForm(); if (!el) return;
+  el.dataset.passMeter = e.target.checked ? "1" : "0";
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
 
     ["rating-min", "rating-max", "rating-step"].forEach((id) => {
       on(id, "input", (e) => {
@@ -1148,6 +1348,8 @@
 
         data.formHelpText = el.dataset.formHelpText || "";
         data.formPlaceholder = el.dataset.formPlaceholder || "";
+        data.formNoBg = el.dataset.formNoBg || "0";
+
         data.formRequired = el.dataset.formRequired || "0";
         data.formInline = el.dataset.formInline || "0";
         data.formName = el.dataset.formName || "";
@@ -1156,6 +1358,10 @@
         data.formMin = el.dataset.formMin || "";
         data.formMax = el.dataset.formMax || "";
         data.formStep = el.dataset.formStep || "";
+data.passMinLen = el.dataset.passMinLen || "0";
+data.passReveal = el.dataset.passReveal || "1";
+data.passMeter = el.dataset.passMeter || "1";
+data.passAutocomplete = el.dataset.passAutocomplete || "";
 
         data.ratingMin = el.dataset.ratingMin || "1";
         data.ratingMax = el.dataset.ratingMax || "5";
@@ -1212,7 +1418,10 @@
       tries++;
       hookSelectElement();
       hookGetElementData();
-      updateAll();
+      
+      if (!isFinal) {
+         updateAll();
+      }
 
       if (window.selectElement?.__sgFormHooked && window.getElementData?.__sgFormHooked) clearInterval(t);
       if (tries >= 80) clearInterval(t);

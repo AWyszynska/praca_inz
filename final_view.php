@@ -300,6 +300,11 @@ if ($type === 'form') {
     " data-form-min='".htmlspecialchars((string)($el->formMin ?? ''), ENT_QUOTES)."'".
     " data-form-max='".htmlspecialchars((string)($el->formMax ?? ''), ENT_QUOTES)."'".
     " data-form-step='".htmlspecialchars((string)($el->formStep ?? ''), ENT_QUOTES)."'".
+        " data-pass-min-len='".htmlspecialchars((string)($el->passMinLen ?? '0'), ENT_QUOTES)."'".
+    " data-pass-reveal='".htmlspecialchars((string)($el->passReveal ?? '1'), ENT_QUOTES)."'".
+    " data-pass-meter='".htmlspecialchars((string)($el->passMeter ?? '1'), ENT_QUOTES)."'".
+    " data-pass-autocomplete='".htmlspecialchars((string)($el->passAutocomplete ?? ''), ENT_QUOTES)."'".
+
     " data-rating-min='".htmlspecialchars((string)($el->ratingMin ?? '1'), ENT_QUOTES)."'".
     " data-rating-max='".htmlspecialchars((string)($el->ratingMax ?? '5'), ENT_QUOTES)."'".
     " data-rating-step='".htmlspecialchars((string)($el->ratingStep ?? '1'), ENT_QUOTES)."'".
@@ -326,7 +331,8 @@ if ($type === 'form') {
 " data-form-input-pad-y='".htmlspecialchars((string)($el->formInputPadY ?? '9'), ENT_QUOTES)."'" .
 " data-form-placeholder-color='".htmlspecialchars((string)($el->formPlaceholderColor ?? '#94a3b8'), ENT_QUOTES)."'" .
 " data-form-focus-ring='".htmlspecialchars((string)($el->formFocusRing ?? '4'), ENT_QUOTES)."'" .
-" data-form-focus-opacity='".htmlspecialchars((string)($el->formFocusOpacity ?? '18'), ENT_QUOTES)."'";
+" data-form-focus-opacity='".htmlspecialchars((string)($el->formFocusOpacity ?? '18'), ENT_QUOTES)."'".
+" data-form-no-bg='".htmlspecialchars((string)($el->formNoBg ?? '0'), ENT_QUOTES)."'";
 
 }
 $scrollAttr = "";
@@ -537,6 +543,32 @@ elseif ($type == 'nav') {
   $linkBorderW = (int)($el->navLinkBorderW ?? 1);
   $linkBorderColor = (string)($el->navLinkBorderColor ?? 'rgba(255,255,255,0.10)');
 $shadowRaw = strtolower(trim((string)($el->navLinkShadow ?? 'soft')));
+$navBgMode  = (string)($el->navBgMode ?? 'solid');
+$navBgSolid = (string)($el->navBgSolid ?? '#111827');
+
+$navGradType   = (string)($el->navGradType ?? 'linear');
+$navGradAngle  = (int)($el->navGradAngle ?? 135);
+$navGradPosX   = (int)($el->navGradPosX ?? 50);
+$navGradPosY   = (int)($el->navGradPosY ?? 50);
+$navGradFrom   = (string)($el->navGradFrom ?? '#0ea5e9');
+$navGradMid    = (string)($el->navGradMid ?? '#a855f7');
+$navGradTo     = (string)($el->navGradTo ?? '#111827');
+$navGradUseMid = ((string)($el->navGradUseMid ?? '0') === '1');
+$navBgCss = $navBgSolid;
+
+if ($navBgMode === 'gradient') {
+  $stops = $navGradUseMid
+    ? "{$navGradFrom}, {$navGradMid}, {$navGradTo}"
+    : "{$navGradFrom}, {$navGradTo}";
+
+  if ($navGradType === 'radial') {
+    $navBgCss = "radial-gradient(circle at {$navGradPosX}% {$navGradPosY}%, {$stops})";
+  } elseif ($navGradType === 'conic') {
+    $navBgCss = "conic-gradient(from {$navGradAngle}deg at {$navGradPosX}% {$navGradPosY}%, {$stops})";
+  } else {
+    $navBgCss = "linear-gradient({$navGradAngle}deg, {$stops})";
+  }
+}
 
 if ($shadowRaw === '0' || $shadowRaw === 'false' || $shadowRaw === 'none' || $shadowRaw === 'off') {
   $linkShadow = 'none';
@@ -1029,6 +1061,20 @@ html, body{
   overflow-x: hidden;
   position: relative; 
 }
+.link{
+  color:#156fe5;
+  text-decoration:underline;
+  cursor:pointer;
+}
+.link:hover{ opacity:.85; }
+.page-element[data-type="text"]{
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  box-sizing: border-box;
+  overflow: auto; 
+}
+
 </style>
 
   <?php
@@ -1221,6 +1267,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.page-element[data-type="brand"]').forEach(el => {
     window.updateBrandVisuals?.(el);
   });
+    document.querySelectorAll('.page-element[data-type="form"]').forEach(el => {
+    window.updateFormVisuals?.(el);   
+  });
+
 });
 
 

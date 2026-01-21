@@ -7,6 +7,7 @@
     <option value="text">Pole tekstowe (Input)</option>
     <option value="textarea">Pole tekstowe (Textarea)</option>
     <option value="email">Email</option>
+    <option value="password">Hasło (Password)</option>
     <option value="number">Liczba</option>
     <option value="date">Data</option>
     <option value="select">Lista rozwijana (Select)</option>
@@ -66,6 +67,7 @@
           <option value="mail">✉️ Mail</option>
           <option value="at">@ At</option>
           <option value="user">👤 User</option>
+          <option value="lock">🔒 Lock</option>
           <option value="phone">📞 Phone</option>
           <option value="search">🔎s Search</option>
           <option value="pin">📍 Pin</option>
@@ -139,6 +141,39 @@
       </div>
     </div>
   </div>
+<div id="form-password-container" style="display:none; margin-top:10px;">
+  <label>HASŁO (password) — opcje</label>
+
+  <div style="display:flex; gap:8px;">
+    <div style="flex:1;">
+      <label style="text-transform:none; font-weight:600; color:#475569;">Min długość</label>
+      <input type="number" id="pass-minlen" value="0" min="0" max="128">
+    </div>
+
+    <div style="flex:1;">
+      <label style="text-transform:none; font-weight:600; color:#475569;">Autocomplete</label>
+      <select id="pass-autocomplete">
+        <option value="">(auto)</option>
+        <option value="new-password">new-password</option>
+        <option value="current-password">current-password</option>
+        <option value="one-time-code">one-time-code</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:8px;">
+    <label style="display:flex; gap:6px; align-items:center; margin:0; text-transform:none; font-weight:600; color:#1e293b;">
+      <input type="checkbox" id="pass-reveal" checked> Przycisk 👁 (pokaż/ukryj)
+    </label>
+    <label style="display:flex; gap:6px; align-items:center; margin:0; text-transform:none; font-weight:600; color:#1e293b;">
+      <input type="checkbox" id="pass-meter" checked> Pasek siły hasła
+    </label>
+  </div>
+
+  <div style="font-size:11px; color:#64748b; margin-top:6px; line-height:1.3;">
+    Tip: 👁 i pasek siły działają tylko w <b>final_view</b> (w edytorze wszystko jest zablokowane).
+  </div>
+</div>
 
   <div id="form-rating-container" style="display:none; margin-top:10px;">
     <label>OCENA (rating)</label>
@@ -206,6 +241,11 @@
 
   <label style="margin-top:10px;">KOLOR AKCENTU (checkbox/radio/rating)</label>
   <input type="color" id="form-accent-color" value="#156fe5">
+<div id="form-no-bg-row" style="display:none; margin-top:10px;">
+  <label style="display:flex; gap:8px; align-items:center; margin:0; text-transform:none; font-weight:700; color:#1e293b;">
+    <input type="checkbox" id="form-no-bg"> Bez tła (przezroczyste)
+  </label>
+</div>
 
   <div style="margin-top:10px; padding:10px; border:1px dashed #e2e8f0; border-radius:12px; background:#f8fafc;">
     <div style="font-size:11px; font-weight:900; color:#334155; letter-spacing:.3px;">INPUT — PRO</div>

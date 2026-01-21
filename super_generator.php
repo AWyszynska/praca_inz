@@ -194,6 +194,8 @@ sg_add_child_compact($el, 'brandCfg', $item['brandCfg'] ?? '', '', true);
     sg_add_child_compact($el, 'boxShadow', $item['boxShadow'] ?? 'none', 'none');
     sg_add_child_compact($el, 'opacity', $item['opacity'] ?? '1', '1');
     sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? 'none', 'none');
+    sg_add_child_compact($el, 'sgLockMove', $item['sgLockMove'] ?? '0', '0');
+
 sg_add_child_compact($el, 'sgToggleTarget',    $item['sgToggleTarget'] ?? '', '', true);
 sg_add_child_compact($el, 'sgToggleTrigger',   $item['sgToggleTrigger'] ?? '', '', true);
 sg_add_child_compact($el, 'sgToggleArrow',     $item['sgToggleArrow'] ?? '', '');
@@ -383,12 +385,40 @@ sg_add_child_compact($el, 'navGradPreset', $item['navGradPreset'] ?? '', '', tru
 
 case 'block':
   sg_add_scroll_block_xml($el, $item['sgScrollBlock'] ?? '');
-  if (($item['isFooter'] ?? '0') === '1') {
-    sg_add_child_compact($el, 'isFooter', '1', '0');
-    sg_add_child_compact($el, 'footerDock', $item['footerDock'] ?? 'bottom', 'bottom');
-    sg_add_child_compact($el, 'footerBottom', $item['footerBottom'] ?? '0', '0');
-    sg_add_child_compact($el, 'footerLeft', $item['footerLeft'] ?? '0', '0');
-  }
+if (($item['isFooter'] ?? '0') === '1') {
+  sg_add_child_compact($el, 'isFooter', '1', '0');
+  sg_add_child_compact($el, 'footerDock', $item['footerDock'] ?? 'bottom', 'bottom');
+  sg_add_child_compact($el, 'footerMode', $item['footerMode'] ?? 'fixed', 'fixed'); 
+  sg_add_child_compact($el, 'footerBottom', $item['footerBottom'] ?? '0', '0');
+  sg_add_child_compact($el, 'footerLeft', $item['footerLeft'] ?? '0', '0');
+  sg_add_child_compact($el, 'footerBgMode', $item['footerBgMode'] ?? 'solid', 'solid');
+  sg_add_child_compact($el, 'footerBgSolid', $item['footerBgSolid'] ?? '#111827', '#111827');
+  sg_add_child_compact($el, 'footerGradFrom', $item['footerGradFrom'] ?? '#111827', '#111827');
+  sg_add_child_compact($el, 'footerGradTo', $item['footerGradTo'] ?? '#0f172a', '#0f172a');
+  sg_add_child_compact($el, 'footerGradAngle', $item['footerGradAngle'] ?? '135', '135');
+
+  sg_add_child_compact($el, 'footerTextColor', $item['footerTextColor'] ?? '#ffffff', '#ffffff');
+  sg_add_child_compact($el, 'footerHeight', $item['footerHeight'] ?? '80', '80');
+  sg_add_child_compact($el, 'footerPad', $item['footerPad'] ?? '16', '16');
+  sg_add_child_compact($el, 'footerRadius', $item['footerRadius'] ?? '0', '0');
+
+  sg_add_child_compact($el, 'footerBorderOn', $item['footerBorderOn'] ?? '0', '0');
+  sg_add_child_compact($el, 'footerBorderW', $item['footerBorderW'] ?? '1', '1');
+  sg_add_child_compact($el, 'footerBorderColor', $item['footerBorderColor'] ?? '#334155', '#334155');
+
+  sg_add_child_compact($el, 'footerShadowOn', $item['footerShadowOn'] ?? 'off', 'off');
+  sg_add_child_compact($el, 'footerShadowX', $item['footerShadowX'] ?? '0', '0');
+  sg_add_child_compact($el, 'footerShadowY', $item['footerShadowY'] ?? '12', '12');
+  sg_add_child_compact($el, 'footerShadowBlur', $item['footerShadowBlur'] ?? '30', '30');
+  sg_add_child_compact($el, 'footerShadowSpread', $item['footerShadowSpread'] ?? '0', '0');
+  sg_add_child_compact($el, 'footerShadowColor', $item['footerShadowColor'] ?? '#000000', '#000000');
+  sg_add_child_compact($el, 'footerShadowAlpha', $item['footerShadowAlpha'] ?? '18', '18');
+
+  sg_add_child_compact($el, 'footerBlur', $item['footerBlur'] ?? '0', '0');
+  sg_add_child_compact($el, 'footerOpacity', $item['footerOpacity'] ?? '100', '100');
+
+}
+
 
   break;
       case 'form':
@@ -408,6 +438,10 @@ case 'block':
         sg_add_child_compact($el, 'formMin', $item['formMin'] ?? '', '', true);
         sg_add_child_compact($el, 'formMax', $item['formMax'] ?? '', '', true);
         sg_add_child_compact($el, 'formStep', $item['formStep'] ?? '', '', true);
+sg_add_child_compact($el, 'passMinLen', $item['passMinLen'] ?? '0', '0');
+sg_add_child_compact($el, 'passReveal', $item['passReveal'] ?? '1', '1');
+sg_add_child_compact($el, 'passMeter', $item['passMeter'] ?? '1', '1');
+sg_add_child_compact($el, 'passAutocomplete', $item['passAutocomplete'] ?? '', '', true);
 
         sg_add_child_compact($el, 'ratingMin', $item['ratingMin'] ?? '1', '1');
         sg_add_child_compact($el, 'ratingMax', $item['ratingMax'] ?? '5', '5');
@@ -441,6 +475,7 @@ sg_add_child_compact($el, 'formInputPadY',        $item['formInputPadY'] ?? '9',
 sg_add_child_compact($el, 'formPlaceholderColor', $item['formPlaceholderColor'] ?? '#94a3b8', '#94a3b8');
 sg_add_child_compact($el, 'formFocusRing',        $item['formFocusRing'] ?? '4', '4');
 sg_add_child_compact($el, 'formFocusOpacity',     $item['formFocusOpacity'] ?? '18', '18');
+sg_add_child_compact($el, 'formNoBg', $item['formNoBg'] ?? '0', '0');
 
         break;
 
@@ -461,11 +496,18 @@ sg_add_child_compact($el, 'formFocusOpacity',     $item['formFocusOpacity'] ?? '
   }
 }
 
-        saveRecursive($elements, $xml);
-    }
-    $xml->asXML($newXmlFile);
-    echo "Plik XML został pomyślnie zaktualizowany!";
-    exit;
+saveRecursive($elements, $xml);
+}
+
+$dom = new DOMDocument('1.0', 'UTF-8');
+$dom->preserveWhiteSpace = false;
+$dom->formatOutput = true;
+$dom->loadXML($xml->asXML());
+$dom->save($newXmlFile);
+
+echo "Plik XML został pomyślnie zaktualizowany!";
+exit;
+
 }
 ?>
 
@@ -564,6 +606,29 @@ sg_add_child_compact($el, 'formFocusOpacity',     $item['formFocusOpacity'] ?? '
   background:#e2e8f0;
   border-color:#94a3b8;
 }
+.layer-btn-lock{
+  border:1px solid #d1d5db;
+  background:#fff;
+  border-radius:8px;
+  padding:6px 8px;
+  cursor:pointer;
+  font-size:13px;
+  line-height:1;
+}
+.layer-btn-lock.on{ background:#e2e8f0; border-color:#94a3b8; }
+.layer-btn-lock.disabled{ opacity:.45; cursor:not-allowed; }
+
+.layer-item.is-move-locked{ opacity:0.85; }
+
+.canvas-element.sg-move-locked{
+  cursor:not-allowed !important;
+}
+.link{
+  color:#156fe5;
+  text-decoration:underline;
+  cursor:pointer;
+}
+.link:hover{ opacity:.85; }
 
 
 </style>
@@ -643,6 +708,35 @@ foreach ($files as $p) {
   </div>
 </div>
 
+<div id="sgPalettePanel" style="margin-top:10px; border-top:1px solid #e5e7eb; padding-top:10px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+    <div style="font-size:12px; color:#334155; font-weight:700;">Paleta kolorów (projekt)</div>
+    <button id="sg-pal-clear" type="button" class="secondary" style="padding:6px 10px; font-size:12px;">
+      Wyczyść
+    </button>
+  </div>
+
+  <div class="sg-pal-row">
+    <input type="color" id="sg-pal-color" value="#156fe5" style="width:58px; padding:0; height:38px;">
+    <input type="text" id="sg-pal-name" placeholder="np. Accent (opcjonalnie)" style="flex:1;">
+  </div>
+
+  <div class="sg-pal-row">
+    <button id="sg-pal-save" type="button" class="btn" style="margin-top:0; background:#0f172a;color:white;">
+      Zapisz kolor
+    </button>
+    <button id="sg-pal-pick" type="button" class="btn" style="margin-top:0; background:#334155;color:white;">
+      Pobierz z ekranu
+    </button>
+  </div>
+
+  <div id="sg-pal-list" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;"></div>
+
+  <div class="sg-pal-help">
+    Tip: kliknij dowolne pole koloru w panelach → potem kliknij próbkę w palecie (wstawi do ostatniego pola).<br>
+    PPM na próbce usuwa pojedynczy kolor.
+  </div>
+</div>
 
 
 
@@ -681,10 +775,14 @@ foreach ($files as $p) {
 </div>
 
             </div>
+
+            <?php include 'button_manager.php'; ?>
             <?php include 'block_manager.php'; ?>
+                        <?php include 'footer_manager.php'; ?>
             <?php include 'image_manager.php'; ?>
             <?php include 'ankieta_manager.php'; ?>
 <?php include 'brand.php'; ?>
+
             <?php include 'slider_manager.php'; ?>
             <?php
 require_once __DIR__ . '/sidescroll_menager_window.php';
@@ -781,8 +879,8 @@ sidescroll_menager_block();
 </div>
 
 
-            <?php include 'footer_manager.php'; ?>
-<?php include 'button_manager.php'; ?>
+      
+
 <?php include 'nav_menager.php'; ?>
 <?php include 'calendar_menager.php'; ?>
 
@@ -848,6 +946,25 @@ function toggleTarget(id){
   if (window.activeContainer === el) resetToCanvas();
   else setAsTarget(id);
 }
+function sgApplyMoveLockStyles(el){
+  if (!el) return;
+  const locked = (el.dataset.sgLockMove === "1");
+  if (locked) {
+    el.classList.add("sg-move-locked");
+  } else {
+    el.classList.remove("sg-move-locked");
+  }
+}
+
+window.sgToggleLockMove = function(id){
+  const el = document.querySelector(`.canvas-element[data-id="${id}"]`);
+  if (!el) return;
+  if (el.dataset.locked === "1") return;
+
+  el.dataset.sgLockMove = (el.dataset.sgLockMove === "1") ? "0" : "1";
+  sgApplyMoveLockStyles(el);
+  refreshLayers();
+};
 
 
     function refreshLayers() {
@@ -860,7 +977,12 @@ function toggleTarget(id){
             elements.forEach(el => {
                 const li = document.createElement('li');
                 const isTarget = activeContainer === el;
-                li.className = 'layer-item' + (activeElement === el ? ' active' : '') + (isTarget ? ' is-target' : '');
+
+                const isMoveLocked = (el.dataset.locked === "1" || el.dataset.sgLockMove === "1");
+li.className = 'layer-item'
+  + (activeElement === el ? ' active' : '')
+  + (isTarget ? ' is-target' : '')
+  + (isMoveLocked ? ' is-move-locked' : '')
                 li.style.marginLeft = (level * 15) + 'px'; 
 
                 const previewColor = el.dataset.type === 'text' ? (el.style.color || '#000000') : (el.style.backgroundColor || '#ffffff');
@@ -893,6 +1015,16 @@ const editBtn = (el.dataset.type === 'text')
   ? `<button class="layer-btn layer-btn-edit" title="Edytuj tekst"
        onclick="event.stopPropagation(); sgStartTextEdit('${el.dataset.id}')">✎</button>`
   : '';
+const baseLocked = (el.dataset.locked === "1");
+const moveLocked = (baseLocked || el.dataset.sgLockMove === "1");
+
+const lockBtn = `
+  <button class="layer-btn-lock ${moveLocked ? 'on' : ''} ${baseLocked ? 'disabled' : ''}"
+    title="${baseLocked ? 'Zablokowane (baza)' : (moveLocked ? 'Odblokuj przesuwanie' : 'Zablokuj przesuwanie')}"
+    onclick="event.stopPropagation(); ${baseLocked ? '' : `sgToggleLockMove('${el.dataset.id}')`}">
+    ${moveLocked ? '🔒' : '🔓'}
+  </button>
+`;
 
                 li.innerHTML = `
   <div class="layer-top-row" style="display:flex; justify-content:space-between; align-items:center;">
@@ -911,9 +1043,11 @@ const editBtn = (el.dataset.type === 'text')
     </div>
 <div class="layer-controls">
   ${editBtn}
+  ${lockBtn}
   <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', 1)">▲</button>
   <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', -1)">▼</button>
 </div>
+
 
 
   </div>
@@ -1026,6 +1160,8 @@ if (type === 'brand') {
   div.className = 'canvas-element type-' + type;
   div.dataset.id = 'el_' + Date.now();
   div.dataset.type = type;
+  div.dataset.sgLockMove = "0";
+
   div.style.zIndex = zCounter;
   div.spellcheck = false;
 
@@ -1097,7 +1233,22 @@ function nestElement(childId, parentId) {
 
 
 function selectElement(el) {
-  if (el?.dataset?.locked === "1") return;
+  const isBaseLocked = (el?.dataset?.locked === "1");
+
+  if (activeElement && activeElement !== el && activeElement.dataset.type === 'text' && activeElement.dataset.editing === "1") {
+    exitTextEdit(activeElement);
+  }
+
+  if (activeElement) activeElement.classList.remove('active');
+
+  activeElement = el;
+  window.activeElement = el;
+
+  el.classList.add('active');
+
+  hiddenTools.style.display = 'block';
+  document.getElementById('delete-element-btn').style.display = isBaseLocked ? 'none' : 'block';
+
 
   if (activeElement && activeElement !== el && activeElement.dataset.type === 'text' && activeElement.dataset.editing === "1") {
     exitTextEdit(activeElement);
@@ -1114,15 +1265,20 @@ function selectElement(el) {
   document.getElementById('delete-element-btn').style.display = 'block';
 
   const type = el.dataset.type;
+  const isFooter = (el.dataset.isFooter === "1");
 
-  document.getElementById('text-edit-section').style.display = (type === 'text') ? 'block' : 'none';
-  document.getElementById('block-edit-section').style.display = (type === 'block') ? 'block' : 'none';
-  document.getElementById('image-edit-section').style.display = (type === 'image') ? 'block' : 'none';
-  document.getElementById('form-edit-section').style.display = (type === 'form') ? 'block' : 'none';
+  document.getElementById('text-edit-section').style.display   = (type === 'text') ? 'block' : 'none';
+  document.getElementById('image-edit-section').style.display  = (type === 'image') ? 'block' : 'none';
+  document.getElementById('form-edit-section').style.display   = (type === 'form') ? 'block' : 'none';
   document.getElementById('slider-edit-section').style.display = (type === 'slider') ? 'block' : 'none';
 
-  document.getElementById('button-edit-section').style.display = (type === 'button') ? 'block' : 'none';
-  if (type === 'button' && typeof syncButtonInputs === "function") syncButtonInputs(el);
+document.getElementById('block-edit-section').style.display  = (type === 'block') ? 'block' : 'none';
+  const footerSec = document.getElementById('footer-edit-section');
+  if (footerSec) footerSec.style.display = (type === 'block' && isFooter) ? 'block' : 'none';
+  if (type === 'block' && isFooter && typeof syncFooterInputs === "function") {
+    syncFooterInputs(el);
+  }
+
 
   document.getElementById('nav-edit-section').style.display = (type === 'nav') ? 'block' : 'none';
   if (type === 'nav' && typeof syncNavInputs === "function") syncNavInputs(el);
@@ -1134,19 +1290,30 @@ function selectElement(el) {
   if (brandSec) brandSec.style.display = (type === 'brand') ? 'block' : 'none';
   if (type === 'brand' && typeof syncBrandInputs === "function") syncBrandInputs(el);
 
-  if (type === 'form') {
+    if (type === 'form') {
     if (typeof syncFormInputs === "function") syncFormInputs(el);
+
   } else if (type === 'image') {
     if (typeof syncImageInputs === "function") syncImageInputs(el);
+
   } else if (type === 'block') {
-    if (typeof syncBlockInputs === "function") syncBlockInputs(el);
+    if (isFooter) {
+  if (typeof syncFooterInputs === "function") syncFooterInputs(el);
+  if (typeof window.applyFooterStyles === "function") window.applyFooterStyles(el);
+  if (typeof syncBlockInputs === "function") syncBlockInputs(el);
+} else {
+  if (typeof syncBlockInputs === "function") syncBlockInputs(el);
+}
+
   } else if (type === 'text') {
     document.getElementById('prop-size').value = parseInt(el.style.fontSize) || 20;
     document.getElementById('prop-color').value = rgbToHex(el.style.color);
     if (typeof updateTextToolbarState === "function") updateTextToolbarState();
+
   } else if (type === 'slider') {
     if (typeof syncSliderInputs === "function") syncSliderInputs(el);
   }
+
 
 
   const metaSec = document.getElementById('meta-edit-section');
@@ -1289,10 +1456,16 @@ canvas.onclick = (e) => {
     } 
 };
 
-    document.getElementById('delete-element-btn').onclick = () => { if(activeElement) { activeElement.remove(); deselectAll(); } };
+document.getElementById('delete-element-btn').onclick = () => {
+  if (!activeElement) return;
+  if (activeElement.dataset.locked === "1") return; 
+  activeElement.remove();
+  deselectAll();
+};
+
 
 function getElementData(el) {
-  if (el?.dataset?.locked === "1") return;
+
 
   const wasActive = el.classList.contains('active');
   if (wasActive) el.classList.remove('active');
@@ -1314,7 +1487,7 @@ if (childData && childData.id && childData.type) children.push(childData);
   if (el.dataset.type === "text") {
   const clone = el.cloneNode(true);
   clone.querySelectorAll('.sgta-arrow').forEach(n => n.remove()); 
-  content = clone.innerHTML.replace(/"/g, "'");
+  content = clone.innerHTML;
 } else if (el.dataset.type === "image") {
     const img = el.querySelector("img");
     content = img ? (img.getAttribute("src") || "") : "";
@@ -1368,6 +1541,8 @@ brandCfg: el.dataset.brandCfg || "",
     opacity: el.style.opacity || cs.opacity || "1",
     backdropFilter: el.style.backdropFilter || cs.backdropFilter || "none",
     formType: el.dataset.formType || "text",
+    formNoBg: el.dataset.formNoBg || "0",
+
     label: el.dataset.label || "",
     options: el.dataset.options || "",
     accentColor: el.dataset.accentColor || "#156fe5",
@@ -1381,6 +1556,10 @@ formRows: el.dataset.formRows || "3",
 formMin: el.dataset.formMin || "",
 formMax: el.dataset.formMax || "",
 formStep: el.dataset.formStep || "",
+passMinLen: el.dataset.passMinLen || "0",
+passReveal: el.dataset.passReveal || "1",
+passMeter: el.dataset.passMeter || "1",
+passAutocomplete: el.dataset.passAutocomplete || "",
 
 ratingMin: el.dataset.ratingMin || "1",
 ratingMax: el.dataset.ratingMax || "5",
@@ -1440,8 +1619,35 @@ sgToggleArrowSide: el.dataset.sgToggleArrowSide || "",
 
     isFooter: el.dataset.isFooter || "0",
 footerDock: el.dataset.footerDock || "bottom",
+footerMode: el.dataset.footerMode || "fixed",
 footerBottom: el.dataset.footerBottom || "0",
 footerLeft: el.dataset.footerLeft || "0",
+footerBgMode: el.dataset.footerBgMode || "solid",
+footerBgSolid: el.dataset.footerBgSolid || "#111827",
+footerGradFrom: el.dataset.footerGradFrom || "#111827",
+footerGradTo: el.dataset.footerGradTo || "#0f172a",
+footerGradAngle: el.dataset.footerGradAngle || "135",
+
+footerTextColor: el.dataset.footerTextColor || "#ffffff",
+footerHeight: el.dataset.footerHeight || "80",
+footerPad: el.dataset.footerPad || "16",
+footerRadius: el.dataset.footerRadius || "0",
+
+footerBorderOn: el.dataset.footerBorderOn || "0",
+footerBorderW: el.dataset.footerBorderW || "1",
+footerBorderColor: el.dataset.footerBorderColor || "#334155",
+
+footerShadowOn: el.dataset.footerShadowOn || "off",
+footerShadowX: el.dataset.footerShadowX || "0",
+footerShadowY: el.dataset.footerShadowY || "12",
+footerShadowBlur: el.dataset.footerShadowBlur || "30",
+footerShadowSpread: el.dataset.footerShadowSpread || "0",
+footerShadowColor: el.dataset.footerShadowColor || "#000000",
+footerShadowAlpha: el.dataset.footerShadowAlpha || "18",
+
+footerBlur: el.dataset.footerBlur || "0",
+footerOpacity: el.dataset.footerOpacity || "100",
+
 imgFit: el.dataset.imgFit || 'cover',
 imgPosX: el.dataset.imgPosX || '50',
 imgPosY: el.dataset.imgPosY || '50',
@@ -1609,7 +1815,7 @@ function clearBaseFromCanvas(){
 function markLocked(el){
   el.dataset.locked = "1";
   el.dataset.origin = "base";
-  el.style.pointerEvents = "none";
+  el.style.pointerEvents = "auto";
 
   el.style.userSelect = "none";
   el.style.filter = "grayscale(0.05)";  
@@ -1741,6 +1947,8 @@ function spawnItem(item, origin){
   el.style.background = item.bg;
   Object.entries(item.dataset || {}).forEach(([k,v]) => el.dataset[k] = String(v));
   applySavedMeta(el);
+  sgApplyMoveLockStyles(el);
+
   if (item.type === "text") {
     el.contentEditable = "false";
     el.dataset.editing = "0";
@@ -1986,11 +2194,17 @@ function exitTextEdit(el) {
 
 
 function setupElementMovement(el, type) {
+  if (el.dataset.sgLockMove == null) el.dataset.sgLockMove = "0";
+
   el.onmousedown = (e) => {
     e.stopPropagation();
     if (el?.dataset?.locked === "1") return;
 
     if (typeof selectElement === "function") selectElement(el);
+if (el.dataset.sgLockMove === "1") {
+  sgApplyMoveLockStyles(el);
+  return;
+}
 
     if (type === "text" && el.dataset.editing === "1") return;
     if ((type === "block" || type === "button") && e.target !== el) {
@@ -2065,7 +2279,9 @@ function setupElementMovement(el, type) {
 
 
 
-const currentFile = <?= json_encode($selected) ?>;
+var currentFile = <?= json_encode($selected) ?>;
+window.sgCurrentFile = currentFile;
+
 window.addEventListener('load', () => loadWithBase(currentFile));
 let SG_PAGE_H = 2000;
 
@@ -2214,6 +2430,7 @@ document.addEventListener('mousedown', (e) => {
 document.addEventListener('keydown', (e) => {
   const el = activeElement;
   if (!el) return;
+if (el.dataset.locked === "1" || el.dataset.sgLockMove === "1") return;
 
   const focused = document.activeElement;
   const tag = focused && focused.tagName ? focused.tagName.toUpperCase() : '';
@@ -2308,22 +2525,27 @@ $__v = function(string $f){
 ?>
 <script src="sg_blocks.js?v=<?= $__v('sg_blocks.js') ?>"></script>
 <script src="sg_slider.js?v=<?= $__v('sg_slider.js') ?>"></script>
+<script src="sg_footer.js?v=<?= $__v('sg_footer.js') ?>"></script>
 <script src="sg_sideblock_window.js?v=<?= $__v('sg_sideblock_window.js') ?>"></script>
 <script src="sg_sidescroll_blok.js?v=<?= $__v('sg_sidescroll_blok.js') ?>"></script>
 
 
 <script src="font.js?v=<?= $__v('font.js') ?>"></script>
-<script src="sg_footer.js?v=<?= $__v('sg_footer.js') ?>"></script>
+
 <script src="sg_images.js?v=<?= $__v('sg_images.js') ?>"></script>
 <script src="sg_ankieta.js?v=<?= $__v('sg_ankieta.js') ?>"></script>
 <script src="sg_button.js?v=<?= $__v('sg_button.js') ?>"></script>
 <script src="sg_nav.js?v=<?= $__v('sg_nav.js') ?>"></script>
 <script src="sg_calendar.js?v=<?= $__v('sg_calendar.js') ?>"></script>
-<script src="sg_connect.js?v=<?= @filemtime(__DIR__ . '/sg_connect.js') ?: time() ?>"></script>
+
+
 <script src="sg_toggle.js?v=<?= $__v('sg_toggle.js') ?>"></script>
+<script src="sg_copy_paste.js?v=<?= @filemtime(__DIR__ . '/sg_copy_paste.js') ?: time() ?>"></script>
+
 <script src="sg_guides.js?v=<?= $__v('sg_guides.js') ?>"></script>
 <script src="sg_project_bg.js?v=<?= $__v('sg_project_bg.js') ?>"></script>
 <script src="sg_brand.js?v=<?= $__v('sg_brand.js') ?>"></script>
+<script src="sg_palette.js?v=<?= $__v('sg_palette.js') ?>"></script>
 
 
 </body>

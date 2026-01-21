@@ -1,2 +1,237 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<customPage><generatedAt>2026-01-21 00:58:06</generatedAt><pageHeight>2000</pageHeight><windowScroll><enabled>1</enabled><firefoxThin>0</firefoxThin><width>12</width><radius>10</radius><track>rgba(203,213,225,0.25)</track><thumb>rgba(15,23,42,0.55)</thumb><thumbHover>rgba(15,23,42,0.75)</thumbHover></windowScroll><projectBackground><mode>solid</mode><solid>#eef5ff</solid><gradType>linear</gradType><gradAngle>180</gradAngle><gradFrom>#3e6375</gradFrom><gradMid>#3b3c87</gradMid><gradTo>#4970c5</gradTo><gradUseMid>0</gradUseMid><gradPosX>50</gradPosX><gradPosY>50</gradPosY><gradPreset/></projectBackground><element id="brand_1768944627537" type="brand"><brandCfg>{"mode":"builder","heightPx":155,"autoWidth":"1","widthPx":280,"fontFamily":"Merriweather, Georgia, 'Times New Roman', serif","anchor":"end","textX":560,"textY":102,"gradOn":"0","gradFrom":"#7c3aed","gradTo":"#06b6d4","gradAngle":0,"gradAffectsStroke":"0","strokeOn":"0","strokeW":1,"strokeColor":"#0f172a","strokeMatchFill":"1","shadowOn":"0","shadowBlur":8,"shadowX":0,"shadowY":4,"shadowColor":"rgba(0,0,0,0.25)","lineOn":"1","lineX1":100,"lineX2":560,"lineY":118,"lineW":1.5,"lineColor":"#06b6d4","lineUseTextPaint":"1","lineDash":"0","dotOn":"1","dotR":4.2,"dotX":560,"dotY":118,"dotColor":"#06b6d4","dotUseTextPaint":"1","bgOn":"0","bgColor":"rgba(255,255,255,0)","bgRadius":0,"bgPad":"0px","seg":[{"text":"Vet","size":70,"weight":700,"italic":"1","underline":"0","fill":"#5c99e6","ownFillOnGradient":"0","letter":0.2,"dx":2},{"text":"Mell","size":72,"weight":500,"italic":"0","underline":"0","fill":"#5c99e6","ownFillOnGradient":"0","letter":0,"dx":2},{"text":"","size":42,"weight":900,"italic":"0","underline":"0","fill":"#0f172a","ownFillOnGradient":"0","letter":0,"dx":6,"enabled":"0"}],"rawSvg":""}</brandCfg><x>301</x><y>46</y><w>698px</w><h>155px</h><zIndex>12</zIndex></element><element id="blk_1768945526302" type="block"><x>530</x><y>244</y><w>400px</w><h>409px</h><bg>rgb(255, 255, 255)</bg><border>1px solid rgb(255, 255, 255)</border><zIndex>14</zIndex><borderRadius>16px</borderRadius><boxShadow>rgba(0, 0, 0, 0.18) 0px 12px 30px 0px</boxShadow><opacity>0.92</opacity><backdropFilter>blur(12px)</backdropFilter><children><element id="el_1768950822627" type="text"><x>135</x><y>17</y><w>128px</w><h>34px</h><bg>rgba(0, 0, 0, 0)</bg><zIndex>11</zIndex><content>Logowanie</content><fontSize>23px</fontSize><fontWeight>700</fontWeight><textAlign>center</textAlign><lineHeight>normal</lineHeight></element><element id="el_1768950891603" type="text"><x>108</x><y>50</y><w>184px</w><h>30px</h><bg>rgba(0, 0, 0, 0)</bg><zIndex>12</zIndex><content>Witaj ponownie</content><color>rgb(73, 70, 70)</color><fontSize>15px</fontSize><fontFamily>Georgia, serif</fontFamily><fontStyle>italic</fontStyle><textAlign>center</textAlign><lineHeight>normal</lineHeight></element></children></element><element id="form_1768953345023_8641" type="form"><x>102</x><y>578</y><w>320px</w><h>39.6px</h><bg>rgb(255, 255, 255)</bg><border>1px solid rgb(226, 232, 240)</border><zIndex>11</zIndex><borderRadius>14px</borderRadius><boxShadow>rgba(0, 0, 0, 0.1) 0px 10px 24px 0px</boxShadow><accentColor>#586f8d</accentColor><formInputRadius>17</formInputRadius></element></customPage>
+<customPage>
+  <generatedAt>2026-01-21 22:49:30</generatedAt>
+  <pageHeight>800</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>solid</mode>
+    <solid>#eef5ff</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#3e6375</gradFrom>
+    <gradMid>#3b3c87</gradMid>
+    <gradTo>#4970c5</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <element id="brand_1768944627537" type="brand">
+    <brandCfg>{"mode":"builder","heightPx":155,"autoWidth":"1","widthPx":280,"fontFamily":"Merriweather, Georgia, 'Times New Roman', serif","anchor":"end","textX":560,"textY":102,"gradOn":"0","gradFrom":"#7c3aed","gradTo":"#06b6d4","gradAngle":0,"gradAffectsStroke":"0","strokeOn":"0","strokeW":1,"strokeColor":"#0f172a","strokeMatchFill":"1","shadowOn":"0","shadowBlur":8,"shadowX":0,"shadowY":4,"shadowColor":"rgba(0,0,0,0.25)","lineOn":"1","lineX1":100,"lineX2":560,"lineY":118,"lineW":1.5,"lineColor":"#06b6d4","lineUseTextPaint":"1","lineDash":"0","dotOn":"1","dotR":4.2,"dotX":560,"dotY":118,"dotColor":"#06b6d4","dotUseTextPaint":"1","bgOn":"0","bgColor":"rgba(255,255,255,0)","bgRadius":0,"bgPad":"0px","seg":[{"text":"Vet","size":70,"weight":700,"italic":"1","underline":"0","fill":"#5c99e6","ownFillOnGradient":"0","letter":0.2,"dx":2},{"text":"Mell","size":72,"weight":500,"italic":"0","underline":"0","fill":"#5c99e6","ownFillOnGradient":"0","letter":0,"dx":2},{"text":"","size":42,"weight":900,"italic":"0","underline":"0","fill":"#0f172a","ownFillOnGradient":"0","letter":0,"dx":6,"enabled":"0"}],"rawSvg":""}</brandCfg>
+    <x>316</x>
+    <y>28</y>
+    <w>698px</w>
+    <h>155px</h>
+    <zIndex>12</zIndex>
+  </element>
+  <element id="blk_1768945526302" type="block">
+    <x>530</x>
+    <y>183</y>
+    <w>400px</w>
+    <h>409px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(255, 255, 255)</border>
+    <zIndex>14</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.18) 0px 12px 30px 0px</boxShadow>
+    <opacity>0.92</opacity>
+    <backdropFilter>blur(12px)</backdropFilter>
+    <children>
+      <element id="el_1768950822627" type="text">
+        <x>135</x>
+        <y>17</y>
+        <w>128px</w>
+        <h>34px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <zIndex>11</zIndex>
+        <content>Logowanie</content>
+        <fontSize>23px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1768950891603" type="text">
+        <x>108</x>
+        <y>50</y>
+        <w>184px</w>
+        <h>30px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <zIndex>12</zIndex>
+        <content>Witaj ponownie</content>
+        <color>rgb(73, 70, 70)</color>
+        <fontSize>15px</fontSize>
+        <fontFamily>Georgia, serif</fontFamily>
+        <fontStyle>italic</fontStyle>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1768999777529_1488" type="form">
+        <x>41</x>
+        <y>112</y>
+        <w>319px</w>
+        <h>38.8px</h>
+        <bg>rgb(255, 255, 255)</bg>
+        <border>1px solid rgb(226, 232, 240)</border>
+        <zIndex>11</zIndex>
+        <borderRadius>14px</borderRadius>
+        <boxShadow>rgba(0, 0, 0, 0.1) 0px 10px 24px 0px</boxShadow>
+        <formType>email</formType>
+        <accentColor>#4d5975</accentColor>
+        <formPlaceholder>Wpisz email...</formPlaceholder>
+        <formName>email</formName>
+        <formInputRadius>12</formInputRadius>
+        <formMarkerText>EMAIL</formMarkerText>
+        <formIcon>at</formIcon>
+        <formIconMode>bubble</formIconMode>
+        <formIconBg>#eff6ff</formIconBg>
+        <formIconColor>#1d4ed8</formIconColor>
+        <formInputStyle>underline</formInputStyle>
+        <formInputBg>#faf7fd</formInputBg>
+        <formInputBorder>#e2e8f0</formInputBorder>
+        <formInputBorderStyle>dotted</formInputBorderStyle>
+        <formInputShadow>strong</formInputShadow>
+        <formInputPadX>5</formInputPadX>
+        <formPlaceholderColor>#496a97</formPlaceholderColor>
+        <formFocusRing>3</formFocusRing>
+      </element>
+      <element id="el_1769000039592" type="text">
+        <x>25</x>
+        <y>84</y>
+        <w>83px</w>
+        <h>20px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <zIndex>12</zIndex>
+        <content>Adres email</content>
+        <color>rgb(83, 70, 82)</color>
+        <fontSize>15px</fontSize>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1769019483654_256" type="form">
+        <x>41</x>
+        <y>204</y>
+        <w>320px</w>
+        <h>38.8px</h>
+        <bg>rgb(255, 255, 255)</bg>
+        <border>1px solid rgb(226, 232, 240)</border>
+        <zIndex>12</zIndex>
+        <borderRadius>14px</borderRadius>
+        <boxShadow>rgba(0, 0, 0, 0.1) 0px 10px 24px 0px</boxShadow>
+        <formType>password</formType>
+        <accentColor>#8893a0</accentColor>
+        <formPlaceholder>Wpisz hasło...</formPlaceholder>
+        <formName>password</formName>
+        <passMeter>0</passMeter>
+        <passAutocomplete>new-password</passAutocomplete>
+        <formMarkerText>HASŁO</formMarkerText>
+        <formIcon>lock</formIcon>
+        <formIconMode>bubble</formIconMode>
+        <formIconBg>#f0f6ff</formIconBg>
+        <formInputStyle>underline</formInputStyle>
+        <formInputBg>#f9f7fd</formInputBg>
+        <formPlaceholderColor>#5a78a1</formPlaceholderColor>
+      </element>
+      <element id="el_1769019799718" type="text">
+        <x>25</x>
+        <y>172</y>
+        <w>63px</w>
+        <h>32px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <zIndex>12</zIndex>
+        <content>&lt;span style="color: rgb(95, 84, 96);"&gt;Hasło&lt;/span&gt;</content>
+        <color>rgb(95, 84, 96)</color>
+        <fontSize>15px</fontSize>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1769022324800" type="text">
+        <x>241</x>
+        <y>256</y>
+        <w>200px</w>
+        <h>27px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <zIndex>11</zIndex>
+        <content>&lt;a href="https://1" target="_self" class="link"&gt;Nie pamiętasz hasła ?&lt;/a&gt;</content>
+        <fontSize>14px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1769022724415_1533" type="form">
+        <x>33</x>
+        <y>259</y>
+        <w>150px</w>
+        <h>21.6px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <zIndex>12</zIndex>
+        <formType>radio</formType>
+        <options>Zapamiętaj mnie</options>
+        <formNoBg>1</formNoBg>
+      </element>
+    </children>
+  </element>
+  <element id="img_1769019879661_1040" type="image">
+    <x>1239</x>
+    <y>28</y>
+    <w>216px</w>
+    <h>216px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <zIndex>13</zIndex>
+    <content>uploads/img_20260121_192439_6eec2b66.png</content>
+  </element>
+  <element id="el_1769019984261" type="button">
+    <htmlId>sgbtn_el_1769019984261</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>576</x>
+    <y>480</y>
+    <w>309px</w>
+    <h>35px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <zIndex>14</zIndex>
+    <btnText>Zaloguj się </btnText>
+    <btnAction>none</btnAction>
+    <btnSize>sm</btnSize>
+    <btnBorderW>0</btnBorderW>
+    <btnWeight>600</btnWeight>
+    <btnUpper>1</btnUpper>
+    <btnBg>#526c8e</btnBg>
+    <btnGradient>1</btnGradient>
+    <btnGradFrom>#d4e3f7</btnGradFrom>
+    <btnGradTo>#67c4fe</btnGradTo>
+  </element>
+  <element id="footer_1769031947027" type="block">
+    <x>11</x>
+    <y>713</y>
+    <w>calc(100% + 0px)</w>
+    <h>125px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <zIndex>12</zIndex>
+    <isFooter>1</isFooter>
+    <footerMode>page</footerMode>
+    <footerBgSolid>#ffffff</footerBgSolid>
+    <footerHeight>125</footerHeight>
+    <children>
+      <element id="el_1769032000258" type="text">
+        <x>1156</x>
+        <y>0</y>
+        <w>288px</w>
+        <h>100px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <zIndex>12</zIndex>
+        <content>&lt;div class="footer-title" style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(107, 114, 128); margin-bottom: 6px; font-family: system-ui, -apple-system, &amp;quot;Segoe UI&amp;quot;, Roboto, Inter, &amp;quot;Helvetica Neue&amp;quot;, Arial, &amp;quot;Noto Sans&amp;quot;; text-align: right; white-space-collapse: collapse; background-color: rgb(255, 255, 255);"&gt;Kontakt&lt;/div&gt;&lt;ul class="footer-list" style="list-style: none; margin: 0px; padding: 0px; font-size: 14px; line-height: 1.4; color: rgb(107, 114, 128); font-family: system-ui, -apple-system, &amp;quot;Segoe UI&amp;quot;, Roboto, Inter, &amp;quot;Helvetica Neue&amp;quot;, Arial, &amp;quot;Noto Sans&amp;quot;; text-align: right; white-space-collapse: collapse; background-color: rgb(255, 255, 255);"&gt;&lt;li&gt;&lt;strong&gt;Email:&lt;/strong&gt;&amp;nbsp;&lt;a href="mailto:support@twojadomena.pl" style="color: rgb(17, 24, 39); text-decoration-line: none;"&gt;support@twojadomena.pl&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Telefon:&lt;/strong&gt;&amp;nbsp;&lt;a href="tel:+48123456789" style="color: rgb(17, 24, 39); text-decoration-line: none;"&gt;+48 123 456 789&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Adres:&lt;/strong&gt;&amp;nbsp;ul. Przykładowa 1, 00-000 Warszawa&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Godziny wsparcia:&lt;/strong&gt;&amp;nbsp;Pon–Pt, 9:00–17:00&lt;/li&gt;&lt;/ul&gt;</content>
+        <color>rgb(255, 255, 255)</color>
+        <textAlign>right</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+</customPage>

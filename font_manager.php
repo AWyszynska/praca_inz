@@ -16,7 +16,18 @@
     <span class="tool-sep"></span>
 
     <button type="button" class="tool-btn" id="tool-clear-format">🧹 Wyczyść</button>
+    <span class="tool-sep"></span>
+<button type="button" class="tool-btn" id="tool-link" title="Zrób link z zaznaczenia">🔗 Link</button>
+<button type="button" class="tool-btn" id="tool-unlink" title="Usuń link">⛔ Usuń</button>
+
   </div>
+<div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:8px;">
+  <input type="text" id="prop-link-href" placeholder="https://... / #sekcja / mailto: / tel:" style="flex:1; min-width:190px;">
+  <select id="prop-link-target" style="min-width:120px;">
+    <option value="_self">Ta karta</option>
+    <option value="_blank">Nowa karta</option>
+  </select>
+</div>
 
   <label>Interlinia:</label>
   <select id="prop-line-height">

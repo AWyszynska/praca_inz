@@ -1,4 +1,5 @@
-<aside id="layers-panel" style="position: absolute; top: 20px; left: 20px; width: 260px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; display: flex; flex-direction: column;">
+<aside id="layers-panel" style="position: absolute; top: 20px; left: 20px; width: 300px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; display: flex; flex-direction: column;">
+
     <div class="panel-header" id="layers-drag-handle" style="background: #334155; color: white; padding: 10px 15px; cursor: move; border-radius: 8px 8px 0 0; font-size: 13px; font-weight: bold;">
          Warstwy i Struktura
     </div>

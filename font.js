@@ -329,6 +329,161 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const linkBtn = $("tool-link");
+  const unlinkBtn = $("tool-unlink");
+  const linkHref = $("prop-link-href");
+  const linkTarget = $("prop-link-target");
+
+  function nodeToElement(n) {
+    if (!n) return null;
+    return n.nodeType === 1 ? n : n.parentElement;
+  }
+
+  function linkAtCaret(range) {
+    if (!range) return null;
+    const el = nodeToElement(range.startContainer);
+    if (!el) return null;
+    return el.closest ? el.closest("a") : null;
+  }
+
+  function normalizeHref(v) {
+    const s = String(v || "").trim();
+    if (!s) return "";
+    return s;
+  }
+
+  function applyLink(url, target) {
+    if (!isTextActive()) return;
+
+    url = normalizeHref(url);
+    if (!url) return;
+
+    const range = getRangeFromSelectionOrSaved();
+    if (!range) return;
+
+    const rel = target === "_blank" ? "noopener noreferrer" : "";
+    if (range.collapsed) {
+      const aHere = linkAtCaret(range);
+      if (aHere) {
+        aHere.setAttribute("href", url);
+        aHere.setAttribute("target", target || "_self");
+        if (rel) aHere.setAttribute("rel", rel);
+        aHere.classList.add("link");
+        cleanupTextMarkup(activeElement);
+        if (typeof refreshLayers === "function") refreshLayers();
+        updateTextToolbarState();
+        return;
+      }
+
+      if (activeElement.querySelector("a")) {
+        alert("Zaznacz fragment tekstu, który ma być linkiem (bo już masz linki w tym polu).");
+        return;
+      }
+
+      const wrap = document.createElement("a");
+      wrap.setAttribute("href", url);
+      wrap.setAttribute("target", target || "_self");
+      if (rel) wrap.setAttribute("rel", rel);
+      wrap.className = "link";
+
+      while (activeElement.firstChild) wrap.appendChild(activeElement.firstChild);
+      activeElement.appendChild(wrap);
+
+      cleanupTextMarkup(activeElement);
+      if (typeof refreshLayers === "function") refreshLayers();
+      updateTextToolbarState();
+      return;
+    }
+    const a = document.createElement("a");
+    a.setAttribute("href", url);
+    a.setAttribute("target", target || "_self");
+    if (rel) a.setAttribute("rel", rel);
+    a.className = "link";
+
+    const frag = range.extractContents();
+    a.appendChild(frag);
+    range.insertNode(a);
+
+    try {
+      const sel = window.getSelection();
+      const nr = document.createRange();
+      nr.selectNodeContents(a);
+      sel.removeAllRanges();
+      sel.addRange(nr);
+      savedRange = nr.cloneRange();
+    } catch (e) {}
+
+    cleanupTextMarkup(activeElement);
+    if (typeof refreshLayers === "function") refreshLayers();
+    updateTextToolbarState();
+  }
+
+  function removeLinks() {
+    if (!isTextActive()) return;
+
+    const range = getRangeFromSelectionOrSaved();
+    if (!range) return;
+
+    if (range.collapsed) {
+      const aHere = linkAtCaret(range);
+      if (aHere) unwrap(aHere);
+      cleanupTextMarkup(activeElement);
+      if (typeof refreshLayers === "function") refreshLayers();
+      updateTextToolbarState();
+      return;
+    }
+
+    const anchors = Array.from(activeElement.querySelectorAll("a"));
+    anchors.forEach((a) => {
+      try {
+        if (range.intersectsNode(a)) unwrap(a);
+      } catch (e) {}
+    });
+
+    cleanupTextMarkup(activeElement);
+    if (typeof refreshLayers === "function") refreshLayers();
+    updateTextToolbarState();
+  }
+
+  if (linkBtn) {
+    linkBtn.addEventListener("click", () => {
+      if (!isTextActive()) return;
+      let url = linkHref ? linkHref.value : "";
+      url = normalizeHref(url);
+
+      if (!url) {
+        url = normalizeHref(prompt("Podaj URL linku (np. https://..., #sekcja, mailto:...):", "https://") || "");
+        if (linkHref) linkHref.value = url;
+      }
+      if (!url) return;
+
+      const target = linkTarget ? linkTarget.value : "_self";
+      applyLink(url, target);
+    });
+  }
+
+  if (unlinkBtn) {
+    unlinkBtn.addEventListener("click", () => {
+      if (!isTextActive()) return;
+      removeLinks();
+    });
+  }
+
+  document.addEventListener(
+    "click",
+    (e) => {
+      if (!window.SG_MODE || window.SG_MODE !== "builder") return;
+      const a = e.target && e.target.closest ? e.target.closest("a") : null;
+      if (!a) return;
+      const inText = a.closest && a.closest('.canvas-element[data-type="text"]');
+      if (!inText) return;
+      if (e.ctrlKey || e.metaKey) return;
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    true
+  );
+
   const clearBtn = $("tool-clear-format");
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
@@ -385,6 +540,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (ws) ws.value = parseFloat(activeElement.style.wordSpacing || "0") || 0;
     if (ti) ti.value = parseInt(activeElement.style.textIndent || "0", 10) || 0;
     if (tt) tt.value = activeElement.style.textTransform || "none";
+        const r = getRangeFromSelectionOrSaved();
+    const aHere = r ? linkAtCaret(r) : null;
+    if (linkHref) linkHref.value = aHere ? (aHere.getAttribute("href") || "") : "";
+    if (linkTarget) linkTarget.value = aHere ? (aHere.getAttribute("target") || "_self") : "_self";
+
   }
 
   window.updateTextToolbarState = updateTextToolbarState;
