@@ -145,12 +145,28 @@ $pos = $isFooter
      "height: {$el->h}; ");
 
 if ($isFooter) {
-  $dock = (string)($el->footerDock ?? 'bottom');
+  $dock = ((string)($el->footerDock ?? 'bottom') === 'top') ? 'top' : 'bottom';
   $off  = (int)($el->footerBottom ?? 0);
   $left = (int)($el->footerLeft ?? 0);
 
-  $pos = "position:fixed; left:{$left}px; right:0px; width:calc(100% - {$left}px); height: {$el->h}; ";
-  $pos .= ($dock === 'top') ? "top:{$off}px; " : "bottom:{$off}px; ";
+  $mode = (string)($el->footerMode ?? 'fixed');
+  $mode = ($mode === 'page') ? 'page' : 'fixed';
+
+  if ($mode === 'fixed') {
+    $pos = "position:fixed; left:{$left}px; right:0px; width:calc(100% - {$left}px); height: {$el->h}; ";
+    $pos .= ($dock === 'top') ? "top:{$off}px; " : "bottom:{$off}px; ";
+  } else {
+    $hNum = (int)filter_var((string)$el->h, FILTER_SANITIZE_NUMBER_INT);
+    if ($hNum <= 0) $hNum = 80;
+
+    $pos = "position:absolute; left:{$left}px; right:0px; width:calc(100% - {$left}px); height: {$el->h}; ";
+    if ($dock === 'top') {
+      $pos .= "top:{$off}px; ";
+    } else {
+      $top = max(0, (int)$GLOBALS['pageH'] - $hNum - $off);
+      $pos .= "top:{$top}px; ";
+    }
+  }
 } else {
   $pos = "position:absolute; left:" . (int)$el->x . "px; top:" . (int)$el->y . "px; width:{$el->w}; height:{$el->h}; ";
 }
@@ -196,6 +212,25 @@ if ($isFooter) {
 $fontSize = sg_xml_val($el, 'fontSize', $defFontSize);  
 $border = sg_xml_val($el, 'border', $defBorder);
 $zIndex   = sg_xml_val($el, 'zIndex', '0');
+
+$toggleAttr = "";
+$toggleTarget = trim((string)($el->sgToggleTarget ?? ''));
+if ($toggleTarget !== '') {
+  $toggleAttr .= " data-sg-toggle-target=\"" . htmlspecialchars($toggleTarget, ENT_QUOTES) . "\"";
+
+  $trig = trim((string)($el->sgToggleTrigger ?? ''));
+  if ($trig !== '') $toggleAttr .= " data-sg-toggle-trigger=\"" . htmlspecialchars($trig, ENT_QUOTES) . "\"";
+
+  $arrow = trim((string)($el->sgToggleArrow ?? ''));
+  if ($arrow !== '') $toggleAttr .= " data-sg-toggle-arrow=\"" . htmlspecialchars($arrow, ENT_QUOTES) . "\"";
+
+  $init = trim((string)($el->sgToggleInitial ?? ''));
+  if ($init !== '') $toggleAttr .= " data-sg-toggle-initial=\"" . htmlspecialchars($init, ENT_QUOTES) . "\"";
+
+  $side = trim((string)($el->sgToggleArrowSide ?? ''));
+  if ($side !== '') $toggleAttr .= " data-sg-toggle-arrow-side=\"" . htmlspecialchars($side, ENT_QUOTES) . "\"";
+}
+
 $hasBlockScroll = false;
 $scrollCfg = null;
 
@@ -203,6 +238,7 @@ if ($type === 'block' && isset($el->sgScrollBlock)) {
   $scrollCfg = sg_parse_scroll_block_node($el->sgScrollBlock);
   $hasBlockScroll = is_array($scrollCfg) && (!isset($scrollCfg['enabled']) || $scrollCfg['enabled']);
 }
+
 
 $overflowCss = $hasBlockScroll ? 'auto' : 'visible';
 
@@ -230,8 +266,11 @@ $style =
   "overflow: {$overflowCss}; " .
   "padding: {$padding};";
 
+$footerMode = $isFooter ? (string)($el->footerMode ?? 'fixed') : '';
+$footerMode = ($footerMode === 'page') ? 'page' : 'fixed';
+
 $footerAttr = $isFooter
-  ? " data-footer='1' data-footer-dock='".htmlspecialchars($dock, ENT_QUOTES)."' "
+  ? " data-footer='1' data-footer-dock='".htmlspecialchars($dock, ENT_QUOTES)."' data-footer-mode='".htmlspecialchars($footerMode, ENT_QUOTES)."' "
   : "";
 
 if ($type === 'button') {
@@ -244,21 +283,52 @@ $htmlClass = trim((string)($el->htmlClass ?? ''));
 $idAttr = ($htmlId !== '') ? " id='".htmlspecialchars($htmlId, ENT_QUOTES)."'" : "";
 $classAttr = "page-element" . ($htmlClass !== '' ? " " . htmlspecialchars($htmlClass, ENT_QUOTES) : "");
 
-  $formAttr = "";
-  if ($type === 'form') {
-    $formAttr =
-      " data-form-type='".htmlspecialchars((string)($el->formType ?? 'text'), ENT_QUOTES)."'".
-      " data-label='".htmlspecialchars((string)($el->label ?? ''), ENT_QUOTES)."'".
-      " data-form-help-text='".htmlspecialchars((string)($el->formHelpText ?? ''), ENT_QUOTES)."'".
-      " data-form-placeholder='".htmlspecialchars((string)($el->formPlaceholder ?? ''), ENT_QUOTES)."'".
-      " data-form-required='".htmlspecialchars((string)($el->formRequired ?? '0'), ENT_QUOTES)."'".
-      " data-form-inline='".htmlspecialchars((string)($el->formInline ?? '0'), ENT_QUOTES)."'".
-      " data-form-name='".htmlspecialchars((string)($el->formName ?? ''), ENT_QUOTES)."'".
-      " data-accent-color='".htmlspecialchars((string)($el->accentColor ?? '#156fe5'), ENT_QUOTES)."'".
-      " data-form-input-radius='".htmlspecialchars((string)($el->formInputRadius ?? '10'), ENT_QUOTES)."'".
-      " data-options='".htmlspecialchars((string)($el->options ?? ''), ENT_QUOTES)."'";
-  }
+$formAttr = "";
+if ($type === 'form') {
+  $formAttr =
+    " data-form-type='".htmlspecialchars((string)($el->formType ?? 'text'), ENT_QUOTES)."'".
+    " data-label='".htmlspecialchars((string)($el->label ?? ''), ENT_QUOTES)."'".
+    " data-form-help-text='".htmlspecialchars((string)($el->formHelpText ?? ''), ENT_QUOTES)."'".
+    " data-form-placeholder='".htmlspecialchars((string)($el->formPlaceholder ?? ''), ENT_QUOTES)."'".
+    " data-form-required='".htmlspecialchars((string)($el->formRequired ?? '0'), ENT_QUOTES)."'".
+    " data-form-inline='".htmlspecialchars((string)($el->formInline ?? '0'), ENT_QUOTES)."'".
+    " data-form-name='".htmlspecialchars((string)($el->formName ?? ''), ENT_QUOTES)."'".
+    " data-accent-color='".htmlspecialchars((string)($el->accentColor ?? '#156fe5'), ENT_QUOTES)."'".
+    " data-form-input-radius='".htmlspecialchars((string)($el->formInputRadius ?? '10'), ENT_QUOTES)."'".
+    " data-options='".htmlspecialchars((string)($el->options ?? ''), ENT_QUOTES)."'".
+    " data-form-rows='".htmlspecialchars((string)($el->formRows ?? '3'), ENT_QUOTES)."'".
+    " data-form-min='".htmlspecialchars((string)($el->formMin ?? ''), ENT_QUOTES)."'".
+    " data-form-max='".htmlspecialchars((string)($el->formMax ?? ''), ENT_QUOTES)."'".
+    " data-form-step='".htmlspecialchars((string)($el->formStep ?? ''), ENT_QUOTES)."'".
+    " data-rating-min='".htmlspecialchars((string)($el->ratingMin ?? '1'), ENT_QUOTES)."'".
+    " data-rating-max='".htmlspecialchars((string)($el->ratingMax ?? '5'), ENT_QUOTES)."'".
+    " data-rating-step='".htmlspecialchars((string)($el->ratingStep ?? '1'), ENT_QUOTES)."'".
+    " data-rating-min-label='".htmlspecialchars((string)($el->ratingMinLabel ?? ''), ENT_QUOTES)."'".
+    " data-rating-max-label='".htmlspecialchars((string)($el->ratingMaxLabel ?? ''), ENT_QUOTES)."'".
+    " data-likert-min='".htmlspecialchars((string)($el->likertMin ?? '1'), ENT_QUOTES)."'".
+    " data-likert-max='".htmlspecialchars((string)($el->likertMax ?? '5'), ENT_QUOTES)."'".
+    " data-likert-left='".htmlspecialchars((string)($el->likertLeft ?? ''), ENT_QUOTES)."'".
+    " data-likert-right='".htmlspecialchars((string)($el->likertRight ?? ''), ENT_QUOTES)."'". 
+" data-form-marker-text='".htmlspecialchars((string)($el->formMarkerText ?? ''), ENT_QUOTES)."'" .
+" data-form-marker-style='".htmlspecialchars((string)($el->formMarkerStyle ?? 'none'), ENT_QUOTES)."'" .
+" data-form-icon='".htmlspecialchars((string)($el->formIcon ?? ''), ENT_QUOTES)."'" .
+" data-form-icon-side='".htmlspecialchars((string)($el->formIconSide ?? 'left'), ENT_QUOTES)."'" .
+" data-form-icon-mode='".htmlspecialchars((string)($el->formIconMode ?? 'split'), ENT_QUOTES)."'" .
+" data-form-icon-bg='".htmlspecialchars((string)($el->formIconBg ?? '#f1f5f9'), ENT_QUOTES)."'" .
+" data-form-icon-color='".htmlspecialchars((string)($el->formIconColor ?? '#0f172a'), ENT_QUOTES)."'" .
+" data-form-input-style='".htmlspecialchars((string)($el->formInputStyle ?? 'box'), ENT_QUOTES)."'" .
+" data-form-input-bg='".htmlspecialchars((string)($el->formInputBg ?? '#ffffff'), ENT_QUOTES)."'" .
+" data-form-input-border='".htmlspecialchars((string)($el->formInputBorder ?? '#d1d5db'), ENT_QUOTES)."'" .
+" data-form-input-border-style='".htmlspecialchars((string)($el->formInputBorderStyle ?? 'solid'), ENT_QUOTES)."'" .
+" data-form-input-border-w='".htmlspecialchars((string)($el->formInputBorderW ?? '1'), ENT_QUOTES)."'" .
+" data-form-input-shadow='".htmlspecialchars((string)($el->formInputShadow ?? 'soft'), ENT_QUOTES)."'" .
+" data-form-input-pad-x='".htmlspecialchars((string)($el->formInputPadX ?? '10'), ENT_QUOTES)."'" .
+" data-form-input-pad-y='".htmlspecialchars((string)($el->formInputPadY ?? '9'), ENT_QUOTES)."'" .
+" data-form-placeholder-color='".htmlspecialchars((string)($el->formPlaceholderColor ?? '#94a3b8'), ENT_QUOTES)."'" .
+" data-form-focus-ring='".htmlspecialchars((string)($el->formFocusRing ?? '4'), ENT_QUOTES)."'" .
+" data-form-focus-opacity='".htmlspecialchars((string)($el->formFocusOpacity ?? '18'), ENT_QUOTES)."'";
 
+}
 $scrollAttr = "";
 if ($type === 'block' && isset($el->sgScrollBlock)) {
   $cfg = sg_parse_scroll_block_node($el->sgScrollBlock);
@@ -267,8 +337,16 @@ if ($type === 'block' && isset($el->sgScrollBlock)) {
     $scrollAttr = " data-sg-scroll-block=\"" . htmlspecialchars($json, ENT_QUOTES) . "\"";
   }
 }
+$brandAttr = "";
+if ($type === 'brand') {
+  $cfg = trim((string)($el->brandCfg ?? ''));
+  if ($cfg !== '') {
+    $brandAttr = " data-brand-cfg=\"" . htmlspecialchars($cfg, ENT_QUOTES) . "\"";
+  }
+}
 
-echo "<div{$idAttr} class='{$classAttr}' data-id='".htmlspecialchars((string)$el['id'], ENT_QUOTES)."' data-type='".htmlspecialchars($type, ENT_QUOTES)."'{$footerAttr}{$formAttr}{$scrollAttr} style=\"".htmlspecialchars($style, ENT_QUOTES)."\">";
+echo "<div{$idAttr} class='{$classAttr}' data-id='".htmlspecialchars((string)$el['id'], ENT_QUOTES)."' data-type='".htmlspecialchars($type, ENT_QUOTES)."'{$footerAttr}{$formAttr}{$scrollAttr}{$toggleAttr}{$brandAttr} style=\"".htmlspecialchars($style, ENT_QUOTES)."\">";
+
 
 
     if ($type == 'image') {
@@ -882,7 +960,7 @@ input.sg-range::-moz-range-thumb{
   box-shadow: var(--sgbtn-shadow, 0 10px 22px rgba(2,6,23,.12));
 
   cursor:pointer;
-  user-select:none;
+
   box-sizing:border-box;
 
   letter-spacing: var(--sgbtn-letter, 0px);
@@ -944,6 +1022,7 @@ html, body{
   overflow: hidden; 
 }
 
+
 #sg-scroll{
   height: 100vh;
   overflow-y: auto;
@@ -958,14 +1037,90 @@ foreach ($xmlDocs as $doc) {
   $v = trim((string)($doc->pageHeight ?? ''));
   if ($v !== '' && ctype_digit($v)) $pageH = (int)$v;
 }
-?>
-<?php
+$projBg = null;
+
+foreach ($xmlDocs as $doc) {
+  if (!isset($doc->projectBackground)) continue;
+
+  $pb = $doc->projectBackground;
+
+  if (isset($pb->mode) || isset($pb->solid) || isset($pb->gradType)) {
+    $projBg = [
+      'mode' => (string)($pb->mode ?? 'none'),
+      'solid' => (string)($pb->solid ?? '#f3f4f6'),
+
+      'gradType' => (string)($pb->gradType ?? 'linear'),
+      'gradAngle' => (int)($pb->gradAngle ?? 180),
+
+      'gradFrom' => (string)($pb->gradFrom ?? '#0ea5e9'),
+      'gradMid'  => (string)($pb->gradMid  ?? '#6366f1'),
+      'gradTo'   => (string)($pb->gradTo   ?? '#111827'),
+      'gradUseMid' => sg_boolish($pb->gradUseMid ?? '0') ? '1' : '0',
+
+      'gradPosX' => (int)($pb->gradPosX ?? 50),
+      'gradPosY' => (int)($pb->gradPosY ?? 50),
+
+      'gradPreset' => (string)($pb->gradPreset ?? ''),
+    ];
+    continue;
+  }
+
+  $raw = trim((string)$pb);
+  if ($raw !== '' && $raw[0] === '{') {
+    $decoded = html_entity_decode($raw, ENT_QUOTES | ENT_XML1, 'UTF-8');
+    $tmp = json_decode($decoded, true);
+    if (is_array($tmp)) $projBg = $tmp;
+  }
+}
+
+if (!$projBg) $projBg = ['mode' => 'none'];
+
 $winCfg = null;
 
 foreach ($xmlDocs as $doc) {
   if (!isset($doc->windowScroll)) continue;
 
   $ws = $doc->windowScroll;
+
+$projBg = null;
+
+foreach ($xmlDocs as $doc) {
+  if (!isset($doc->projectBackground)) continue;
+
+  $pb = $doc->projectBackground;
+
+  if (isset($pb->mode) || isset($pb->solid) || isset($pb->gradType)) {
+    $projBg = [
+      'mode' => (string)($pb->mode ?? 'none'),
+      'solid' => (string)($pb->solid ?? '#f3f4f6'),
+
+      'gradType' => (string)($pb->gradType ?? 'linear'),
+      'gradAngle' => (int)($pb->gradAngle ?? 180),
+
+      'gradFrom' => (string)($pb->gradFrom ?? '#0ea5e9'),
+      'gradMid'  => (string)($pb->gradMid  ?? '#6366f1'),
+      'gradTo'   => (string)($pb->gradTo   ?? '#111827'),
+      'gradUseMid' => sg_boolish($pb->gradUseMid ?? '0') ? '1' : '0',
+
+      'gradPosX' => (int)($pb->gradPosX ?? 50),
+      'gradPosY' => (int)($pb->gradPosY ?? 50),
+
+      'gradPreset' => (string)($pb->gradPreset ?? ''),
+    ];
+    continue;
+  }
+
+  $raw = trim((string)$pb);
+  if ($raw !== '' && substr($raw, 0, 1) === '{') {
+    $decoded = html_entity_decode($raw, ENT_QUOTES | ENT_XML1, 'UTF-8');
+    $tmp = json_decode($decoded, true);
+    if (is_array($tmp)) $projBg = $tmp;
+  }
+}
+
+if (!$projBg) $projBg = ['mode' => 'none'];
+
+
   if (isset($ws->enabled) || isset($ws->width) || isset($ws->track)) {
     $enabledRaw = strtolower(trim((string)($ws->enabled ?? '1')));
     $thinRaw    = strtolower(trim((string)($ws->firefoxThin ?? '0')));
@@ -1006,6 +1161,9 @@ if (!$winCfg) {
 
 </head>
 <body>
+  <script>
+window.sgProjectBgConfig = <?= json_encode($projBg, JSON_UNESCAPED_UNICODE) ?>;
+</script>
   <div id="sg-scroll">
     <?php
     foreach ($xmlDocs as $doc) {
@@ -1021,7 +1179,8 @@ if (!$winCfg) {
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const footers = Array.from(document.querySelectorAll('[data-footer="1"]'));
+  const footers = Array.from(document.querySelectorAll('[data-footer="1"][data-footer-mode="fixed"]'));
+
 
   let padTop = 0;
   let padBottom = 0;
@@ -1055,8 +1214,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.sg_sideblock_window) {
     window.sg_sideblock_window(winCfg, "#sg-scroll");
   }
+
   document.querySelectorAll('.page-element[data-type="block"][data-sg-scroll-block]')
     .forEach((el) => window.sg_sidescroll_blok?.(el));
+
+  document.querySelectorAll('.page-element[data-type="brand"]').forEach(el => {
+    window.updateBrandVisuals?.(el);
+  });
 });
 
 
@@ -1158,7 +1322,9 @@ $__v = function(string $f){
 
 <script src="sg_footer.js?v=<?= $__v('sg_footer.js') ?>"></script>
 <script src="sg_calendar.js?v=<?= $__v('sg_calendar.js') ?>"></script>
-
+<script src="sg_toggle.js?v=<?= $__v('sg_toggle.js') ?>"></script>
+<script src="sg_project_bg.js?v=<?= $__v('sg_project_bg.js') ?>"></script>
+<script src="sg_brand.js?v=<?= $__v('sg_brand.js') ?>"></script>
 <style>
   .sg-form-inner input:focus,
   .sg-form-inner select:focus,

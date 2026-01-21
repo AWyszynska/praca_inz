@@ -619,10 +619,10 @@ data.calShowToday = el.dataset.calShowToday || "1";
     hookSelectElement();
     hookGetElementData();
 
-    document.querySelectorAll('.canvas-element[data-type="calendar"]').forEach((el) => {
-      ensureDefaults(el);
-      updateCalendarVisuals(el);
-    });
+document.querySelectorAll('.canvas-element[data-type="calendar"], .sg-calendar-runtime[data-type="calendar"]').forEach((el) => {
+  ensureDefaults(el);
+  updateCalendarVisuals(el);
+});
 
     let tries = 0;
     const t = setInterval(() => {

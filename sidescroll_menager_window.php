@@ -3,7 +3,8 @@
 
 if (!function_exists('sidescroll_menager_window')) {
   function sidescroll_menager_window(): void { ?>
-    <div id="sgWindowScrollPanel" style="margin-top:14px;">
+    <div id="sgWindowScrollPanel" style="margin-top:14px; display:none;">
+
       <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin:12px 0 8px;">
         <h3 style="margin:0; font-size:13px; color:#0f172a;">Scroll przeglądarki</h3>
         <span style="font-size:11px; color:#64748b;">WINDOW</span>

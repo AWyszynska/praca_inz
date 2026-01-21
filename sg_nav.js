@@ -1,9 +1,9 @@
 (() => {
   const $ = (id) => document.getElementById(id);
-
   const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
   const inEditor = () => !!document.getElementById("preview-canvas");
+
   const pointer = { x: 160, y: 120 };
   function updatePointer(e) {
     if (!window.canvas) return;
@@ -23,7 +23,6 @@
       "'": "&#39;",
     }[c]));
   }
-
   function escapeAttr(s) {
     return String(s ?? "").replace(/[&<>"']/g, (c) => ({
       "&": "&amp;",
@@ -34,29 +33,9 @@
     }[c]));
   }
 
-  function hexToRgba(color, alpha) {
-    const c = String(color || "").trim();
-    if (!c) return `rgba(255,255,255,${alpha})`;
-
-    const m3 = c.match(/^#([0-9a-f]{3})$/i);
-    if (m3) {
-      const r = parseInt(m3[1][0] + m3[1][0], 16);
-      const g = parseInt(m3[1][1] + m3[1][1], 16);
-      const b = parseInt(m3[1][2] + m3[1][2], 16);
-      return `rgba(${r},${g},${b},${alpha})`;
-    }
-    const m6 = c.match(/^#([0-9a-f]{6})$/i);
-    if (m6) {
-      const r = parseInt(m6[1].slice(0, 2), 16);
-      const g = parseInt(m6[1].slice(2, 4), 16);
-      const b = parseInt(m6[1].slice(4, 6), 16);
-      return `rgba(${r},${g},${b},${alpha})`;
-    }
-    return c;
-  }
-
-  function linkShadowCss(name) {
-    return (name === "none") ? "none" : "0 6px 14px rgba(0,0,0,0.10)";
+  function guessPageKey(href) {
+    const m = String(href ?? "").match(/[?&]page=([^&]+)/i);
+    return m ? decodeURIComponent(m[1]) : "";
   }
 
   function parseItems(raw) {
@@ -69,31 +48,114 @@
       const parts = line.split("|");
       const label = (parts[0] ?? "").trim() || "Link";
       const href = (parts[1] ?? "").trim() || "#";
-
       const key = (parts[2] ?? "").trim();
       const pageKey = guessPageKey(href);
-      return {
-        label,
-        href,
-        key: key || pageKey,
-        pageKey,
-      };
+      return { label, href, key, pageKey };
     });
 
-    return items.length ? items : [
-      { label: "Strona główna", href: "?page=home", key: "home", pageKey: "home" },
-      { label: "O nas", href: "?page=about", key: "about", pageKey: "about" },
-      { label: "Kontakt", href: "?page=kontakt", key: "kontakt", pageKey: "kontakt" },
-    ];
-  }
-
-  function guessPageKey(href) {
-    const m = String(href ?? "").match(/[?&]page=([^&]+)/i);
-    return m ? m[1] : "";
+    return items.length
+      ? items
+      : [
+          { label: "Strona główna", href: "?page=home", key: "home", pageKey: "home" },
+          { label: "O nas", href: "?page=about", key: "about", pageKey: "about" },
+          { label: "Usługi", href: "?page=uslugi", key: "uslugi", pageKey: "uslugi" },
+          { label: "Kontakt", href: "?page=kontakt", key: "kontakt", pageKey: "kontakt" },
+        ];
   }
 
   function isNav(el) {
     return !!el && el.dataset && el.dataset.type === "nav";
+  }
+
+  function linkShadowCss(name) {
+    if (name === "strong") return "0 12px 28px rgba(0,0,0,0.18)";
+    if (name === "none") return "none";
+    return "0 6px 14px rgba(0,0,0,0.10)";
+  }
+
+  function containerShadowCss(name) {
+    if (name === "strong") return "0 12px 28px rgba(0,0,0,0.18)";
+    if (name === "none") return "none";
+    return "0 10px 24px rgba(0,0,0,0.18)";
+  }
+
+  const gradPresets = {
+    ocean:       { type: "linear", angle: 135, from: "#0ea5e9", mid: "#2563eb", to: "#111827", useMid: 1, posX: 50, posY: 50 },
+    sunset:      { type: "linear", angle: 120, from: "#fb7185", mid: "#f59e0b", to: "#7c3aed", useMid: 1, posX: 50, posY: 50 },
+    purple_night:{ type: "linear", angle: 135, from: "#a855f7", mid: "#1d4ed8", to: "#0b1020", useMid: 1, posX: 50, posY: 50 },
+    candy:       { type: "linear", angle: 90,  from: "#22c55e", mid: "#a855f7", to: "#fb7185", useMid: 1, posX: 50, posY: 50 },
+    forest:      { type: "linear", angle: 135, from: "#16a34a", mid: "#065f46", to: "#0b1020", useMid: 1, posX: 50, posY: 50 },
+    neon_blue:   { type: "linear", angle: 135, from: "#06b6d4", mid: "#3b82f6", to: "#0b1020", useMid: 1, posX: 50, posY: 50 },
+    gold_warm:   { type: "linear", angle: 135, from: "#f59e0b", mid: "#ef4444", to: "#7c3aed", useMid: 1, posX: 50, posY: 50 },
+    cherry:      { type: "linear", angle: 140, from: "#ef4444", mid: "#fb7185", to: "#111827", useMid: 1, posX: 50, posY: 50 },
+    steel:       { type: "linear", angle: 135, from: "#94a3b8", mid: "#475569", to: "#0f172a", useMid: 1, posX: 50, posY: 50 },
+    frost:       { type: "linear", angle: 135, from: "#e2e8f0", mid: "#38bdf8", to: "#0f172a", useMid: 1, posX: 50, posY: 50 },
+    aurora:      { type: "conic",  angle: 180, from: "#22c55e", mid: "#06b6d4", to: "#a855f7", useMid: 1, posX: 50, posY: 50 },
+    lava:        { type: "radial", angle: 0,   from: "#f97316", mid: "#ef4444", to: "#111827", useMid: 1, posX: 40, posY: 35 },
+    mint:        { type: "linear", angle: 120, from: "#34d399", mid: "#06b6d4", to: "#0f172a", useMid: 1, posX: 50, posY: 50 },
+    space:       { type: "radial", angle: 0,   from: "#60a5fa", mid: "#a855f7", to: "#0b1020", useMid: 1, posX: 35, posY: 35 },
+    peach:       { type: "linear", angle: 120, from: "#fdba74", mid: "#fb7185", to: "#7c3aed", useMid: 1, posX: 50, posY: 50 },
+
+    midnight:    { type: "linear", angle: 135, from: "#0b1020", mid: "#1d4ed8", to: "#111827", useMid: 1, posX: 50, posY: 50 },
+    rose:        { type: "linear", angle: 125, from: "#fb7185", mid: "#f43f5e", to: "#7c3aed", useMid: 1, posX: 50, posY: 50 },
+    mango:       { type: "linear", angle: 120, from: "#fbbf24", mid: "#fb7185", to: "#ef4444", useMid: 1, posX: 50, posY: 50 },
+    deepsea:     { type: "radial", angle: 0,   from: "#0ea5e9", mid: "#1e40af", to: "#020617", useMid: 1, posX: 40, posY: 35 },
+    horizon:     { type: "linear", angle: 90,  from: "#38bdf8", mid: "#22c55e", to: "#f59e0b", useMid: 1, posX: 50, posY: 50 },
+    electric:    { type: "conic",  angle: 210, from: "#06b6d4", mid: "#a855f7", to: "#f59e0b", useMid: 1, posX: 50, posY: 50 },
+    lime:        { type: "linear", angle: 135, from: "#84cc16", mid: "#22c55e", to: "#06b6d4", useMid: 1, posX: 50, posY: 50 },
+    royal:       { type: "linear", angle: 140, from: "#1d4ed8", mid: "#7c3aed", to: "#0f172a", useMid: 1, posX: 50, posY: 50 },
+  };
+
+  function makeGradientCss(cfg) {
+    const from = cfg.gradFrom || "#0ea5e9";
+    const mid = cfg.gradMid || "#a855f7";
+    const to = cfg.gradTo || "#111827";
+    const useMid = cfg.gradUseMid === 1;
+
+    const angle = clamp(parseInt(cfg.gradAngle || 0, 10) || 0, 0, 360);
+    const posX = clamp(parseInt(cfg.gradPosX || 50, 10) || 50, 0, 100);
+    const posY = clamp(parseInt(cfg.gradPosY || 50, 10) || 50, 0, 100);
+
+    const colors = useMid ? `${from}, ${mid}, ${to}` : `${from}, ${to}`;
+
+    if (cfg.gradType === "radial") {
+      return `radial-gradient(circle at ${posX}% ${posY}%, ${colors})`;
+    }
+    if (cfg.gradType === "conic") {
+      return `conic-gradient(from ${angle}deg at ${posX}% ${posY}%, ${colors})`;
+    }
+    return `linear-gradient(${angle}deg, ${colors})`;
+  }
+
+  function applyBackground(el) {
+    if (!isNav(el)) return;
+
+    const mode = el.dataset.navBgMode || "solid";
+if (mode === "gradient") {
+  const styleHasGrad = (el.style.background || "").toLowerCase().includes("gradient(");
+  const hasGradData = !!(el.dataset.navGradFrom || el.dataset.navGradTo || el.dataset.navGradMid);
+  if (styleHasGrad && !hasGradData) return;
+
+  const cfg = {
+    gradType: el.dataset.navGradType || "linear",
+    gradAngle: el.dataset.navGradAngle || "135",
+    gradPosX: el.dataset.navGradPosX || "50",
+    gradPosY: el.dataset.navGradPosY || "50",
+    gradFrom: el.dataset.navGradFrom || "#0ea5e9",
+    gradMid: el.dataset.navGradMid || "#a855f7",
+    gradTo: el.dataset.navGradTo || "#111827",
+    gradUseMid: el.dataset.navGradUseMid === "1" ? 1 : 0,
+  };
+
+  el.style.background = makeGradientCss(cfg);
+  el.style.backgroundColor = cfg.gradTo || "#111827";
+  return;
+}
+ else {
+      const solid = (el.dataset.navBgSolid || "#111827").trim() || "#111827";
+      el.style.background = "none";
+      el.style.backgroundColor = solid;
+    }
   }
 
   function ensureDefaults(el) {
@@ -101,22 +163,22 @@
 
     if (el.dataset.navItems === undefined) {
       el.dataset.navItems =
-        "Strona główna|?page=home\nO nas|?page=about\nUsługi|?page=uslugi\nKontakt|?page=kontakt";
+        "Strona główna|?page=home|home\nO nas|?page=about|about\nUsługi|?page=uslugi|uslugi\nKontakt|?page=kontakt|kontakt";
     }
-
-    if (!el.dataset.navOrientation) el.dataset.navOrientation = "horizontal"; 
-    if (!el.dataset.navAlign) el.dataset.navAlign = "left"; 
-
-    if (!el.dataset.navJustify) el.dataset.navJustify = "start";
-    if (!el.dataset.navVJustify) el.dataset.navVJustify = "top";
-    if (el.dataset.navName === undefined) el.dataset.navName = "";
 
     if (!el.dataset.navLayout) el.dataset.navLayout = "pills";
     if (!el.dataset.navHookMode) el.dataset.navHookMode = "none";
 
-    if (el.dataset.navWrap === undefined) el.dataset.navWrap = "0";
-    if (el.dataset.navStretch === undefined) el.dataset.navStretch = "0";
-    if (el.dataset.navDivider === undefined) el.dataset.navDivider = "0";
+    if (!el.dataset.navOrientation) el.dataset.navOrientation = "horizontal";
+    if (!el.dataset.navAlign) el.dataset.navAlign = "left";
+
+    if (!el.dataset.navJustify) el.dataset.navJustify = "start";
+    if (!el.dataset.navVJustify) el.dataset.navVJustify = "top";
+
+    if (!el.dataset.navWrap) el.dataset.navWrap = "0";
+    if (!el.dataset.navStretch) el.dataset.navStretch = "0";
+    if (!el.dataset.navDivider) el.dataset.navDivider = "0";
+
     if (!el.dataset.navGap) el.dataset.navGap = "10";
     if (!el.dataset.navPad) el.dataset.navPad = "10";
 
@@ -126,7 +188,8 @@
     if (el.dataset.navUnderline === undefined) el.dataset.navUnderline = "0";
 
     if (!el.dataset.navLinkBorderW) el.dataset.navLinkBorderW = "1";
-    if (!el.dataset.navLinkBorderColor) el.dataset.navLinkBorderColor = "#ffffff";
+    if (!el.dataset.navLinkBorderColor) el.dataset.navLinkBorderColor = "rgba(255,255,255,0.10)";
+
     if (!el.dataset.navLinkShadow) el.dataset.navLinkShadow = "soft";
 
     if (!el.dataset.navLinkColor) el.dataset.navLinkColor = "#ffffff";
@@ -135,21 +198,52 @@
     if (!el.dataset.navActiveBg) el.dataset.navActiveBg = "rgba(255,255,255,0.18)";
     if (!el.dataset.navActiveColor) el.dataset.navActiveColor = "#ffffff";
 
-    if (!el.dataset.navActiveMode) el.dataset.navActiveMode = "query_page"; 
+    if (!el.dataset.navActiveMode) el.dataset.navActiveMode = "query_page";
 
-    if (!el.dataset.navHtmlId) el.dataset.navHtmlId = "";
-    if (!el.dataset.navHtmlClass) el.dataset.navHtmlClass = "";
-    if (!el.dataset.navBrandText) el.dataset.navBrandText = "";
-    if (!el.dataset.navBrandHref) el.dataset.navBrandHref = "#";
+    if (el.dataset.navBgMode === undefined) {
+  const bgStr = (el.style.background || "").toLowerCase();
+  el.dataset.navBgMode = bgStr.includes("gradient(") ? "gradient" : "solid";
+}
+const hadGradData =
+  (el.dataset.navGradFrom !== undefined) ||
+  (el.dataset.navGradMid  !== undefined) ||
+  (el.dataset.navGradTo   !== undefined);
+
+if (el.dataset.navBgMode === undefined) {
+  const bgStr = (el.style.background || "").toLowerCase();
+  el.dataset.navBgMode = bgStr.includes("gradient(") ? "gradient" : "solid";
+}
+if (!el.dataset.navBgSolid) el.dataset.navBgSolid = "#111827";
+
+    if (!el.dataset.navBgSolid) el.dataset.navBgSolid = "#111827";
+if (el.dataset.navBgMode !== "gradient" || hadGradData) {
+  if (!el.dataset.navGradType) el.dataset.navGradType = "linear";
+  if (!el.dataset.navGradAngle) el.dataset.navGradAngle = "135";
+  if (!el.dataset.navGradPosX) el.dataset.navGradPosX = "50";
+  if (!el.dataset.navGradPosY) el.dataset.navGradPosY = "50";
+  if (!el.dataset.navGradFrom) el.dataset.navGradFrom = "#0ea5e9";
+  if (!el.dataset.navGradMid) el.dataset.navGradMid = "#a855f7";
+  if (!el.dataset.navGradTo) el.dataset.navGradTo = "#111827";
+  if (el.dataset.navGradUseMid === undefined) el.dataset.navGradUseMid = "1";
+  if (el.dataset.navGradPreset === undefined) el.dataset.navGradPreset = "";
+}
+
+    if (!el.dataset.navName) el.dataset.navName = "";
+    if (el.dataset.navHtmlId === undefined) el.dataset.navHtmlId = "";
+    if (el.dataset.navHtmlClass === undefined) el.dataset.navHtmlClass = "";
+    if (el.dataset.navBrandText === undefined) el.dataset.navBrandText = "";
+    if (el.dataset.navBrandHref === undefined) el.dataset.navBrandHref = "#";
+
     if (!el.style.width) el.style.width = "680px";
     if (!el.style.height) el.style.height = "56px";
-    if (!el.style.backgroundColor) el.style.backgroundColor = "#111827";
     if (!el.style.border || el.style.border === "none") el.style.border = "1px solid rgba(255,255,255,0.08)";
     if (!el.style.borderRadius) el.style.borderRadius = "12px";
     if (!el.style.boxShadow || el.style.boxShadow === "none") el.style.boxShadow = "0 10px 24px rgba(0,0,0,0.18)";
     if (!el.style.color) el.style.color = "#ffffff";
-    if (!el.style.fontSize) el.style.fontSize = "15px";
+    if (!el.style.fontSize) el.style.fontSize = "20px";
     if (!el.style.fontFamily) el.style.fontFamily = "'Segoe UI', sans-serif";
+
+ 
   }
 
   function getCfg(el) {
@@ -160,12 +254,14 @@
 
     const orientation = el.dataset.navOrientation || "horizontal";
     const align = el.dataset.navAlign || "left";
+
     const justify = el.dataset.navJustify || "start";
     const vJustify = el.dataset.navVJustify || "top";
-    const navName = (el.dataset.navName || "").trim();
-    const wrap = (el.dataset.navWrap === "1");
-    const stretch = (el.dataset.navStretch === "1");
-    const divider = (el.dataset.navDivider === "1");
+
+    const wrap = el.dataset.navWrap === "1";
+    const stretch = el.dataset.navStretch === "1";
+    const divider = el.dataset.navDivider === "1";
+
     const gap = clamp(parseInt(el.dataset.navGap || "10", 10) || 10, 0, 80);
     const pad = clamp(parseInt(el.dataset.navPad || "10", 10) || 10, 0, 80);
 
@@ -173,12 +269,14 @@
     const linkPadY = clamp(parseInt(el.dataset.navLinkPadY || "8", 10) || 8, 0, 80);
     const linkRadius = clamp(parseInt(el.dataset.navLinkRadius || "8", 10) || 8, 0, 40);
 
-    const linkBorderW = clamp(parseInt(el.dataset.navLinkBorderW || "1", 10) || 1, 0, 10);
-    const linkBorderColor = el.dataset.navLinkBorderColor || "#ffffff";
-    const linkBorderCss = (linkBorderW === 0) ? "none" : `${linkBorderW}px solid ${hexToRgba(linkBorderColor, 0.12)}`;
-    const linkShadow = el.dataset.navLinkShadow || "soft";
+    const underline = el.dataset.navUnderline === "1";
 
-    const underline = (el.dataset.navUnderline === "1");
+    const linkBorderW = clamp(parseInt(el.dataset.navLinkBorderW || "1", 10) || 1, 0, 8);
+    const linkBorderColor = (el.dataset.navLinkBorderColor || "rgba(255,255,255,0.10)").trim() || "rgba(255,255,255,0.10)";
+
+    const linkBorderCss = `${linkBorderW}px solid ${linkBorderColor}`;
+
+    const linkShadow = el.dataset.navLinkShadow || "soft";
 
     const linkColor = el.dataset.navLinkColor || "#ffffff";
     const hoverBg = el.dataset.navHoverBg || "rgba(255,255,255,0.12)";
@@ -192,6 +290,20 @@
     const htmlClass = (el.dataset.navHtmlClass || "").trim();
     const brandText = (el.dataset.navBrandText || "").trim();
     const brandHref = (el.dataset.navBrandHref || "#").trim() || "#";
+    const navName = (el.dataset.navName || "").trim();
+
+    const bgMode = el.dataset.navBgMode || "solid";
+    const bgSolid = el.dataset.navBgSolid || "#111827";
+
+    const gradType = el.dataset.navGradType || "linear";
+    const gradAngle = el.dataset.navGradAngle || "135";
+    const gradPosX = el.dataset.navGradPosX || "50";
+    const gradPosY = el.dataset.navGradPosY || "50";
+    const gradFrom = el.dataset.navGradFrom || "#0ea5e9";
+    const gradMid = el.dataset.navGradMid || "#a855f7";
+    const gradTo = el.dataset.navGradTo || "#111827";
+    const gradUseMid = el.dataset.navGradUseMid === "1" ? 1 : 0;
+    const gradPreset = el.dataset.navGradPreset || "";
 
     const items = parseItems(el.dataset.navItems);
 
@@ -225,6 +337,18 @@
       brandText,
       brandHref,
       items,
+
+      bgMode,
+      bgSolid,
+      gradType,
+      gradAngle,
+      gradPosX,
+      gradPosY,
+      gradFrom,
+      gradMid,
+      gradTo,
+      gradUseMid,
+      gradPreset,
     };
   }
 
@@ -233,201 +357,124 @@
     if (align === "right") return "flex-end";
     return "flex-start";
   }
-
   function justifyFromMode(mode) {
     if (mode === "center") return "center";
     if (mode === "end") return "flex-end";
     if (mode === "between") return "space-between";
     if (mode === "around") return "space-around";
     if (mode === "evenly") return "space-evenly";
-    return "flex-start"; 
+    return "flex-start";
   }
-
   function vJustifyFromMode(mode) {
-    if (mode === "center") return "center";
-    if (mode === "bottom") return "flex-end";
-    return "flex-start"; 
+if (mode === "center") return "center";
+if (mode === "bottom") return "flex-end";
+if (mode === "between") return "space-between";
+return "flex-start";
+
   }
 
   function buildLinksHtml(cfg) {
     const parts = [];
 
-    if (cfg.brandText) {
-      parts.push(
-        `<a class="sgnav__brand" href="${escapeAttr(cfg.brandHref || "#")}" data-key="brand" data-page="">${escapeHtml(cfg.brandText)}</a>`
-      );
-      if (cfg.divider && cfg.items.length) parts.push(`<span class="sgnav__div" aria-hidden="true"></span>`);
-    }
 
     cfg.items.forEach((it, idx) => {
-      const key = (it.key || it.pageKey || "").trim();
+      const key = (it.key || it.pageKey || `item_${idx}`).trim();
       const dp = it.pageKey ? ` data-page="${escapeAttr(it.pageKey)}"` : "";
       const dk = key ? ` data-key="${escapeAttr(key)}"` : "";
-      parts.push(`<a class="sgnav__link" href="${escapeAttr(it.href)}"${dp}${dk}>${escapeHtml(it.label)}</a>`);
-      if (cfg.divider && idx < cfg.items.length - 1) parts.push(`<span class="sgnav__div" aria-hidden="true"></span>`);
+      const u = (cfg.layout === "underline") ? `<span class="sgnav__u"></span>` : "";
+parts.push(`<a href="${escapeAttr(it.href)}"${dp}${dk}>${escapeHtml(it.label)}${u}</a>`);
+
+     
     });
 
     return parts.join("");
   }
 
-function buildEditorMarkup(el) {
-  const cfg = getCfg(el);
-  const idSafe = String(el.dataset.id || "nav").replace(/[^a-zA-Z0-9_-]/g, "_");
-  const cls = `sgnav_${idSafe}__editor`;
-
-  const flexDir = (cfg.orientation === "vertical") ? "column" : "row";
-  const justify = (cfg.orientation === "vertical") ? vJustifyFromMode(cfg.vJustify) : justifyFromMode(cfg.justify);
-  const alignItems = (cfg.orientation === "vertical") ? alignItemsFromAlign(cfg.align) : "center";
-
-  const wrap = (cfg.orientation === "horizontal" && cfg.wrap) ? "wrap" : "nowrap";
-  const deco = cfg.underline ? "underline" : "none";
-
-  const dividerSize = Math.max(6, Math.round(cfg.gap / 2));
-  const linksHtml = buildLinksHtml(cfg);
-
-  return `
-<style>
-  .${cls}{
-    width:100%;
-    height:100%;
-    box-sizing:border-box;
-    padding:${cfg.pad}px;
-    display:flex;
-    flex-direction:${flexDir};
-    justify-content:${justify};
-    align-items:${alignItems};
-    flex-wrap:${wrap};
-    gap:${cfg.gap}px;
-    pointer-events:none;
+  function computeNavBgCss(cfg) {
+    return cfg.bgMode === "gradient" ? makeGradientCss(cfg) : (cfg.bgSolid || "#111827");
   }
 
-  .${cls} .sgnav__div{
-    flex:0 0 auto;
-    width:${cfg.orientation === "vertical" ? "100%" : "1px"};
-    height:${cfg.orientation === "vertical" ? "1px" : `${dividerSize}px`};
-    background:rgba(255,255,255,0.18);
-    opacity:0.6;
-  }
-
-  .${cls} a,
-  .${cls} a:visited{
-    font:inherit;
-    line-height:1;
-    margin:0;
-    box-sizing:border-box;
-    position:relative;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:${cfg.linkPadY}px ${cfg.linkPadX}px;
-    color:${escapeAttr(cfg.linkColor)};
-    text-decoration:${deco};
-    background:transparent;
-    white-space:nowrap;
-    user-select:none;
-    transition:background .15s ease, color .15s ease, transform .12s ease, border-color .15s ease;
-  }
-
-  .${cls} a.sgnav__link{${cfg.stretch ? "flex:1 1 0;" : ""}}
-
-  .${cls}[data-layout="pills"] a{
-    border:${escapeAttr(cfg.linkBorderCss)};
-    border-radius:${cfg.linkRadius}px;
-    box-shadow:${escapeAttr(linkShadowCss(cfg.linkShadow))};
-  }
-
-  .${cls}[data-layout="tabs"] a,
-  .${cls}[data-layout="underline"] a{
-    border:none;
-    box-shadow:none;
-    border-bottom:2px solid transparent;
-    border-radius:${cfg.layout === "tabs" ? "10px 10px 0 0" : "0"};
-    text-decoration:none;
-  }
-
-  .${cls}[data-layout="sidebar"]{
-    align-items:stretch;
-  }
-  .${cls}[data-layout="sidebar"] a{
-    justify-content:flex-start;
-    width:100%;
-    border:none;
-    box-shadow:none;
-    border-radius:10px;
-    text-decoration:none;
-  }
-  .${cls}[data-layout="sidebar"] a::before{
-    content:"";
-    position:absolute;
-    left:0;
-    top:8px;
-    bottom:8px;
-    width:3px;
-    border-radius:999px;
-    background:transparent;
-  }
-
-  .${cls} a:hover{
-    background:${escapeAttr(cfg.hoverBg)};
-    color:${escapeAttr(cfg.hoverColor)};
-    transform:translateY(-1px);
-  }
-  .${cls}[data-layout="tabs"] a:hover,
-  .${cls}[data-layout="underline"] a:hover,
-  .${cls}[data-layout="sidebar"] a:hover{
-    transform:none;
-  }
-
-  .${cls} a.active{
-    background:${escapeAttr(cfg.activeBg)};
-    color:${escapeAttr(cfg.activeColor)};
-  }
-  .${cls}[data-layout="tabs"] a.active,
-  .${cls}[data-layout="underline"] a.active{
-    border-bottom-color:${escapeAttr(cfg.activeColor)};
-  }
-  .${cls}[data-layout="sidebar"] a.active::before{
-    background:${escapeAttr(cfg.activeColor)};
-  }
-</style>
-<nav class="${cls}" data-layout="${escapeAttr(cfg.layout)}" data-orientation="${escapeAttr(cfg.orientation)}" data-active-mode="${escapeAttr(cfg.activeMode)}">${linksHtml}</nav>
-  `.trim();
-}
-  function buildRuntimeMarkup(el) {
+  function buildMarkup(el, previewMode) {
     const cfg = getCfg(el);
-    const idSafe = String(el.dataset.id || "nav").replace(/[^a-zA-Z0-9_-]/g, "");
-    const navClass = `sgnav-${idSafe}`;
+    const idSafe = String(el.dataset.id || "nav").replace(/[^a-zA-Z0-9_-]/g, "_");
+    const navClass = `sgnav_${idSafe}__rt`;
 
-    const flexDir = (cfg.orientation === "vertical") ? "column" : "row";
-    const justify = (cfg.orientation === "vertical") ? vJustifyFromMode(cfg.vJustify) : justifyFromMode(cfg.justify);
-    const alignItems = (cfg.orientation === "vertical") ? alignItemsFromAlign(cfg.align) : "center";
-    const wrap = (cfg.orientation === "horizontal" && cfg.wrap) ? "wrap" : "nowrap";
-    const deco = cfg.underline ? "underline" : "none";
+    const bgCss = computeNavBgCss(cfg);
 
-    const dividerSize = Math.max(6, Math.round(cfg.gap / 2));
-    const linksHtml = buildLinksHtml(cfg);
+    const flexDir = cfg.orientation === "vertical" ? "column" : "row";
+    const justify = cfg.orientation === "vertical" ? vJustifyFromMode(cfg.vJustify) : justifyFromMode(cfg.justify);
 
-    const htmlId = cfg.htmlId ? ` id="${escapeAttr(cfg.htmlId)}"` : "";
+    const alignItems =
+      cfg.orientation === "vertical" ? alignItemsFromAlign(cfg.align) : "center";
+
+    const linkDeco = cfg.underline ? "underline" : "none";
+    const wrapCss = (cfg.wrap && cfg.orientation !== "vertical") ? "wrap" : "nowrap";
+
+const dividerCss = cfg.divider
+
+  ? (cfg.orientation === "vertical"
+      ? `.${navClass} .sgnav__links a + a{ border-top:1px solid rgba(255,255,255,0.10); }`
+      : `.${navClass} .sgnav__links a + a{ border-left:1px solid rgba(255,255,255,0.10); }`)
+  : "";
+let layoutCss = "";
+
+if (cfg.layout === "underline") {
+  layoutCss = `
+.${navClass} .sgnav__links a{ background:transparent; border-color:transparent; box-shadow:none; border-radius:10px; }
+.${navClass} .sgnav__links a:hover{ background:transparent; }
+.${navClass} .sgnav__links a.active{ background:transparent; }
+.${navClass} .sgnav__links a .sgnav__u{ display:block; height:2px; margin-top:6px; border-radius:999px; background:transparent; }
+.${navClass} .sgnav__links a.active .sgnav__u{ background:${cfg.activeColor}; opacity:.9; }
+`;
+} else if (cfg.layout === "tabs") {
+  layoutCss = `
+.${navClass} .sgnav__links a{ background:transparent; box-shadow:none; border-color:rgba(255,255,255,0.14); }
+.${navClass} .sgnav__links a.active{ background:${cfg.activeBg}; }
+`;
+} else if (cfg.layout === "sidebar") {
+  layoutCss = `
+.${navClass}{ align-items:stretch; }
+.${navClass} .sgnav__links{ width:100%; }
+.${navClass} .sgnav__links a{ width:100%; justify-content:flex-start; }
+`;
+}
+
     const extraClass = cfg.htmlClass ? ` ${escapeAttr(cfg.htmlClass)}` : "";
+    const htmlId = cfg.htmlId ? ` id="${escapeAttr(cfg.htmlId)}"` : "";
     const navNameAttr = cfg.navName ? ` data-nav-name="${escapeAttr(cfg.navName)}"` : "";
 
-    const js = `
+    const linksHtml = buildLinksHtml(cfg);
+
+    const stopDrag = previewMode ? "" : `
+      (function(){
+        try{
+          var root = document.querySelector('.${navClass}');
+          if(!root) return;
+          root.addEventListener('pointerdown', function(ev){ ev.stopPropagation(); }, true);
+          root.addEventListener('mousedown', function(ev){ ev.stopPropagation(); }, true);
+        }catch(e){}
+      })();
+    `.trim();
+
+    const runtime = `
 (function(){
   try{
     var root = document.querySelector('.${navClass}');
     if(!root) return;
-    var mode = root.getAttribute('data-active-mode') || 'none';
-    var hookMode = root.getAttribute('data-hook-mode') || 'none';
 
-    function allLinks(){ return root.querySelectorAll('a.sgnav__link, a.sgnav__brand'); }
-    function clearActive(){ allLinks().forEach(function(a){ a.classList.remove('active'); }); }
+    var hookMode = root.getAttribute('data-hook-mode') || 'none';
+    var activeMode = root.getAttribute('data-active-mode') || 'none';
+    var links = root.querySelectorAll('a');
+
+    function clearActive(){
+      links.forEach(function(a){ a.classList.remove('active'); });
+    }
 
     function setActiveByPage(){
       var sp = new URLSearchParams(window.location.search || '');
       var page = sp.get('page') || '';
       if(!page) return;
-      allLinks().forEach(function(a){
+      links.forEach(function(a){
         var p = a.getAttribute('data-page') || '';
         if(p && p === page) a.classList.add('active');
       });
@@ -435,136 +482,205 @@ function buildEditorMarkup(el) {
 
     function setActiveByUrl(){
       var cur = window.location.pathname + window.location.search;
-      allLinks().forEach(function(a){
+      links.forEach(function(a){
         var href = a.getAttribute('href') || '';
         if(href === cur || (href && cur.indexOf(href) !== -1)) a.classList.add('active');
       });
     }
 
-    if(mode === 'query_page') { clearActive(); setActiveByPage(); }
-    else if(mode === 'url') { clearActive(); setActiveByUrl(); }
+    function setActiveByClick(a){
+      clearActive();
+      a.classList.add('active');
+    }
 
+    if(activeMode === 'query_page') setActiveByPage();
+    else if(activeMode === 'url') setActiveByUrl();
+
+    // preview: klik = symulacja działania + status
+    if(root.getAttribute('data-preview') === '1'){
+      root.addEventListener('click', function(ev){
+        var a = ev.target && ev.target.closest ? ev.target.closest('a') : null;
+        if(!a) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        setActiveByClick(a);
+
+        var key = a.getAttribute('data-key') || '';
+        var href = a.getAttribute('href') || '';
+        var page = a.getAttribute('data-page') || '';
+        var navName = root.getAttribute('data-nav-name') || '';
+
+        var status = document.getElementById('nav-preview-status');
+        if(status){
+          status.innerHTML =
+            'Klik: <b>' + (key || a.textContent || 'link') + '</b> | href: <b>' + href + '</b>' +
+            (page ? (' | page: <b>' + page + '</b>') : '') +
+            (navName ? (' | navName: <b>' + navName + '</b>') : '');
+        }
+
+        if(hookMode === 'event'){
+          document.dispatchEvent(new CustomEvent('sg:navigate', {
+            detail: { key: key, href: href, page: page, navName: navName }
+          }));
+        }
+      }, true);
+
+      return;
+    }
+
+    // runtime: hook event
     if(hookMode === 'event'){
       root.addEventListener('click', function(ev){
         var a = ev.target && ev.target.closest ? ev.target.closest('a') : null;
-        if(!a || !root.contains(a)) return;
-        ev.preventDefault();
-        var detail = {
-          key: a.getAttribute('data-key') || '',
-          href: a.getAttribute('href') || '',
-          label: (a.textContent || '').trim(),
-          navName: root.getAttribute('data-nav-name') || '',
-        };
-        root.dispatchEvent(new CustomEvent('sg:navigate', { detail: detail, bubbles: true }));
+        if(!a) return;
+        var key = a.getAttribute('data-key') || '';
+        var href = a.getAttribute('href') || '';
+        var page = a.getAttribute('data-page') || '';
+        var navName = root.getAttribute('data-nav-name') || '';
+
+        document.dispatchEvent(new CustomEvent('sg:navigate', {
+          detail: { key: key, href: href, page: page, navName: navName }
+        }));
       }, true);
     }
   }catch(e){}
 })();`.trim();
 
+    const pointerEvents = previewMode ? "auto" : "none";
+const brandHtml = cfg.brandText
+  ? `<a class="sgnav__brand" href="${escapeAttr(cfg.brandHref || "#")}" data-key="brand" data-page="">${escapeHtml(cfg.brandText)}</a>`
+  : "";
+
     return `
 <style>
-  .${navClass}{
-    width:100%;
-    height:100%;
-    box-sizing:border-box;
-    padding:${cfg.pad}px;
-    display:flex;
-    flex-direction:${flexDir};
-    justify-content:${justify};
-    align-items:${alignItems};
-    flex-wrap:${wrap};
-    gap:${cfg.gap}px;
-  }
+.${navClass}{
+  width:100%;
+  height:100%;
+  box-sizing:border-box;
+  padding:${cfg.pad}px;
 
-  .${navClass} .sgnav__div{
-    flex:0 0 auto;
-    width:${cfg.orientation === "vertical" ? "100%" : "1px"};
-    height:${cfg.orientation === "vertical" ? "1px" : `${dividerSize}px`};
-    background:${hexToRgba(cfg.activeColor, 0.18)};
-    opacity:0.6;
-  }
+display:flex;
+flex-direction:${flexDir};
+gap:${cfg.gap}px;
+align-items:${cfg.orientation === "vertical" ? alignItems : "center"};
 
-  .${navClass} a,
-  .${navClass} a:visited{
+
+  background:transparent;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+
+  color:inherit;
+  font:inherit;
+
+  pointer-events:${pointerEvents};
+}
+
+
+
+
+
+  .${navClass} .sgnav__links a,
+.${navClass} .sgnav__links a:visited{
     font:inherit;
     line-height:1;
     margin:0;
-    box-sizing:border-box;
-    position:relative;
+    color:${cfg.linkColor};
+    text-decoration:${cfg.underline ? "underline" : "none"};
+    background:transparent;
+box-sizing:border-box;
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    text-align:center;
+
     padding:${cfg.linkPadY}px ${cfg.linkPadX}px;
-    color:${cfg.linkColor};
-    text-decoration:${deco};
-    background:transparent;
+    border-radius:${cfg.linkRadius}px;
+    border:${cfg.linkBorderCss};
+    box-shadow:${linkShadowCss(cfg.linkShadow)};
+
     white-space:nowrap;
     user-select:none;
-    transition:background .15s ease, color .15s ease, transform .12s ease, border-color .15s ease;
+
+   transition:background .15s ease, color .15s ease, transform .12s ease;
+
+    ${cfg.stretch ? "flex:1 1 0;" : "flex:0 0 auto;"}
   }
 
-  .${navClass} a.sgnav__link{${cfg.stretch ? "flex:1 1 0;" : ""}}
 
-  .${navClass}[data-layout="pills"] a{
-    border:${cfg.linkBorderCss};
-    border-radius:${cfg.linkRadius}px;
-    box-shadow:${linkShadowCss(cfg.linkShadow)};
+  .${navClass} .sgnav__links a:hover{
+    background:${cfg.hoverBg};
+    color:${cfg.hoverColor};
+    transform:translateY(-1px);
   }
 
-  .${navClass}[data-layout="tabs"] a,
-  .${navClass}[data-layout="underline"] a{
-    border:none;
-    box-shadow:none;
-    border-bottom:2px solid transparent;
-    border-radius:${cfg.layout === "tabs" ? "10px 10px 0 0" : "0"};
-    text-decoration:none;
-  }
+  .${navClass} .sgnav__links a.active{ background:${cfg.activeBg}; color:${cfg.activeColor}; }
 
-  .${navClass}[data-layout="sidebar"]{ align-items:stretch; }
-  .${navClass}[data-layout="sidebar"] a{
-    justify-content:flex-start;
-    width:100%;
-    border:none;
-    box-shadow:none;
-    border-radius:10px;
-    text-decoration:none;
-  }
-  .${navClass}[data-layout="sidebar"] a::before{
-    content:"";
-    position:absolute;
-    left:0;
-    top:8px;
-    bottom:8px;
-    width:3px;
-    border-radius:999px;
-    background:transparent;
-  }
 
-  .${navClass} a:hover{ background:${cfg.hoverBg}; color:${cfg.hoverColor}; transform:translateY(-1px); }
-  .${navClass}[data-layout="tabs"] a:hover,
-  .${navClass}[data-layout="underline"] a:hover,
-  .${navClass}[data-layout="sidebar"] a:hover{ transform:none; }
 
-  .${navClass} a.active{ background:${cfg.activeBg}; color:${cfg.activeColor}; }
-  .${navClass}[data-layout="tabs"] a.active,
-  .${navClass}[data-layout="underline"] a.active{ border-bottom-color:${cfg.activeColor}; }
-  .${navClass}[data-layout="sidebar"] a.active::before{ background:${cfg.activeColor}; }
+  .${navClass} .sgnav__links{
+  display:flex;
+  flex-direction:${flexDir};
+  flex-wrap:${wrapCss};
+  justify-content:${justify};
+  align-items:${cfg.orientation === "vertical" ? alignItems : "center"};
+  gap:${cfg.gap}px;
+  width:100%;
+  height:100%;
+
+}
+  ${dividerCss}
+.${navClass} .sgnav__brand{
+  display:flex; align-items:center;
+  font-weight:700;
+  text-decoration:none;
+  color:${cfg.linkColor};
+  padding:${cfg.linkPadY}px ${cfg.linkPadX}px;
+  border-radius:${cfg.linkRadius}px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+  white-space:nowrap;
+}
+${layoutCss}
 </style>
-<nav${htmlId} class="${navClass}${extraClass}" data-layout="${escapeAttr(cfg.layout)}" data-orientation="${escapeAttr(cfg.orientation)}" data-hook-mode="${escapeAttr(cfg.hookMode)}"${navNameAttr} data-active-mode="${escapeAttr(cfg.activeMode)}">
-  ${linksHtml}
+
+<nav${htmlId}
+  class="${navClass} sgnav sgnav--${escapeAttr(cfg.layout)}${extraClass}"
+
+  data-layout="${escapeAttr(cfg.layout)}"
+  data-orientation="${escapeAttr(cfg.orientation)}"
+  data-hook-mode="${escapeAttr(cfg.hookMode)}"
+  data-active-mode="${escapeAttr(cfg.activeMode)}"
+  data-preview="${previewMode ? "1" : "0"}"
+  ${navNameAttr}
+>
+  ${brandHtml}
+  <div class="sgnav__links">
+    ${linksHtml}
+  </div>
 </nav>
-<script>${js}</script>
+
+
+
+<script>
+${stopDrag}
+${runtime}
+</script>
     `.trim();
   }
 
   function updateNavVisuals(el) {
     if (!isNav(el)) return;
     ensureDefaults(el);
+
+    applyBackground(el);
+
     el.contentEditable = "false";
-    el.innerHTML = buildEditorMarkup(el);
+    el.innerHTML = buildMarkup(el, false);
+
     const panelPrev = $("nav-panel-preview");
-    if (panelPrev) panelPrev.innerHTML = buildEditorMarkup(el);
+    if (panelPrev) panelPrev.innerHTML = buildMarkup(el, true);
   }
 
   window.updateNavVisuals = updateNavVisuals;
@@ -574,11 +690,15 @@ function buildEditorMarkup(el) {
     if (!window.canvas) return;
     if (typeof window.zCounter === "undefined") window.zCounter = 1;
 
-    const host = (typeof window.activeContainer !== "undefined" && window.activeContainer) ? window.activeContainer : canvas;
+    const host =
+      typeof window.activeContainer !== "undefined" && window.activeContainer
+        ? window.activeContainer
+        : canvas;
+
     const rect = host.getBoundingClientRect();
 
-    const lx = Number.isFinite(clientX) ? (clientX - rect.left) : pointer.x;
-    const ly = Number.isFinite(clientY) ? (clientY - rect.top) : pointer.y;
+    const lx = Number.isFinite(clientX) ? clientX - rect.left : pointer.x;
+    const ly = Number.isFinite(clientY) ? clientY - rect.top : pointer.y;
 
     const navEl = document.createElement("div");
     navEl.className = "canvas-element type-nav";
@@ -595,49 +715,125 @@ function buildEditorMarkup(el) {
 
     if (typeof window.setupElementMovement === "function") window.setupElementMovement(navEl, "nav");
 
-    navEl.onclick = (ev) => { ev.stopPropagation(); window.selectElement?.(navEl); };
+    navEl.onclick = (ev) => {
+      ev.stopPropagation();
+      window.selectElement?.(navEl);
+    };
+
     window.selectElement?.(navEl);
     window.refreshLayers?.();
 
     return navEl;
   };
 
+  function setUiVisibility() {
+    const mode = ($("nav-bg-mode")?.value || "solid").toLowerCase();
+    const solidWrap = $("nav-bg-solid-wrap");
+    const gradWrap = $("nav-bg-grad-wrap");
+
+    if (solidWrap) solidWrap.style.display = mode === "solid" ? "block" : "none";
+    if (gradWrap) gradWrap.style.display = mode === "gradient" ? "block" : "none";
+  }
+
   window.syncNavInputs = function syncNavInputs(el) {
     if (!isNav(el)) return;
     ensureDefaults(el);
-
     const cfg = getCfg(el);
 
-    const setVal = (id, v) => { const n = $(id); if (n) n.value = String(v ?? ""); };
+    const toHexColor = (val, fallback) => {
+      const raw = String(val ?? "").trim();
+      const fbRaw = String(fallback ?? "#ffffff").trim();
+      const fb = /^#[0-9a-f]{6}$/i.test(fbRaw) ? fbRaw : "#ffffff";
+
+      const pad2 = (n) => n.toString(16).padStart(2, "0");
+      const clamp255 = (n) => Math.max(0, Math.min(255, n | 0));
+
+      if (!raw) return fb;
+
+      if (/^#[0-9a-f]{3}$/i.test(raw)) {
+        const r = raw[1], g = raw[2], b = raw[3];
+        return ("#" + r + r + g + g + b + b).toLowerCase();
+      }
+      if (/^#[0-9a-f]{6}$/i.test(raw)) return raw.toLowerCase();
+      if (/^#[0-9a-f]{8}$/i.test(raw)) return raw.slice(0, 7).toLowerCase();
+
+      const m = raw.match(/^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(?:\s*,\s*([0-9.]+))?\s*\)$/i);
+      if (m) {
+        const r = clamp255(parseInt(m[1], 10));
+        const g = clamp255(parseInt(m[2], 10));
+        const b = clamp255(parseInt(m[3], 10));
+        return "#" + pad2(r) + pad2(g) + pad2(b);
+      }
+
+      return fb;
+    };
+
+    const setVal = (id, v) => {
+      const n = $(id);
+      if (!n) return;
+
+      if (String(n.type || "").toLowerCase() === "color") {
+        const current = String(n.value || "").trim();
+        const safeFallback = /^#[0-9a-f]{6}$/i.test(current) ? current : "#ffffff";
+        n.value = toHexColor(v, safeFallback);
+        return;
+      }
+
+      n.value = String(v ?? "");
+    };
     const setChk = (id, v) => { const n = $(id); if (n) n.checked = !!v; };
 
     setVal("nav-items", el.dataset.navItems || "");
-    setVal("nav-layout", cfg.layout);
-    setVal("nav-hook-mode", cfg.hookMode);
 
+    setVal("nav-layout", cfg.layout);
     setVal("nav-orientation", cfg.orientation);
     setVal("nav-align", cfg.align);
+
+    setVal("nav-hook-mode", cfg.hookMode);
+    setVal("nav-name", cfg.navName);
+
+    setVal("nav-html-id", cfg.htmlId);
+    setVal("nav-html-class", cfg.htmlClass);
+    setVal("nav-brand-text", cfg.brandText);
+    setVal("nav-brand-href", cfg.brandHref);
+
     setVal("nav-justify", cfg.justify);
     setVal("nav-v-justify", cfg.vJustify);
-    setVal("nav-name", cfg.navName);
+
     setChk("nav-wrap", cfg.wrap);
     setChk("nav-stretch", cfg.stretch);
     setChk("nav-divider", cfg.divider);
+
+    setVal("nav-active-mode", cfg.activeMode);
+    setChk("nav-underline", cfg.underline);
+
     setVal("nav-gap", cfg.gap);
     setVal("nav-pad", cfg.pad);
+
+    setVal("nav-w", parseInt(el.style.width || "680", 10) || 680);
+    setVal("nav-h", parseInt(el.style.height || "56", 10) || 56);
+
+    setVal("nav-radius", parseInt(el.style.borderRadius || "12", 10) || 12);
+
+    const borderW = parseInt(String(el.style.border || "").match(/(\d+)px/)?.[1] || "1", 10) || 1;
+    setVal("nav-border-w", borderW);
+
+    const borderColor = String(el.style.border || "").match(/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8})/)?.[1] || "#ffffff";
+    setVal("nav-border-color", borderColor);
+
+    const shadowName = (el.style.boxShadow || "").includes("rgba") ? (el.style.boxShadow.includes("36px") ? "strong" : "soft") : "none";
+    setVal("nav-shadow", shadowName);
+
+    setVal("nav-text-color", el.style.color || "#ffffff");
+    setVal("nav-font-size", parseInt(el.style.fontSize || "15", 10) || 15);
 
     setVal("nav-link-pad-x", cfg.linkPadX);
     setVal("nav-link-pad-y", cfg.linkPadY);
     setVal("nav-link-radius", cfg.linkRadius);
 
-    setVal("nav-link-border-w", (cfg.linkBorderCss === "none") ? 0 : (parseInt(el.dataset.navLinkBorderW || "1", 10) || 1));
-    const borderColor = (typeof window.rgbToHex === "function")
-      ? (rgbToHex(el.dataset.navLinkBorderColor || "#ffffff") || "#ffffff")
-      : (String(el.dataset.navLinkBorderColor || "#ffffff").startsWith("#") ? el.dataset.navLinkBorderColor : "#ffffff");
-    setVal("nav-link-border-color", borderColor);
+    setVal("nav-link-border-w", parseInt(el.dataset.navLinkBorderW || "1", 10) || 1);
+    setVal("nav-link-border-color", el.dataset.navLinkBorderColor || "#ffffff");
     setVal("nav-link-shadow", cfg.linkShadow);
-
-    setChk("nav-underline", cfg.underline);
 
     setVal("nav-link-color", cfg.linkColor);
     setVal("nav-hover-bg", cfg.hoverBg);
@@ -645,196 +841,203 @@ function buildEditorMarkup(el) {
     setVal("nav-active-bg", cfg.activeBg);
     setVal("nav-active-color", cfg.activeColor);
 
-    setVal("nav-active-mode", cfg.activeMode);
+    setVal("nav-bg-mode", cfg.bgMode);
+    setVal("nav-bg-solid", cfg.bgSolid);
 
-    setVal("nav-html-id", cfg.htmlId);
-    setVal("nav-html-class", cfg.htmlClass);
-    setVal("nav-brand-text", cfg.brandText);
-    setVal("nav-brand-href", cfg.brandHref);
+    setVal("nav-grad-type", cfg.gradType);
+    setVal("nav-grad-angle", cfg.gradAngle);
+    setVal("nav-grad-pos-x", cfg.gradPosX);
+    setVal("nav-grad-pos-y", cfg.gradPosY);
+    setVal("nav-grad-from", cfg.gradFrom);
+    setVal("nav-grad-mid", cfg.gradMid);
+    setVal("nav-grad-to", cfg.gradTo);
+    setChk("nav-grad-use-mid", cfg.gradUseMid === 1);
+    setVal("nav-grad-preset", cfg.gradPreset);
 
-    setVal("nav-w", parseInt(el.style.width) || 680);
-    setVal("nav-h", parseInt(el.style.height) || 56);
-
-    setVal("nav-bg", (typeof rgbToHex === "function") ? rgbToHex(el.style.backgroundColor) : "#111827");
-    const border = el.style.border || "";
-    const bw = (border.match(/(\d+)px/) || [])[1] || "1";
-    setVal("nav-border-w", bw);
-    const bs = (el.style.boxShadow || "none").toLowerCase();
-    const shadowPreset =
-      bs === "none" ? "none"
-      : (bs.includes("44px") || bs.includes("0.22")) ? "strong"
-      : "soft";
-    setVal("nav-shadow", shadowPreset);
-
-    setVal("nav-radius", parseInt(el.style.borderRadius) || 12);
-
+    setUiVisibility();
     updateNavVisuals(el);
   };
 
-  function applyShadow(el, preset) {
-    if (preset === "none") el.style.boxShadow = "none";
-    else if (preset === "strong") el.style.boxShadow = "0 18px 44px rgba(2,6,23,.22)";
-    else el.style.boxShadow = "0 10px 24px rgba(2,6,23,.14)";
-  }
-
   function bindNavUI() {
-    const bindOnce = (id, ev, fn) => {
-      const n = $(id);
-      if (!n) return;
-      const key = `__sgNavBound_${ev}`;
-      if (n.dataset[key] === "1") return;
-      n.dataset[key] = "1";
-      n.addEventListener(ev, fn);
+    const applyIfActive = (fn) => {
+      const el = window.activeElement;
+      if (!el || !isNav(el)) return;
+      fn(el);
+      updateNavVisuals(el);
+      window.refreshLayers?.();
     };
 
-    const activeNav = () => (window.activeElement && isNav(window.activeElement)) ? window.activeElement : null;
-    const map = [
-      ["nav-layout", "navLayout"],
-      ["nav-hook-mode", "navHookMode"],
-      ["nav-justify", "navJustify"],
-      ["nav-v-justify", "navVJustify"],
-      ["nav-name", "navName"],
-      ["nav-items", "navItems"],
-      ["nav-orientation", "navOrientation"],
-      ["nav-align", "navAlign"],
-      ["nav-gap", "navGap"],
-      ["nav-pad", "navPad"],
-      ["nav-link-pad-x", "navLinkPadX"],
-      ["nav-link-pad-y", "navLinkPadY"],
-      ["nav-link-radius", "navLinkRadius"],
-      ["nav-link-color", "navLinkColor"],
-      ["nav-hover-bg", "navHoverBg"],
-      ["nav-hover-color", "navHoverColor"],
-      ["nav-active-bg", "navActiveBg"],
-      ["nav-active-color", "navActiveColor"],
-      ["nav-active-mode", "navActiveMode"],
-      ["nav-link-border-w", "navLinkBorderW"],
-      ["nav-link-border-color", "navLinkBorderColor"],
-      ["nav-link-shadow", "navLinkShadow"],
-      ["nav-html-id", "navHtmlId"],
-      ["nav-html-class", "navHtmlClass"],
-      ["nav-brand-text", "navBrandText"],
-      ["nav-brand-href", "navBrandHref"],
-    ];
+    const bindVal = (id, cb) => {
+      const n = $(id);
+      if (!n) return;
+      n.addEventListener("input", () => applyIfActive(cb));
+      n.addEventListener("change", () => applyIfActive(cb));
+    };
 
-    map.forEach(([id, key]) => {
-      bindOnce(id, "input", (e) => {
-        const el = activeNav(); if (!el) return;
-        el.dataset[key] = e.target.value;
-        updateNavVisuals(el);
-        window.refreshLayers?.();
-      });
-      bindOnce(id, "change", (e) => {
-        const el = activeNav(); if (!el) return;
-        el.dataset[key] = e.target.value;
-        updateNavVisuals(el);
-        window.refreshLayers?.();
-      });
+    const bindChk = (id, cb) => {
+      const n = $(id);
+      if (!n) return;
+      n.addEventListener("change", () => applyIfActive(cb));
+    };
+
+    bindVal("nav-items", (el) => { el.dataset.navItems = $("nav-items").value || ""; });
+
+    bindVal("nav-layout", (el) => { el.dataset.navLayout = $("nav-layout").value || "pills"; });
+    bindVal("nav-orientation", (el) => { el.dataset.navOrientation = $("nav-orientation").value || "horizontal"; });
+    bindVal("nav-align", (el) => { el.dataset.navAlign = $("nav-align").value || "left"; });
+
+    bindVal("nav-hook-mode", (el) => { el.dataset.navHookMode = $("nav-hook-mode").value || "none"; });
+    bindVal("nav-name", (el) => { el.dataset.navName = $("nav-name").value || ""; });
+
+    bindVal("nav-html-id", (el) => { el.dataset.navHtmlId = $("nav-html-id").value || ""; });
+    bindVal("nav-html-class", (el) => { el.dataset.navHtmlClass = $("nav-html-class").value || ""; });
+
+    bindVal("nav-brand-text", (el) => { el.dataset.navBrandText = $("nav-brand-text").value || ""; });
+    bindVal("nav-brand-href", (el) => { el.dataset.navBrandHref = $("nav-brand-href").value || "#"; });
+
+    bindVal("nav-justify", (el) => { el.dataset.navJustify = $("nav-justify").value || "start"; });
+    bindVal("nav-v-justify", (el) => { el.dataset.navVJustify = $("nav-v-justify").value || "top"; });
+
+    bindChk("nav-wrap", (el) => { el.dataset.navWrap = $("nav-wrap").checked ? "1" : "0"; });
+    bindChk("nav-stretch", (el) => { el.dataset.navStretch = $("nav-stretch").checked ? "1" : "0"; });
+    bindChk("nav-divider", (el) => { el.dataset.navDivider = $("nav-divider").checked ? "1" : "0"; });
+
+    bindVal("nav-active-mode", (el) => { el.dataset.navActiveMode = $("nav-active-mode").value || "query_page"; });
+    bindChk("nav-underline", (el) => { el.dataset.navUnderline = $("nav-underline").checked ? "1" : "0"; });
+
+    bindVal("nav-gap", (el) => { el.dataset.navGap = String(parseInt($("nav-gap").value || "10", 10) || 10); });
+    bindVal("nav-pad", (el) => { el.dataset.navPad = String(parseInt($("nav-pad").value || "10", 10) || 10); });
+
+    bindVal("nav-w", (el) => { el.style.width = (parseInt($("nav-w").value || "680", 10) || 680) + "px"; });
+    bindVal("nav-h", (el) => { el.style.height = (parseInt($("nav-h").value || "56", 10) || 56) + "px"; });
+
+    bindVal("nav-radius", (el) => { el.style.borderRadius = (parseInt($("nav-radius").value || "12", 10) || 12) + "px"; });
+
+    bindVal("nav-border-w", (el) => {
+      const w = clamp(parseInt($("nav-border-w").value || "1", 10) || 1, 0, 12);
+      const col = ($("nav-border-color").value || "#ffffff").trim() || "#ffffff";
+      el.style.border = `${w}px solid ${col}`;
+    });
+    bindVal("nav-border-color", (el) => {
+      const w = clamp(parseInt($("nav-border-w").value || "1", 10) || 1, 0, 12);
+      const col = ($("nav-border-color").value || "#ffffff").trim() || "#ffffff";
+      el.style.border = `${w}px solid ${col}`;
     });
 
+    bindVal("nav-shadow", (el) => { el.style.boxShadow = containerShadowCss($("nav-shadow").value || "soft"); });
 
+    bindVal("nav-text-color", (el) => { el.style.color = $("nav-text-color").value || "#ffffff"; });
+    bindVal("nav-font-size", (el) => { el.style.fontSize = (parseInt($("nav-font-size").value || "15", 10) || 15) + "px"; });
 
-    bindOnce("nav-wrap", "change", (e) => {
-      const el = activeNav(); if (!el) return;
-      el.dataset.navWrap = e.target.checked ? "1" : "0";
-      updateNavVisuals(el);
-      window.refreshLayers?.();
+    bindVal("nav-link-pad-x", (el) => { el.dataset.navLinkPadX = String(parseInt($("nav-link-pad-x").value || "12", 10) || 12); });
+    bindVal("nav-link-pad-y", (el) => { el.dataset.navLinkPadY = String(parseInt($("nav-link-pad-y").value || "8", 10) || 8); });
+    bindVal("nav-link-radius", (el) => { el.dataset.navLinkRadius = String(parseInt($("nav-link-radius").value || "8", 10) || 8); });
+
+    bindVal("nav-link-border-w", (el) => { el.dataset.navLinkBorderW = String(parseInt($("nav-link-border-w").value || "1", 10) || 1); });
+    bindVal("nav-link-border-color", (el) => { el.dataset.navLinkBorderColor = $("nav-link-border-color").value || "#ffffff"; });
+
+    bindVal("nav-link-shadow", (el) => { el.dataset.navLinkShadow = $("nav-link-shadow").value || "soft"; });
+
+    bindVal("nav-link-color", (el) => { el.dataset.navLinkColor = $("nav-link-color").value || "#ffffff"; });
+    bindVal("nav-hover-bg", (el) => { el.dataset.navHoverBg = $("nav-hover-bg").value || "rgba(255,255,255,0.12)"; });
+    bindVal("nav-hover-color", (el) => { el.dataset.navHoverColor = $("nav-hover-color").value || "#ffffff"; });
+    bindVal("nav-active-bg", (el) => { el.dataset.navActiveBg = $("nav-active-bg").value || "rgba(255,255,255,0.18)"; });
+    bindVal("nav-active-color", (el) => { el.dataset.navActiveColor = $("nav-active-color").value || "#ffffff"; });
+    bindVal("nav-bg-mode", (el) => {
+      el.dataset.navBgMode = ($("nav-bg-mode").value || "solid").toLowerCase();
+      setUiVisibility();
+      applyBackground(el);
     });
 
-    bindOnce("nav-stretch", "change", (e) => {
-      const el = activeNav(); if (!el) return;
-      el.dataset.navStretch = e.target.checked ? "1" : "0";
-      updateNavVisuals(el);
-      window.refreshLayers?.();
+    bindVal("nav-bg-solid", (el) => {
+      el.dataset.navBgSolid = $("nav-bg-solid").value || "#111827";
+      applyBackground(el);
     });
 
-    bindOnce("nav-divider", "change", (e) => {
-      const el = activeNav(); if (!el) return;
-      el.dataset.navDivider = e.target.checked ? "1" : "0";
-      updateNavVisuals(el);
-      window.refreshLayers?.();
-    });
-    bindOnce("nav-underline", "change", (e) => {
-      const el = activeNav(); if (!el) return;
-      el.dataset.navUnderline = e.target.checked ? "1" : "0";
-      updateNavVisuals(el);
-      window.refreshLayers?.();
-    });
-    bindOnce("nav-w", "input", (e) => {
-      const el = activeNav(); if (!el) return;
-      el.style.width = (parseInt(e.target.value || "680", 10) || 680) + "px";
-      updateNavVisuals(el);
-      window.refreshLayers?.();
+    bindVal("nav-grad-type", (el) => { el.dataset.navGradType = $("nav-grad-type").value || "linear"; applyBackground(el); });
+    bindVal("nav-grad-angle", (el) => { el.dataset.navGradAngle = $("nav-grad-angle").value || "135"; applyBackground(el); });
+    bindVal("nav-grad-pos-x", (el) => { el.dataset.navGradPosX = $("nav-grad-pos-x").value || "50"; applyBackground(el); });
+    bindVal("nav-grad-pos-y", (el) => { el.dataset.navGradPosY = $("nav-grad-pos-y").value || "50"; applyBackground(el); });
+
+    bindVal("nav-grad-from", (el) => { el.dataset.navGradFrom = $("nav-grad-from").value || "#0ea5e9"; applyBackground(el); });
+    bindVal("nav-grad-mid", (el) => { el.dataset.navGradMid = $("nav-grad-mid").value || "#a855f7"; applyBackground(el); });
+    bindVal("nav-grad-to", (el) => { el.dataset.navGradTo = $("nav-grad-to").value || "#111827"; applyBackground(el); });
+
+    bindChk("nav-grad-use-mid", (el) => {
+      el.dataset.navGradUseMid = $("nav-grad-use-mid").checked ? "1" : "0";
+      applyBackground(el);
     });
 
-    bindOnce("nav-h", "input", (e) => {
-      const el = activeNav(); if (!el) return;
-      el.style.height = (parseInt(e.target.value || "56", 10) || 56) + "px";
-      updateNavVisuals(el);
-      window.refreshLayers?.();
+    bindVal("nav-grad-preset", (el) => {
+      const key = ($("nav-grad-preset").value || "").trim();
+      el.dataset.navGradPreset = key;
+
+      if (key && gradPresets[key]) {
+        const p = gradPresets[key];
+        el.dataset.navBgMode = "gradient";
+        el.dataset.navGradType = p.type;
+        el.dataset.navGradAngle = String(p.angle);
+        el.dataset.navGradPosX = String(p.posX);
+        el.dataset.navGradPosY = String(p.posY);
+        el.dataset.navGradFrom = p.from;
+        el.dataset.navGradMid = p.mid;
+        el.dataset.navGradTo = p.to;
+        el.dataset.navGradUseMid = p.useMid ? "1" : "0";
+        window.syncNavInputs?.(el);
+      } else {
+        setUiVisibility();
+        applyBackground(el);
+      }
     });
 
-    bindOnce("nav-bg", "input", (e) => {
-      const el = activeNav(); if (!el) return;
-      el.style.backgroundColor = e.target.value;
-      updateNavVisuals(el);
-      window.refreshLayers?.();
-    });
-
-    bindOnce("nav-border-w", "input", (e) => {
-      const el = activeNav(); if (!el) return;
-      const bw = clamp(parseInt(e.target.value || "1", 10) || 1, 0, 10);
-      el.style.border = (bw === 0) ? "none" : `${bw}px solid rgba(255,255,255,0.08)`;
-      updateNavVisuals(el);
-      window.refreshLayers?.();
-    });
-
-    bindOnce("nav-radius", "input", (e) => {
-      const el = activeNav(); if (!el) return;
-      el.style.borderRadius = clamp(parseInt(e.target.value || "12", 10) || 12, 0, 40) + "px";
-      updateNavVisuals(el);
-      window.refreshLayers?.();
-    });
-
-    bindOnce("nav-shadow", "change", (e) => {
-      const el = activeNav(); if (!el) return;
-      applyShadow(el, e.target.value);
-      updateNavVisuals(el);
-      window.refreshLayers?.();
-    });
-    bindOnce("nav-preset-dark", "click", () => {
-      const el = activeNav(); if (!el) return;
-      el.style.backgroundColor = "#111827";
-      el.style.border = "1px solid rgba(255,255,255,0.08)";
-      el.style.color = "#ffffff";
-
-      el.dataset.navLinkColor = "#ffffff";
-      el.dataset.navHoverBg = "rgba(255,255,255,0.12)";
-      el.dataset.navHoverColor = "#ffffff";
-      el.dataset.navActiveBg = "rgba(255,255,255,0.18)";
-      el.dataset.navActiveColor = "#ffffff";
-
-      updateNavVisuals(el);
+    const swap13 = $("nav-grad-swap");
+    if (swap13) swap13.onclick = () => applyIfActive((el) => {
+      const a = el.dataset.navGradFrom || "#0ea5e9";
+      const c = el.dataset.navGradTo || "#111827";
+      el.dataset.navGradFrom = c;
+      el.dataset.navGradTo = a;
       window.syncNavInputs?.(el);
-      window.refreshLayers?.();
     });
 
-    bindOnce("nav-preset-light", "click", () => {
-      const el = activeNav(); if (!el) return;
-      el.style.backgroundColor = "#ffffff";
-      el.style.border = "1px solid #e2e8f0";
-      el.style.color = "#0f172a";
-
-      el.dataset.navLinkColor = "#0f172a";
-      el.dataset.navHoverBg = "#f1f5f9";
-      el.dataset.navHoverColor = "#0f172a";
-      el.dataset.navActiveBg = "#e2e8f0";
-      el.dataset.navActiveColor = "#0f172a";
-
-      updateNavVisuals(el);
+    const swap12 = $("nav-grad-swap-12");
+    if (swap12) swap12.onclick = () => applyIfActive((el) => {
+      const a = el.dataset.navGradFrom || "#0ea5e9";
+      const b = el.dataset.navGradMid || "#a855f7";
+      el.dataset.navGradFrom = b;
+      el.dataset.navGradMid = a;
       window.syncNavInputs?.(el);
-      window.refreshLayers?.();
     });
+
+    const swap23 = $("nav-grad-swap-23");
+    if (swap23) swap23.onclick = () => applyIfActive((el) => {
+      const b = el.dataset.navGradMid || "#a855f7";
+      const c = el.dataset.navGradTo || "#111827";
+      el.dataset.navGradMid = c;
+      el.dataset.navGradTo = b;
+      window.syncNavInputs?.(el);
+    });
+
+    const randomBtn = $("nav-grad-random");
+    if (randomBtn) randomBtn.onclick = () => applyIfActive((el) => {
+      const keys = Object.keys(gradPresets || {}).filter(Boolean);
+      if (!keys.length) return;
+      const pick = keys[Math.floor(Math.random() * keys.length)];
+      const p = gradPresets[pick];
+
+      el.dataset.navGradPreset = pick;
+      el.dataset.navBgMode = "gradient";
+      el.dataset.navGradType = p.type;
+      el.dataset.navGradAngle = String(p.angle);
+      el.dataset.navGradPosX = String(p.posX);
+      el.dataset.navGradPosY = String(p.posY);
+      el.dataset.navGradFrom = p.from;
+      el.dataset.navGradMid = p.mid;
+      el.dataset.navGradTo = p.to;
+      el.dataset.navGradUseMid = p.useMid ? "1" : "0";
+
+      window.syncNavInputs?.(el);
+    });
+
   }
 
   function hookSelectElement() {
@@ -870,8 +1073,10 @@ function buildEditorMarkup(el) {
       if (isNav(el)) {
         ensureDefaults(el);
         const cfg = getCfg(el);
-    data.content = ""; 
+
+        data.content = "";
         data.navItems = el.dataset.navItems || "";
+
         data.navOrientation = cfg.orientation;
         data.navAlign = cfg.align;
         data.navGap = String(cfg.gap);
@@ -895,6 +1100,7 @@ function buildEditorMarkup(el) {
         data.navWrap = cfg.wrap ? "1" : "0";
         data.navStretch = cfg.stretch ? "1" : "0";
         data.navDivider = cfg.divider ? "1" : "0";
+
         data.navLinkBorderW = String(parseInt(el.dataset.navLinkBorderW || "1", 10) || 1);
         data.navLinkBorderColor = el.dataset.navLinkBorderColor || "#ffffff";
         data.navLinkShadow = cfg.linkShadow;
@@ -906,6 +1112,18 @@ function buildEditorMarkup(el) {
         data.navJustify = cfg.justify;
         data.navVJustify = cfg.vJustify;
         data.navName = cfg.navName;
+        data.navBgMode = cfg.bgMode;
+        data.navBgSolid = cfg.bgSolid;
+
+        data.navGradType = cfg.gradType;
+        data.navGradAngle = String(cfg.gradAngle);
+        data.navGradPosX = String(cfg.gradPosX);
+        data.navGradPosY = String(cfg.gradPosY);
+        data.navGradFrom = cfg.gradFrom;
+        data.navGradMid = cfg.gradMid;
+        data.navGradTo = cfg.gradTo;
+        data.navGradUseMid = cfg.gradUseMid ? "1" : "0";
+        data.navGradPreset = cfg.gradPreset;
       }
 
       return data;
@@ -918,6 +1136,7 @@ function buildEditorMarkup(el) {
     bindNavUI();
     hookSelectElement();
     hookGetElementData();
+
     let tries = 0;
     const t = setInterval(() => {
       tries++;

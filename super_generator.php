@@ -71,6 +71,31 @@ function sg_add_window_scroll_tags(SimpleXMLElement $xml, array $cfg): void {
   $ws->addChild('thumb', htmlspecialchars((string)($cfg['thumb'] ?? 'rgba(15,23,42,0.55)'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
   $ws->addChild('thumbHover', htmlspecialchars((string)($cfg['thumbHover'] ?? 'rgba(15,23,42,0.75)'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
 }
+function sg_add_project_bg_tags(SimpleXMLElement $xml, array $cfg): void {
+  $pb = $xml->addChild('projectBackground');
+
+  $mode = (string)($cfg['mode'] ?? 'none');
+  if (!in_array($mode, ['none','solid','gradient'], true)) $mode = 'none';
+
+  $pb->addChild('mode', $mode);
+
+  $pb->addChild('solid', htmlspecialchars((string)($cfg['solid'] ?? '#f3f4f6'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+
+  $pb->addChild('gradType', htmlspecialchars((string)($cfg['gradType'] ?? 'linear'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+  $pb->addChild('gradAngle', (string)((int)($cfg['gradAngle'] ?? 180)));
+
+  $pb->addChild('gradFrom', htmlspecialchars((string)($cfg['gradFrom'] ?? '#0ea5e9'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+  $pb->addChild('gradMid',  htmlspecialchars((string)($cfg['gradMid']  ?? '#6366f1'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+  $pb->addChild('gradTo',   htmlspecialchars((string)($cfg['gradTo']   ?? '#111827'), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+
+  $useMid = (!empty($cfg['gradUseMid']) && $cfg['gradUseMid'] !== 'false') ? '1' : '0';
+  $pb->addChild('gradUseMid', $useMid);
+
+  $pb->addChild('gradPosX', (string)((int)($cfg['gradPosX'] ?? 50)));
+  $pb->addChild('gradPosY', (string)((int)($cfg['gradPosY'] ?? 50)));
+
+  $pb->addChild('gradPreset', htmlspecialchars((string)($cfg['gradPreset'] ?? ''), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+}
 
 $requested = isset($_GET['file']) ? (string)$_GET['file'] : '';
 if ($requested !== '') {
@@ -123,6 +148,14 @@ if ($winScroll) {
   sg_add_window_scroll_tags($xml, $winScroll);
 }
 
+$projBg = [];
+if (!empty($_POST['projectBackground'])) {
+  $tmp = json_decode((string)$_POST['projectBackground'], true);
+  if (is_array($tmp)) $projBg = $tmp;
+}
+if ($projBg) {
+  sg_add_project_bg_tags($xml, $projBg);
+}
 
     $rawBase = trim((string)($_POST['baseFile'] ?? ''));
 $baseFile = $rawBase !== '' ? sg_clean_file_name($rawBase) : '';
@@ -147,6 +180,8 @@ function saveRecursive($items, $xmlNode) {
     sg_add_child_compact($el, 'htmlId', $item['htmlId'] ?? '', '', true);
     sg_add_child_compact($el, 'htmlClass', $item['htmlClass'] ?? '', '', true);
 
+sg_add_child_compact($el, 'brandCfg', $item['brandCfg'] ?? '', '', true);
+
     $el->addChild('x', $item['x'] ?? 0);
     $el->addChild('y', $item['y'] ?? 0);
     $el->addChild('w', $item['w'] ?? 'auto');
@@ -159,6 +194,11 @@ function saveRecursive($items, $xmlNode) {
     sg_add_child_compact($el, 'boxShadow', $item['boxShadow'] ?? 'none', 'none');
     sg_add_child_compact($el, 'opacity', $item['opacity'] ?? '1', '1');
     sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? 'none', 'none');
+sg_add_child_compact($el, 'sgToggleTarget',    $item['sgToggleTarget'] ?? '', '', true);
+sg_add_child_compact($el, 'sgToggleTrigger',   $item['sgToggleTrigger'] ?? '', '', true);
+sg_add_child_compact($el, 'sgToggleArrow',     $item['sgToggleArrow'] ?? '', '');
+sg_add_child_compact($el, 'sgToggleInitial',   $item['sgToggleInitial'] ?? '', '', true);
+sg_add_child_compact($el, 'sgToggleArrowSide', $item['sgToggleArrowSide'] ?? '', '', true);
 
     switch ($type) {
 
@@ -239,6 +279,9 @@ function saveRecursive($items, $xmlNode) {
         sg_add_child_compact($el, 'btnTitle', $item['btnTitle'] ?? '', '', true);
         sg_add_child_compact($el, 'btnLoading', $item['btnLoading'] ?? '0', '0');
         break;
+case 'brand':
+
+  break;
 
 case 'nav':
   sg_add_child_compact($el, 'navItems', $item['navItems'] ?? '', '', true);
@@ -276,6 +319,18 @@ case 'nav':
   sg_add_child_compact($el, 'navHtmlClass', $item['navHtmlClass'] ?? '', '', true);
   sg_add_child_compact($el, 'navBrandText', $item['navBrandText'] ?? '', '', true);
   sg_add_child_compact($el, 'navBrandHref', $item['navBrandHref'] ?? '', '', true);
+sg_add_child_compact($el, 'navBgMode', $item['navBgMode'] ?? 'solid', 'solid');
+sg_add_child_compact($el, 'navBgSolid', $item['navBgSolid'] ?? '#111827', '#111827');
+
+sg_add_child_compact($el, 'navGradType', $item['navGradType'] ?? 'linear', 'linear');
+sg_add_child_compact($el, 'navGradAngle', $item['navGradAngle'] ?? '135', '135');
+sg_add_child_compact($el, 'navGradPosX', $item['navGradPosX'] ?? '50', '50');
+sg_add_child_compact($el, 'navGradPosY', $item['navGradPosY'] ?? '50', '50');
+sg_add_child_compact($el, 'navGradFrom', $item['navGradFrom'] ?? '#0ea5e9', '#0ea5e9');
+sg_add_child_compact($el, 'navGradMid', $item['navGradMid'] ?? '#a855f7', '#a855f7');
+sg_add_child_compact($el, 'navGradTo', $item['navGradTo'] ?? '#111827', '#111827');
+sg_add_child_compact($el, 'navGradUseMid', $item['navGradUseMid'] ?? '0', '0');
+sg_add_child_compact($el, 'navGradPreset', $item['navGradPreset'] ?? '', '', true);
 
   break;
 
@@ -366,6 +421,27 @@ case 'block':
         sg_add_child_compact($el, 'likertRight', $item['likertRight'] ?? '', '', true);
 
         sg_add_child_compact($el, 'formInputRadius', $item['formInputRadius'] ?? '10', '10');
+sg_add_child_compact($el, 'formMarkerText',  $item['formMarkerText'] ?? '', '', true);
+sg_add_child_compact($el, 'formMarkerStyle', $item['formMarkerStyle'] ?? 'none', 'none');
+sg_add_child_compact($el, 'formIcon',     $item['formIcon'] ?? '', '', true);
+sg_add_child_compact($el, 'formIconSide', $item['formIconSide'] ?? 'left', 'left');
+sg_add_child_compact($el, 'formIconMode', $item['formIconMode'] ?? 'split', 'split');
+sg_add_child_compact($el, 'formIconBg',   $item['formIconBg'] ?? '#f1f5f9', '#f1f5f9');
+sg_add_child_compact($el, 'formIconColor',$item['formIconColor'] ?? '#0f172a', '#0f172a');
+sg_add_child_compact($el, 'formInputStyle',       $item['formInputStyle'] ?? 'box', 'box');
+sg_add_child_compact($el, 'formInputBg',          $item['formInputBg'] ?? '#ffffff', '#ffffff');
+sg_add_child_compact($el, 'formInputBorder',      $item['formInputBorder'] ?? '#d1d5db', '#d1d5db');
+sg_add_child_compact($el, 'formInputBorderStyle', $item['formInputBorderStyle'] ?? 'solid', 'solid');
+sg_add_child_compact($el, 'formInputBorderW',     $item['formInputBorderW'] ?? '1', '1');
+sg_add_child_compact($el, 'formInputShadow',      $item['formInputShadow'] ?? 'soft', 'soft');
+
+sg_add_child_compact($el, 'formInputPadX',        $item['formInputPadX'] ?? '10', '10');
+sg_add_child_compact($el, 'formInputPadY',        $item['formInputPadY'] ?? '9', '9');
+
+sg_add_child_compact($el, 'formPlaceholderColor', $item['formPlaceholderColor'] ?? '#94a3b8', '#94a3b8');
+sg_add_child_compact($el, 'formFocusRing',        $item['formFocusRing'] ?? '4', '4');
+sg_add_child_compact($el, 'formFocusOpacity',     $item['formFocusOpacity'] ?? '18', '18');
+
         break;
 
       default:
@@ -528,8 +604,12 @@ case 'block':
 </button>
 <button id="add-nav-btn" class="btn" style="background:#0f172a;color:white;">DODAJ PANEL NAWIGACYJNY</button>
 <button id="add-calendar-btn" class="btn" style="background:#2563eb;color:white;">DODAJ KALENDARZ</button>
-
-
+<button id="open-project-bg-btn" class="btn" style="background:#334155;color:white;">
+  TŁO PROJEKTU
+</button>
+<button id="add-brand-btn" class="btn" style="background:#7c3aed;color:white;">
+  STWÓRZ LOGO
+</button>
         <button id="generate-btn" class="btn btn-save">ZAPISZ ZMIANY W XML</button>
 <div style="margin-top:10px; border-top:1px solid #e5e7eb; padding-top:10px;">
   <label>Długość strony (px)</label>
@@ -562,6 +642,7 @@ foreach ($files as $p) {
     Tło: brak
   </div>
 </div>
+
 
 
 
@@ -603,7 +684,7 @@ foreach ($files as $p) {
             <?php include 'block_manager.php'; ?>
             <?php include 'image_manager.php'; ?>
             <?php include 'ankieta_manager.php'; ?>
-
+<?php include 'brand.php'; ?>
             <?php include 'slider_manager.php'; ?>
             <?php
 require_once __DIR__ . '/sidescroll_menager_window.php';
@@ -612,10 +693,100 @@ require_once __DIR__ . '/sidescroll_menager_block.php';
 sidescroll_menager_window();
 sidescroll_menager_block();
 ?>
+<div id="sgProjectBgPanel" style="display:none; margin-top:12px; padding-top:12px; border-top:1px solid #e5e7eb;">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="font-size:12px; color:#334155; font-weight:800;">Tło projektu</div>
+    <button type="button" id="close-project-bg-btn" class="tool-btn">Zamknij</button>
+  </div>
+
+  <input type="hidden" id="sgProjectBgJson" value='{"mode":"none"}'>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">
+    <div>
+      <label style="margin-top:0;">Tryb</label>
+      <select id="proj-bg-mode">
+        <option value="none">— brak —</option>
+        <option value="solid">Kolor</option>
+        <option value="gradient">Gradient</option>
+      </select>
+    </div>
+
+    <div id="proj-bg-solid-wrap" style="display:none;">
+      <label style="margin-top:0;">Kolor</label>
+      <input type="color" id="proj-bg-solid" value="#f3f4f6">
+    </div>
+  </div>
+
+  <div id="proj-bg-grad-wrap" style="display:none; margin-top:10px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div>
+        <label style="margin-top:0;">Typ gradientu</label>
+        <select id="proj-grad-type">
+          <option value="linear">Linear</option>
+          <option value="radial">Radial</option>
+          <option value="conic">Conic</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="margin-top:0;">Preset</label>
+        <select id="proj-grad-preset">
+          <option value="">— custom —</option>
+          <option value="ocean">Ocean</option>
+          <option value="sunset">Sunset</option>
+          <option value="forest">Forest</option>
+          <option value="night">Night</option>
+          <option value="candy">Candy</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
+      <div>
+        <label style="margin-top:0;">Od</label>
+        <input type="color" id="proj-grad-from" value="#0ea5e9">
+      </div>
+
+      <div>
+        <label style="margin-top:0;">Środek</label>
+        <input type="color" id="proj-grad-mid" value="#6366f1">
+        <label style="margin-top:8px; font-size:11px;">
+          <input type="checkbox" id="proj-grad-use-mid"> 3 kolor
+        </label>
+      </div>
+
+      <div>
+        <label style="margin-top:0;">Do</label>
+        <input type="color" id="proj-grad-to" value="#111827">
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
+      <div id="proj-grad-angle-wrap">
+        <label style="margin-top:0;">Kąt (deg)</label>
+        <input type="number" id="proj-grad-angle" min="0" max="360" step="1" value="180">
+      </div>
+
+      <div>
+        <label style="margin-top:0;">Center X (%)</label>
+        <input type="number" id="proj-grad-posx" min="0" max="100" step="1" value="50">
+      </div>
+
+      <div>
+        <label style="margin-top:0;">Center Y (%)</label>
+        <input type="number" id="proj-grad-posy" min="0" max="100" step="1" value="50">
+      </div>
+    </div>
+  </div>
+</div>
+
+
             <?php include 'footer_manager.php'; ?>
 <?php include 'button_manager.php'; ?>
 <?php include 'nav_menager.php'; ?>
 <?php include 'calendar_menager.php'; ?>
+
+
 
         </div>
     </div>
@@ -840,6 +1011,14 @@ function createElement(x, y, type) {
   }
 
 
+if (type === 'brand') {
+  if (typeof createBrandElement === "function") {
+    createBrandElement(x, y);
+    sg_forceIntoTarget(targetEl);
+  } else alert("Brakuje createBrandElement()");
+  addMode = null;
+  return;
+}
 
 
   zCounter++;
@@ -951,6 +1130,9 @@ function selectElement(el) {
   const calSec = document.getElementById('calendar-edit-section');
   if (calSec) calSec.style.display = (type === 'calendar') ? 'block' : 'none';
   if (type === 'calendar' && typeof syncCalendarInputs === "function") syncCalendarInputs(el);
+  const brandSec = document.getElementById('brand-edit-section');
+  if (brandSec) brandSec.style.display = (type === 'brand') ? 'block' : 'none';
+  if (type === 'brand' && typeof syncBrandInputs === "function") syncBrandInputs(el);
 
   if (type === 'form') {
     if (typeof syncFormInputs === "function") syncFormInputs(el);
@@ -965,6 +1147,7 @@ function selectElement(el) {
   } else if (type === 'slider') {
     if (typeof syncSliderInputs === "function") syncSliderInputs(el);
   }
+
 
   const metaSec = document.getElementById('meta-edit-section');
   if (metaSec) metaSec.style.display = 'block';
@@ -995,14 +1178,63 @@ function selectElement(el) {
 
 document.getElementById('add-text-btn').onclick = () => { addMode = 'text'; };
 
+
+document.getElementById('add-brand-btn').onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  const r = canvas.getBoundingClientRect();
+  const cx = r.left + r.width * 0.5;
+  const cy = r.top  + r.height * 0.20;
+  createElement(cx, cy, 'brand');
+};
+
+document.getElementById('open-project-bg-btn').onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  hiddenTools.style.display = 'block';
+  const winPanel = document.getElementById('sgWindowScrollPanel');
+  if (winPanel) winPanel.style.display = 'none';
+
+  const blockPanel = document.getElementById('sgScrollBlockPanel');
+  if (blockPanel) blockPanel.style.display = 'none';
+
+  const bgPanel = document.getElementById('sgProjectBgPanel');
+  if (bgPanel) {
+    bgPanel.style.display = 'block';
+    bgPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.sgProjectBgBindUI?.();
+    if (window.sgProjectBgConfig) {
+      window.sgProjectBgSyncUI?.(window.sgProjectBgConfig);
+    }
+  }
+};
+
+document.getElementById('close-project-bg-btn').onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  const bgPanel = document.getElementById('sgProjectBgPanel');
+  if (bgPanel) bgPanel.style.display = 'none';
+};
+
 document.getElementById('add-form-btn').onclick = () => { addMode = 'form'; }; 
 document.getElementById('open-window-scroll-btn').onclick = (e) => {
   e.preventDefault();
   e.stopPropagation();
+
   hiddenTools.style.display = 'block';
+  const blockPanel = document.getElementById('sgScrollBlockPanel');
+  if (blockPanel) blockPanel.style.display = 'none';
+
   const panel = document.getElementById('sgWindowScrollPanel');
-  if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (panel) {
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    if (window.sgWinScrollLoad) window.sgWinScrollLoad(window.sgWindowScrollConfig);
+  }
 };
+
 
 document.getElementById('open-block-scroll-btn').onclick = (e) => {
   e.preventDefault();
@@ -1073,17 +1305,23 @@ function getElementData(el) {
 
   const children = [];
   Array.from(el.children).forEach(child => {
-    const childData = getElementData(child);
-if (childData) children.push(childData);
+const childData = getElementData(child);
+if (childData && childData.id && childData.type) children.push(childData);
+
   });
 
   let content = "";
   if (el.dataset.type === "text") {
-    content = el.innerHTML.replace(/"/g, "'");
-  } else if (el.dataset.type === "image") {
+  const clone = el.cloneNode(true);
+  clone.querySelectorAll('.sgta-arrow').forEach(n => n.remove()); 
+  content = clone.innerHTML.replace(/"/g, "'");
+} else if (el.dataset.type === "image") {
     const img = el.querySelector("img");
     content = img ? (img.getAttribute("src") || "") : "";
   }
+ else if (el.dataset.type === "brand") {
+  content = el.innerHTML.replace(/"/g, "'");
+}
 
   const bg = (el.style.background && el.style.background.trim() !== "")
     ? el.style.background
@@ -1102,6 +1340,7 @@ if (childData) children.push(childData);
   return {
     htmlId: el.dataset.htmlId || "",
 htmlClass: el.dataset.htmlClass || "",
+brandCfg: el.dataset.brandCfg || "",
 
     id: el.dataset.id,
     type: el.dataset.type,
@@ -1132,6 +1371,51 @@ htmlClass: el.dataset.htmlClass || "",
     label: el.dataset.label || "",
     options: el.dataset.options || "",
     accentColor: el.dataset.accentColor || "#156fe5",
+    formHelpText: el.dataset.formHelpText || "",
+formPlaceholder: el.dataset.formPlaceholder || "",
+formRequired: el.dataset.formRequired || "0",
+formInline: el.dataset.formInline || "0",
+formName: el.dataset.formName || "",
+
+formRows: el.dataset.formRows || "3",
+formMin: el.dataset.formMin || "",
+formMax: el.dataset.formMax || "",
+formStep: el.dataset.formStep || "",
+
+ratingMin: el.dataset.ratingMin || "1",
+ratingMax: el.dataset.ratingMax || "5",
+ratingStep: el.dataset.ratingStep || "1",
+ratingMinLabel: el.dataset.ratingMinLabel || "",
+ratingMaxLabel: el.dataset.ratingMaxLabel || "",
+
+likertMin: el.dataset.likertMin || "1",
+likertMax: el.dataset.likertMax || "5",
+likertLeft: el.dataset.likertLeft || "",
+likertRight: el.dataset.likertRight || "",
+
+formInputRadius: el.dataset.formInputRadius || "10",
+formMarkerText: el.dataset.formMarkerText || "",
+formMarkerStyle: el.dataset.formMarkerStyle || "none",
+
+formIcon: el.dataset.formIcon || "",
+formIconSide: el.dataset.formIconSide || "left",
+formIconMode: el.dataset.formIconMode || "split",
+formIconBg: el.dataset.formIconBg || "#f1f5f9",
+formIconColor: el.dataset.formIconColor || "#0f172a",
+
+formInputStyle: el.dataset.formInputStyle || "box",
+formInputBg: el.dataset.formInputBg || "#ffffff",
+formInputBorder: el.dataset.formInputBorder || "#d1d5db",
+formInputBorderStyle: el.dataset.formInputBorderStyle || "solid",
+formInputBorderW: el.dataset.formInputBorderW || "1",
+formInputShadow: el.dataset.formInputShadow || "soft",
+formInputPadX: el.dataset.formInputPadX || "10",
+formInputPadY: el.dataset.formInputPadY || "9",
+
+formPlaceholderColor: el.dataset.formPlaceholderColor || "#94a3b8",
+formFocusRing: el.dataset.formFocusRing || "4",
+formFocusOpacity: el.dataset.formFocusOpacity || "18",
+
     sliderLabel: el.dataset.sliderLabel || "",
     sliderUnit: el.dataset.sliderUnit || "",
     sliderMin: el.dataset.sliderMin || "0",
@@ -1142,6 +1426,12 @@ htmlClass: el.dataset.htmlClass || "",
     sliderShowMinMax: el.dataset.sliderShowMinMax || "0",
     sliderPreset: el.dataset.sliderPreset || "soft",
     sgScrollBlock: el.dataset.sgScrollBlock || "",
+    sgToggleTarget: el.dataset.sgToggleTarget || "",
+sgToggleTrigger: el.dataset.sgToggleTrigger || "",
+sgToggleArrow: el.dataset.sgToggleArrow || "",
+sgToggleInitial: el.dataset.sgToggleInitial || "",
+sgToggleArrowSide: el.dataset.sgToggleArrowSide || "",
+
     sliderTrack: el.dataset.sliderTrack || "#e2e8f0",
     sliderFill: el.dataset.sliderFill || "#156fe5",
     sliderThumb: el.dataset.sliderThumb || "#156fe5",
@@ -1236,6 +1526,17 @@ navHtmlClass: el.dataset.navHtmlClass || "",
 
 navBrandText: el.dataset.navBrandText || "",
 navBrandHref: el.dataset.navBrandHref || "#",
+navBgMode: el.dataset.navBgMode || "solid",
+navBgSolid: el.dataset.navBgSolid || "#111827",
+navGradType: el.dataset.navGradType || "linear",
+navGradAngle: el.dataset.navGradAngle || "135",
+navGradPosX: el.dataset.navGradPosX || "50",
+navGradPosY: el.dataset.navGradPosY || "50",
+navGradFrom: el.dataset.navGradFrom || "#0ea5e9",
+navGradMid: el.dataset.navGradMid || "#a855f7",
+navGradTo: el.dataset.navGradTo || "#111827",
+navGradUseMid: el.dataset.navGradUseMid || "0",
+navGradPreset: el.dataset.navGradPreset || "",
 
 calYear: el.dataset.calYear || "2026",
 calMonth: el.dataset.calMonth || "1",
@@ -1281,6 +1582,7 @@ Array.from(canvas.children).forEach(el => {
         fd.append('baseFile', window.sgBaseFile || '');
         fd.append('pageHeight', String(SG_PAGE_H));
         fd.append('windowScroll', document.getElementById('sgWinScrollJson')?.value || '{}');
+fd.append('projectBackground', document.getElementById('sgProjectBgJson')?.value || '{}');
         fetch('super_generator.php', { method: 'POST', body: fd }).then(res => res.text()).then(data => alert(data));
     };
 window.sgBaseFile = '';
@@ -1320,6 +1622,7 @@ function afterCreateFromXml(el){
     if (el.dataset.type === "slider") window.updateSliderVisuals?.(el);
     if (el.dataset.type === "image")  window.updateImageVisuals?.(el);
     if (el.dataset.type === "button") window.updateButtonVisuals?.(el);
+    if (el.dataset.type === "brand") window.updateBrandVisuals?.(el);
     if (el.dataset.type === "form") window.updateFormVisuals?.(el);
 
     if (el.dataset.type === "nav")    window.updateNavVisuals?.(el);
@@ -1459,9 +1762,14 @@ el.style.padding = el.dataset.padding || "0px";
   } else if (item.type === "image") {
     const src = item.content || "";
     el.innerHTML = `<img src="${src.replaceAll('"','&quot;')}" alt="" style="width:100%;height:100%;object-fit:${el.dataset.imgFit||'cover'};">`;
-  } else {
-    el.contentEditable = "false";
-  }
+} else if (item.type === "brand") {
+  el.innerHTML = "";
+  el.contentEditable = "false";
+  window.updateBrandVisuals?.(el);
+} else {
+
+  el.contentEditable = "false";
+}
 
   setupElementMovement(el, item.type);
   if (origin === "base") markLocked(el);
@@ -1534,6 +1842,22 @@ const winJson = document.getElementById("sgWinScrollJson");
 if (winJson) winJson.value = JSON.stringify(winCfg);
 if (window.sgWinScrollLoad) window.sgWinScrollLoad(winCfg);
 else if (window.sg_sideblock_window) window.sg_sideblock_window(winCfg);
+let bgCfg = window.sgProjectBgParse?.(childXml);
+
+if (!bgCfg && baseFile) {
+  const baseXml3 = await fetchXmlFile(baseFile);
+  bgCfg = window.sgProjectBgParse?.(baseXml3);
+}
+
+if (!bgCfg) bgCfg = window.sgProjectBgDefault?.();
+
+window.sgProjectBgConfig = bgCfg;
+
+const bgJson = document.getElementById("sgProjectBgJson");
+if (bgJson) bgJson.value = JSON.stringify(bgCfg);
+
+window.sgProjectBgSyncUI?.(bgCfg);
+window.sgProjectBgApply?.(bgCfg);
 
 
 
@@ -1759,10 +2083,6 @@ document.getElementById('page-height-num')?.addEventListener('input', (e)=> appl
 applyPageHeight(2000);
 
 
-document.getElementById('page-height')?.addEventListener('input', (e) => {
-  const v = parseInt(e.target.value || "2000", 10) || 2000;
-  document.documentElement.style.setProperty('--page-h', v + 'px');
-});
 
 function sanitizeHtmlId(raw){
   const v = String(raw || '').trim()
@@ -1999,7 +2319,12 @@ $__v = function(string $f){
 <script src="sg_button.js?v=<?= $__v('sg_button.js') ?>"></script>
 <script src="sg_nav.js?v=<?= $__v('sg_nav.js') ?>"></script>
 <script src="sg_calendar.js?v=<?= $__v('sg_calendar.js') ?>"></script>
+<script src="sg_connect.js?v=<?= @filemtime(__DIR__ . '/sg_connect.js') ?: time() ?>"></script>
+<script src="sg_toggle.js?v=<?= $__v('sg_toggle.js') ?>"></script>
 <script src="sg_guides.js?v=<?= $__v('sg_guides.js') ?>"></script>
+<script src="sg_project_bg.js?v=<?= $__v('sg_project_bg.js') ?>"></script>
+<script src="sg_brand.js?v=<?= $__v('sg_brand.js') ?>"></script>
+
 
 </body>
 </html>

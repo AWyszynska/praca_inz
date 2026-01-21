@@ -4,7 +4,11 @@
   <button type="button" class="tool-btn" id="footer-open-as-target">🎯 Otwórz (dodawaj do stopki)</button>
   <button type="button" class="tool-btn" id="footer-close-target">↩ Wróć na ekran</button>
 </div>
-
+<label>Stopka: tryb</label>
+<select id="footer-mode">
+  <option value="fixed">Przyklejona (podąża za scrollem)</option>
+  <option value="page">Na stronie (na dole / u góry strony)</option>
+</select>
   <label>Stopka: pozycja (dock)</label>
   <select id="footer-dock">
     <option value="bottom">Dół</option>

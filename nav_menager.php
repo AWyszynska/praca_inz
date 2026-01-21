@@ -2,48 +2,42 @@
   <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin:12px 0 8px;">
     <h3 style="margin:0; font-size:13px; color:#0f172a;">Panel nawigacyjny</h3>
   </div>
-
   <div style="border:1px solid #e2e8f0; border-radius:10px; padding:10px; background:#f8fafc; margin-bottom:10px;">
-    <div style="font-size:11px; color:#64748b; margin-bottom:8px;">Podgląd</div>
-    <div id="nav-panel-preview" style="height:64px;"></div>
-    <div style="font-size:12px;color:#64748b;margin-top:6px;">
-      Podgląd jest “martwy” w edytorze (żeby dało się zaznaczać element).
+    <div style="font-size:11px; color:#64748b; margin-bottom:8px;">Podgląd (klikany testowo)</div>
+
+    <div id="nav-panel-preview" style="height:86px;"></div>
+
+    <div id="nav-preview-status" style="font-size:12px;color:#64748b;margin-top:8px; line-height:1.35;">
+      Kliknij link w podglądzie - zobaczysz symulację działania (bez prawdziwej nawigacji).
     </div>
   </div>
 
-  <label>Pozycje menu</label>
-  <div style="font-size:12px; color:#64748b; margin:-2px 0 8px; line-height:1.35;">
-    Każda linia: <b>Etykieta|href</b> albo <b>Etykieta|href|key</b> (key to identyfikator do łatwego podpinania nawigacji).
+  <label>POZYCJE MENU</label>
+  <div style="font-size:12px; color:#64748b; margin:-6px 0 8px; line-height:1.35;">
+    Każda linia: <b>Etykieta|href</b> albo <b>Etykieta|href|key</b> (key ułatwia późniejsze podpinanie funkcjonalności).
   </div>
   <textarea id="nav-items" rows="6" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; box-sizing:border-box; font-size:13px;"></textarea>
 
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
     <div>
-      <label>Styl</label>
+      <label>Layout</label>
       <select id="nav-layout">
-        <option value="pills" selected>Pills (domyślny)</option>
+        <option value="pills" selected>Pills</option>
         <option value="tabs">Tabs</option>
         <option value="underline">Underline</option>
         <option value="sidebar">Sidebar</option>
       </select>
     </div>
     <div>
-      <label>Zachowanie kliknięcia</label>
-      <select id="nav-hook-mode">
-        <option value="none" selected>Normalne linki</option>
-        <option value="event">Emituj event (do podpięcia własnej nawigacji)</option>
+      <label>Orientacja</label>
+      <select id="nav-orientation">
+        <option value="horizontal" selected>Poziomo</option>
+        <option value="vertical">Pionowo</option>
       </select>
     </div>
   </div>
 
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <div>
-      <label>Układ</label>
-      <select id="nav-orientation">
-        <option value="horizontal" selected>Poziomy</option>
-        <option value="vertical">Pionowy</option>
-      </select>
-    </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
     <div>
       <label>Wyrównanie</label>
       <select id="nav-align">
@@ -51,6 +45,38 @@
         <option value="center">Środek</option>
         <option value="right">Prawo</option>
       </select>
+    </div>
+    <div>
+      <label>Hook (łatwe podpięcie później)</label>
+      <select id="nav-hook-mode">
+        <option value="none" selected>Brak</option>
+        <option value="event">Event (sg:navigate)</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+    <div>
+      <label>Nazwa nawigacji (opcjonalnie)</label>
+      <input type="text" id="nav-name" placeholder="np. mainNav">
+    </div>
+    <div>
+      <label>ID / Klasy (opcjonalnie)</label>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <input type="text" id="nav-html-id" placeholder="id">
+        <input type="text" id="nav-html-class" placeholder="class">
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+    <div>
+      <label>Brand tekst</label>
+      <input type="text" id="nav-brand-text" placeholder="np. LOGO / Nazwa">
+    </div>
+    <div>
+      <label>Brand href</label>
+      <input type="text" id="nav-brand-href" placeholder="?page=home">
     </div>
   </div>
 
@@ -75,11 +101,6 @@
       </select>
     </div>
   </div>
-  <div style="font-size:12px; color:#64748b; margin:6px 0 0; line-height:1.35;">
-    <b>Poziomy:</b> steruje rozkładem linków w poziomie (justify-content).<br>
-    <b>Pionowy:</b> steruje rozkładem linków w pionie (justify-content).
-  </div>
-
 
   <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:6px;">
     <div>
@@ -99,13 +120,13 @@
     </div>
   </div>
 
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
     <div>
       <label>Aktywny link (tryb)</label>
       <select id="nav-active-mode">
         <option value="none">Brak</option>
         <option value="url">Porównaj URL</option>
-        <option value="query_page" selected>?page=...</option>
+        <option value="query_page" selected>?page=.</option>
       </select>
     </div>
     <div>
@@ -115,8 +136,7 @@
       </label>
     </div>
   </div>
-
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
     <div>
       <label>Szerokość (px)</label>
       <input type="number" id="nav-w" min="120" max="1600" value="680">
@@ -127,7 +147,7 @@
     </div>
   </div>
 
-  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:6px;">
     <div>
       <label>Gap (px)</label>
       <input type="number" id="nav-gap" min="0" max="80" value="10">
@@ -141,18 +161,120 @@
       <input type="number" id="nav-radius" min="0" max="40" value="12">
     </div>
   </div>
+  <div style="margin-top:12px; border-top:1px solid #e5e7eb; padding-top:10px;">
+    <div style="font-size:12px; color:#334155; font-weight:800; margin-bottom:6px;">Tło</div>
 
-  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div>
+        <label>Tryb tła</label>
+        <select id="nav-bg-mode">
+          <option value="solid" selected>Solid</option>
+          <option value="gradient">Gradient</option>
+        </select>
+      </div>
+      <div id="nav-bg-solid-wrap">
+        <label>Kolor tła</label>
+        <input type="color" id="nav-bg-solid" value="#111827">
+      </div>
+    </div>
+
+    <div id="nav-bg-grad-wrap" style="display:none; margin-top:8px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div>
+          <label>Typ gradientu</label>
+          <select id="nav-grad-type">
+            <option value="linear" selected>linear-gradient</option>
+            <option value="radial">radial-gradient</option>
+            <option value="conic">conic-gradient</option>
+          </select>
+        </div>
+        <div>
+          <label>Preset</label>
+          <select id="nav-grad-preset">
+            <option value="" selected>— brak —</option>
+            <option value="ocean">Ocean</option>
+            <option value="sunset">Sunset</option>
+            <option value="purple_night">Purple Night</option>
+            <option value="candy">Candy</option>
+            <option value="forest">Forest</option>
+            <option value="neon_blue">Neon Blue</option>
+            <option value="gold_warm">Gold Warm</option>
+            <option value="cherry">Cherry</option>
+            <option value="steel">Steel</option>
+            <option value="frost">Frost</option>
+            <option value="aurora">Aurora</option>
+            <option value="lava">Lava</option>
+            <option value="mint">Mint</option>
+            <option value="space">Space</option>
+            <option value="peach">Peach</option>
+
+            <option value="midnight">Midnight</option>
+            <option value="rose">Rose</option>
+            <option value="mango">Mango</option>
+            <option value="deepsea">Deep Sea</option>
+            <option value="horizon">Horizon</option>
+            <option value="electric">Electric</option>
+            <option value="lime">Lime</option>
+            <option value="royal">Royal</option>
+
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:8px;">
+        <div>
+          <label>Kąt (linear/conic)</label>
+          <input type="number" id="nav-grad-angle" min="0" max="360" value="135">
+        </div>
+        <div>
+          <label>Pozycja X (radial/conic)</label>
+          <input type="number" id="nav-grad-pos-x" min="0" max="100" value="50">
+        </div>
+        <div>
+          <label>Pozycja Y (radial/conic)</label>
+          <input type="number" id="nav-grad-pos-y" min="0" max="100" value="50">
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:8px;">
+        <div>
+          <label>Kolor 1</label>
+          <input type="color" id="nav-grad-from" value="#0ea5e9">
+        </div>
+        <div>
+          <label style="display:flex; align-items:center; justify-content:space-between;">
+            <span>Kolor 2 (środek)</span>
+            <span style="font-size:12px; color:#64748b; font-weight:600;">
+              <input type="checkbox" id="nav-grad-use-mid" style="width:auto; vertical-align:middle;"> użyj
+            </span>
+          </label>
+          <input type="color" id="nav-grad-mid" value="#a855f7">
+        </div>
+        <div>
+          <label>Kolor 3</label>
+          <input type="color" id="nav-grad-to" value="#111827">
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <button type="button" id="nav-grad-swap" class="tool-btn">Swap 1 ⇄ 3</button>
+        <button type="button" id="nav-grad-swap-12" class="tool-btn">Swap 1 ⇄ 2</button>
+        <button type="button" id="nav-grad-swap-23" class="tool-btn">Swap 2 ⇄ 3</button>
+        <button type="button" id="nav-grad-random" class="tool-btn">🎲 Losowy preset</button>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:12px;">
     <div>
-      <label>Tło kontenera</label>
-      <input type="color" id="nav-bg" value="#111827">
+      <label>Obramowanie (px)</label>
+      <input type="number" id="nav-border-w" min="0" max="12" value="1">
     </div>
     <div>
-      <label>Border (px)</label>
-      <input type="number" id="nav-border-w" min="0" max="10" value="1">
+      <label>Kolor obramowania</label>
+      <input type="color" id="nav-border-color" value="#ffffff">
     </div>
     <div>
-      <label>Cień</label>
+      <label>Cień kontenera</label>
       <select id="nav-shadow">
         <option value="none">Brak</option>
         <option value="soft" selected>Soft</option>
@@ -161,128 +283,85 @@
     </div>
   </div>
 
-  <div style="margin-top:10px; padding-top:10px; border-top:1px solid #e2e8f0;">
-    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-      <button type="button" id="nav-preset-dark" class="btn" style="width:auto; padding:8px 10px; margin-top:0; background:#111827; color:#fff;">Preset: Dark</button>
-      <button type="button" id="nav-preset-light" class="btn" style="width:auto; padding:8px 10px; margin-top:0; background:#e2e8f0; color:#0f172a;">Preset: Light</button>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+    <div>
+      <label>Kolor tekstu</label>
+      <input type="color" id="nav-text-color" value="#ffffff">
+    </div>
+    <div>
+      <label>Rozmiar czcionki (px)</label>
+      <input type="number" id="nav-font-size" min="10" max="60" value="15">
     </div>
   </div>
-
-  <div style="margin-top:10px; padding-top:10px; border-top:1px solid #e2e8f0;">
-    <h4 style="margin:0 0 8px; font-size:12px; color:#0f172a;">Wygląd linków</h4>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div>
-        <label>Kolor tekstu</label>
-        <input type="color" id="nav-link-color" value="#ffffff">
-      </div>
-      <div>
-        <label>Hover tło</label>
-        <input type="text" id="nav-hover-bg" value="rgba(255,255,255,0.12)">
-      </div>
-    </div>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div>
-        <label>Hover kolor</label>
-        <input type="color" id="nav-hover-color" value="#ffffff">
-      </div>
-      <div>
-        <label>Active tło</label>
-        <input type="text" id="nav-active-bg" value="rgba(255,255,255,0.18)">
-      </div>
-    </div>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div>
-        <label>Active kolor</label>
-        <input type="color" id="nav-active-color" value="#ffffff">
-      </div>
-      <div></div>
-    </div>
+  <div style="margin-top:12px; border-top:1px solid #e5e7eb; padding-top:10px;">
+    <div style="font-size:12px; color:#334155; font-weight:800; margin-bottom:6px;">Wygląd linków</div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
       <div>
-        <label>Padding X (px)</label>
+        <label>Padding X</label>
         <input type="number" id="nav-link-pad-x" min="0" max="80" value="12">
       </div>
       <div>
-        <label>Padding Y (px)</label>
+        <label>Padding Y</label>
         <input type="number" id="nav-link-pad-y" min="0" max="80" value="8">
       </div>
       <div>
-        <label>Radius linku (px)</label>
+        <label>Radius linku</label>
         <input type="number" id="nav-link-radius" min="0" max="40" value="8">
       </div>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:6px;">
       <div>
         <label>Border linku (px)</label>
-        <input type="number" id="nav-link-border-w" min="0" max="10" value="1">
+        <input type="number" id="nav-link-border-w" min="0" max="8" value="1">
       </div>
       <div>
-        <label>Border kolor</label>
+        <label>Kolor border linku</label>
         <input type="color" id="nav-link-border-color" value="#ffffff">
       </div>
       <div>
-        <label>Cień linków</label>
+        <label>Cień linku</label>
         <select id="nav-link-shadow">
           <option value="none">Brak</option>
           <option value="soft" selected>Soft</option>
         </select>
       </div>
     </div>
-  </div>
 
-  <div style="margin-top:10px; padding-top:10px; border-top:1px solid #e2e8f0;">
-    
-
-    <div style="margin:6px 0 10px;">
-      <label>Nazwa / hook (opcjonalnie)</label>
-      <input type="text" id="nav-name" placeholder="np. mainNav">
-      <div style="font-size:12px; color:#64748b; margin-top:4px; line-height:1.35;">
-        Dostępne potem w HTML jako <code>data-nav-name</code> i w evencie <code>sg:navigate</code> (detail.navName).
-      </div>
-    </div>
-    
-    <div style="margin:6px 0 10px;">
-      <label>Nazwa / hook (opcjonalnie)</label>
-      <input type="text" id="nav-name" placeholder="np. mainNav">
-      <div style="font-size:12px; color:#64748b; margin-top:4px; line-height:1.35;">
-        Dostępne potem w HTML jako <code>data-nav-name</code> i w evencie <code>sg:navigate</code> (detail.navName).
-      </div>
-    </div>
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div>
-        <label>HTML id (opcjonalnie)</label>
-        <input type="text" id="nav-html-id" placeholder="np. mainNav">
-      </div>
-      <div>
-        <label>HTML class (opcjonalnie)</label>
-        <input type="text" id="nav-html-class" placeholder="np. nav nav--main">
-      </div>
-    </div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
       <div>
-        <label>Brand tekst (opcjonalnie)</label>
-        <input type="text" id="nav-brand-text" placeholder="np. LOGO">
+        <label>Kolor linku</label>
+        <input type="color" id="nav-link-color" value="#ffffff">
       </div>
       <div>
-        <label>Brand href</label>
-        <input type="text" id="nav-brand-href" value="#">
+        <label>Hover: kolor tekstu</label>
+        <input type="color" id="nav-hover-color" value="#ffffff">
       </div>
     </div>
-    <div style="margin-top:8px; font-size:12px; color:#64748b; line-height:1.35;">
-      Jeśli ustawisz <b>Emituj event</b>, kliknięcie linku wyśle <code>sg:navigate</code> z danymi (key/href/label/navName).
-    </div>
-  </div>
 
-  <div style="margin-top:10px; font-size:12px; color:#64748b; line-height:1.35;">
-    <b>XML (nowe znaczniki – do dopisania w super_generator.php / saveRecursive):</b><br>
-    navItems, navLayout, navHookMode, navName, navOrientation, navAlign, navJustify, navVJustify, navWrap, navStretch, navDivider, navGap, navPad,<br>
-    navLinkPadX, navLinkPadY, navLinkRadius, navUnderline, navLinkBorderW, navLinkBorderColor, navLinkShadow,<br>
-    navLinkColor, navHoverBg, navHoverColor, navActiveBg, navActiveColor, navActiveMode,<br>
-    navHtmlId, navHtmlClass, navBrandText, navBrandHref
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+      <div>
+        <label>Hover: tło</label>
+        <input type="text" id="nav-hover-bg" value="rgba(255,255,255,0.12)" placeholder="np. rgba(255,255,255,0.12)">
+      </div>
+      <div>
+        <label>Active: tło</label>
+        <input type="text" id="nav-active-bg" value="rgba(255,255,255,0.18)" placeholder="np. rgba(255,255,255,0.18)">
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+      <div>
+        <label>Active: kolor tekstu</label>
+        <input type="color" id="nav-active-color" value="#ffffff">
+      </div>
+      <div></div>
+    </div>
+
+    <div style="margin-top:10px; font-size:12px; color:#64748b; line-height:1.35;">
+      Jeśli ustawisz <b>Hook = Event</b>, klik w podglądzie wyemituje zdarzenie:
+      <b>document.dispatchEvent(new CustomEvent('sg:navigate', { detail: { key, href, page, navName } }))</b>.
+    </div>
   </div>
 </div>

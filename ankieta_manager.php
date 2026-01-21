@@ -43,6 +43,72 @@
   <label style="margin-top:10px;">NAME (nazwa pola) — opcjonalnie</label>
   <input type="text" id="form-name" placeholder="Np. email, ocena, komentarz">
 
+  <div style="margin-top:12px; padding:10px; border:1px dashed #cbd5e1; border-radius:12px; background:#f8fafc;">
+    <div style="font-size:11px; font-weight:900; color:#334155; letter-spacing:.3px;">ZNACZNIKI / IKONKA</div>
+
+    <label style="margin-top:8px; font-size:11px;">ZNACZNIK (mała plakietka) — opcjonalnie</label>
+    <input type="text" id="form-marker-text" placeholder="np. EMAIL, PRO, OPCJONALNE">
+
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Styl znacznika</label>
+        <select id="form-marker-style">
+          <option value="none">Brak</option>
+          <option value="chip">Chip (wypełniony)</option>
+          <option value="outline">Chip (obrys)</option>
+          <option value="muted">Muted</option>
+        </select>
+      </div>
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Ikonka</label>
+        <select id="form-icon">
+          <option value="">Brak</option>
+          <option value="mail">✉️ Mail</option>
+          <option value="at">@ At</option>
+          <option value="user">👤 User</option>
+          <option value="phone">📞 Phone</option>
+          <option value="search">🔎s Search</option>
+          <option value="pin">📍 Pin</option>
+        </select>
+      </div>
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Strona ikonki</label>
+        <select id="form-icon-side">
+          <option value="left">Lewa</option>
+          <option value="right">Prawa</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Tryb ikonki</label>
+        <select id="form-icon-mode">
+          <option value="split">W polu (podzielone)</option>
+          <option value="bubble">Bąbelek (okrągły)</option>
+        </select>
+      </div>
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Tło ikonki</label>
+        <input type="color" id="form-icon-bg" value="#f1f5f9">
+      </div>
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Kolor ikonki</label>
+        <input type="color" id="form-icon-color" value="#0f172a">
+      </div>
+    </div>
+
+    <div id="form-email-presets" style="display:none; margin-top:10px;">
+      <div style="font-size:11px; font-weight:800; color:#334155;">PRESET EMAIL</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;">
+        <button type="button" data-sg-email-preset="gmail" style="padding:6px 10px; border-radius:10px; border:1px solid #e2e8f0; background:#ffffff; color:#0f172a; cursor:pointer;">Gmail</button>
+        <button type="button" data-sg-email-preset="outlook" style="padding:6px 10px; border-radius:10px; border:1px solid #e2e8f0; background:#eff6ff; color:#0f172a; cursor:pointer;">Outlook</button>
+        <button type="button" data-sg-email-preset="minimal" style="padding:6px 10px; border-radius:10px; border:1px solid #e2e8f0; background:#f8fafc; color:#0f172a; cursor:pointer;">Minimal</button>
+        <button type="button" data-sg-email-preset="dark" style="padding:6px 10px; border-radius:10px; border:1px solid #0f172a; background:#0f172a; color:#ffffff; cursor:pointer;">Dark</button>
+      </div>
+    </div>
+  </div>
+
   <div id="form-options-container" style="display:none; margin-top:10px;">
     <label style="font-size:11px;">OPCJE (nowa linia lub przecinek)</label>
     <textarea id="form-options-list" style="width:100%; height:72px; font-size:12px;" placeholder="Opcja 1\nOpcja 2\nOpcja 3"></textarea>
@@ -141,8 +207,68 @@
   <label style="margin-top:10px;">KOLOR AKCENTU (checkbox/radio/rating)</label>
   <input type="color" id="form-accent-color" value="#156fe5">
 
-  <label style="margin-top:10px;">ZAOKRĄGLENIE INPUTA (PX)</label>
-  <input type="range" id="form-input-radius" min="0" max="30" value="10">
+  <div style="margin-top:10px; padding:10px; border:1px dashed #e2e8f0; border-radius:12px; background:#f8fafc;">
+    <div style="font-size:11px; font-weight:900; color:#334155; letter-spacing:.3px;">INPUT — PRO</div>
+
+    <label style="margin-top:8px;">STYL INPUTA</label>
+    <select id="form-input-style">
+      <option value="box">Box (klasyczny)</option>
+      <option value="underline">Tylko linia (underline)</option>
+      <option value="soft">Soft (delikatny)</option>
+      <option value="pill">Pill (mocno zaokrąglony)</option>
+    </select>
+
+    <label style="margin-top:10px;">TŁO INPUTA</label>
+    <input type="color" id="form-input-bg" value="#ffffff">
+
+    <label style="margin-top:10px;">KOLOR RAMKI / LINII</label>
+    <input type="color" id="form-input-border" value="#d1d5db">
+
+    <label style="margin-top:10px;">RODZAJ RAMKI</label>
+    <select id="form-input-border-style">
+      <option value="solid">Solid</option>
+      <option value="dashed">Dashed</option>
+      <option value="dotted">Dotted</option>
+    </select>
+
+    <label style="margin-top:10px;">GRUBOŚĆ RAMKI / LINII (PX)</label>
+    <input type="range" id="form-input-border-w" min="0" max="6" value="1">
+
+    <label style="margin-top:10px;">CIEŃ INPUTA</label>
+    <select id="form-input-shadow">
+      <option value="none">Brak</option>
+      <option value="soft">Soft</option>
+      <option value="strong">Strong</option>
+    </select>
+
+    <label style="margin-top:10px;">ZAOKRĄGLENIE INPUTA (PX)</label>
+    <input type="range" id="form-input-radius" min="0" max="60" value="10">
+
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Padding X</label>
+        <input type="range" id="form-input-pad-x" min="4" max="28" value="10">
+      </div>
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Padding Y</label>
+        <input type="range" id="form-input-pad-y" min="4" max="22" value="9">
+      </div>
+    </div>
+
+    <label style="margin-top:10px;">KOLOR PLACEHOLDER</label>
+    <input type="color" id="form-placeholder-color" value="#94a3b8">
+
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Focus ring (px)</label>
+        <input type="range" id="form-focus-ring" min="0" max="12" value="4">
+      </div>
+      <div style="flex:1;">
+        <label style="text-transform:none; font-weight:600; color:#475569;">Focus opacity (%)</label>
+        <input type="range" id="form-focus-opacity" min="0" max="40" value="18">
+      </div>
+    </div>
+  </div>
 
   <label style="margin-top:10px;">SZEROKOŚĆ ELEMENTU (PX)</label>
   <input type="number" id="form-width" value="320" min="140" max="1200">
