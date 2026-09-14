@@ -16,7 +16,7 @@
 
       .sgbtn{
         width:100%; height:100%;
-        display:inline-flex; align-items:center; justify-content:center; gap:8px;
+        display:inline-flex; align-items:center; justify-content: var(--sgbtn-justify, center); gap:8px;
         box-sizing:border-box;
         border: var(--sgbtn-border-w, 1px) solid var(--sgbtn-border, #156fe5);
         background: var(--sgbtn-bg, #156fe5);
@@ -27,8 +27,12 @@
         user-select:none;
         padding: var(--sgbtn-pad-y, 10px) var(--sgbtn-pad-x, 12px);
         font-weight: var(--sgbtn-weight, 600);
-        letter-spacing: var(--sgbtn-letter, 0px);
-        text-align: var(--sgbtn-align, center);
+font-family: var(--sgbtn-font-family, 'Segoe UI', system-ui, -apple-system, sans-serif);
+font-style: var(--sgbtn-font-style, normal);
+text-decoration: var(--sgbtn-text-decoration, none);
+letter-spacing: var(--sgbtn-letter, 0px);
+text-align: var(--sgbtn-align, center);
+font-size: var(--sgbtn-font-size, 13px);
         line-height: 1.1;
         white-space: nowrap;
         transition: transform .08s ease, background-color .15s ease, color .15s ease,
@@ -41,12 +45,29 @@
       .sgbtn:focus-visible{ outline: 3px solid rgba(59,130,246,.35); outline-offset:2px; }
       .sgbtn[disabled], .sgbtn[aria-disabled="true"]{ opacity:.55; cursor:not-allowed; pointer-events:none; box-shadow:none; }
 
-      .sgbtn__icon{ display:inline-flex; align-items:center; justify-content:center; font-size: 1.05em; line-height:1; }
-      .sgbtn__text{ display:inline-block; overflow:hidden; text-overflow:ellipsis; }
+.sgbtn__icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 1.05em;
+  line-height:1;
+  font-weight: inherit;
+  font-style: inherit;
+  text-decoration: inherit;
+}
 
-      .sgbtn--sm{ --sgbtn-pad-y: 8px;  --sgbtn-pad-x: 10px; font-size: 12px; }
-      .sgbtn--md{ --sgbtn-pad-y: 10px; --sgbtn-pad-x: 12px; font-size: 13px; }
-      .sgbtn--lg{ --sgbtn-pad-y: 12px; --sgbtn-pad-x: 14px; font-size: 14px; }
+.sgbtn__text{
+  display:inline-block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-weight: inherit;
+  font-style: inherit;
+  text-decoration: inherit;
+}
+
+      .sgbtn--sm{ --sgbtn-pad-y: 8px;  --sgbtn-pad-x: 10px; }
+.sgbtn--md{ --sgbtn-pad-y: 10px; --sgbtn-pad-x: 12px; }
+.sgbtn--lg{ --sgbtn-pad-y: 12px; --sgbtn-pad-x: 14px; }
 
       @media (prefers-reduced-motion: reduce){
         .sgbtn{ transition:none; }
@@ -62,6 +83,51 @@
         pointer-events:none;
       }
       .sgbtn[data-grad="1"]:hover::before{ transform: translateX(120%); }
+            .sgbtn.fx-scale-click{ transform: scale(.96) !important; }
+      .sgbtn.fx-bounce-click{ animation: sgbtnBounce .38s ease; }
+      .sgbtn.fx-pulse-click{ animation: sgbtnPulse .35s ease; }
+      .sgbtn.fx-glow-click{ animation: sgbtnGlow .45s ease; }
+      .sgbtn.fx-shake-click{ animation: sgbtnShake .35s ease; }
+
+      @keyframes sgbtnBounce{
+        0%{ transform: scale(1); }
+        35%{ transform: scale(.93); }
+        65%{ transform: scale(1.03); }
+        100%{ transform: scale(1); }
+      }
+
+      @keyframes sgbtnPulse{
+        0%{ transform: scale(1); }
+        50%{ transform: scale(1.06); }
+        100%{ transform: scale(1); }
+      }
+
+      @keyframes sgbtnGlow{
+        0%{ box-shadow: var(--sgbtn-shadow, 0 10px 20px rgba(2,6,23,.12)); }
+        50%{ box-shadow: 0 0 0 6px rgba(255,255,255,.18), 0 0 18px rgba(255,255,255,.28), var(--sgbtn-shadow, 0 10px 20px rgba(2,6,23,.12)); }
+        100%{ box-shadow: var(--sgbtn-shadow, 0 10px 20px rgba(2,6,23,.12)); }
+      }
+      .sgbtn__ripple{
+        position:absolute;
+        border-radius:999px;
+        background: rgba(255,255,255,.32);
+        transform: scale(0);
+        opacity: 1;
+        pointer-events:none;
+        animation: sgbtnRipple .55s ease-out;
+      }
+
+      @keyframes sgbtnRipple{
+        to{ transform: scale(1); opacity:0; }
+      }
+      @keyframes sgbtnShake{
+        0%{ transform: translateX(0); }
+        20%{ transform: translateX(-3px); }
+        40%{ transform: translateX(3px); }
+        60%{ transform: translateX(-2px); }
+        80%{ transform: translateX(2px); }
+        100%{ transform: translateX(0); }
+      }
     `;
     document.head.appendChild(s);
   }
@@ -80,8 +146,6 @@
     el.dataset.btnTarget = el.dataset.btnTarget || "_blank";
     el.dataset.btnScrollTargetId = el.dataset.btnScrollTargetId || "";
     el.dataset.btnScrollOffset = el.dataset.btnScrollOffset || "0";
-
-    el.dataset.btnPreset = el.dataset.btnPreset || "primary";
     el.dataset.btnSize = el.dataset.btnSize || "md";
     el.dataset.btnIcon = el.dataset.btnIcon || "";
     el.dataset.btnIconPos = el.dataset.btnIconPos || "left";
@@ -94,19 +158,22 @@
 
     el.dataset.btnRadius = el.dataset.btnRadius || "10";
     el.dataset.btnBorderW = el.dataset.btnBorderW || "1";
-    el.dataset.btnWeight = el.dataset.btnWeight || "600";
-    el.dataset.btnAlign = el.dataset.btnAlign || "center";
-    el.dataset.btnUpper = el.dataset.btnUpper || "0";
-    el.dataset.btnLetter = el.dataset.btnLetter || "0";
-    el.dataset.btnShadow = el.dataset.btnShadow || "soft";
+        el.dataset.btnClickEffect = el.dataset.btnClickEffect || "none";
+el.dataset.btnWeight = el.dataset.btnWeight || "600";
+el.dataset.btnAlign = el.dataset.btnAlign || "center";
+el.dataset.btnFontSize = el.dataset.btnFontSize || "13";
+el.dataset.btnLetter = el.dataset.btnLetter || "0";
+el.dataset.btnShadow = el.dataset.btnShadow || "soft";
+
+el.dataset.btnFontFamily = el.dataset.btnFontFamily || "'Segoe UI', system-ui, -apple-system, sans-serif";
+el.dataset.btnFontStyle = el.dataset.btnFontStyle || "normal";
+el.dataset.btnTextDecoration = el.dataset.btnTextDecoration || "none";
 
     el.dataset.btnGradient = el.dataset.btnGradient || "0";
     el.dataset.btnGradFrom = el.dataset.btnGradFrom || el.dataset.btnBg || "#156fe5";
     el.dataset.btnGradTo = el.dataset.btnGradTo || "#22c55e";
     el.dataset.btnGradAngle = el.dataset.btnGradAngle || "135";
-    el.dataset.btnTitle = el.dataset.btnTitle || "";
-    el.dataset.btnAria = el.dataset.btnAria || "";
-    el.dataset.btnType = el.dataset.btnType || "button";
+
     if (!el.dataset.htmlId) el.dataset.htmlId = "sgbtn_" + (el.dataset.id || Date.now());
     if (!el.dataset.htmlClass) el.dataset.htmlClass = "sgbtn-wrap";
   }
@@ -130,37 +197,34 @@
     return `linear-gradient(${ang}deg, ${a}, ${b})`;
   }
 
-  function getHost(el) {
-    let host = el.querySelector(":scope > .sgbtn-host");
-    if (!host) {
-      host = document.createElement("div");
-      host.className = "sgbtn-host";
-      el.insertBefore(host, el.firstChild);
-    }
-    return host;
-  }
 
-  function buildButtonContent(btn, el) {
-    const text = el.dataset.btnText || "Kliknij";
-    const icon = (el.dataset.btnIcon || "").trim();
-    const pos = el.dataset.btnIconPos || "left";
+function buildButtonContent(btn, el) {
+  const text = el.dataset.btnText || "Kliknij";
+  const icon = (el.dataset.btnIcon || "").trim();
+  const pos = el.dataset.btnIconPos || "left";
 
-    btn.innerHTML = "";
+  btn.innerHTML = "";
 
-    const t = document.createElement("span");
-    t.className = "sgbtn__text";
-    t.textContent = text;
+  const t = document.createElement("span");
+  t.className = "sgbtn__text";
+  t.textContent = text;
 
-    if (icon) {
-      const i = document.createElement("span");
-      i.className = "sgbtn__icon";
-      i.textContent = icon;
-      if (pos === "right") { btn.appendChild(t); btn.appendChild(i); }
-      else { btn.appendChild(i); btn.appendChild(t); }
+  if (icon) {
+    const i = document.createElement("span");
+    i.className = "sgbtn__icon";
+    i.textContent = icon;
+
+    if (pos === "right") {
+      btn.appendChild(t);
+      btn.appendChild(i);
     } else {
+      btn.appendChild(i);
       btn.appendChild(t);
     }
+  } else {
+    btn.appendChild(t);
   }
+}
 
 function applyButtonVisual(el){
   injectStyle();
@@ -207,7 +271,7 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
   const borderW = clamp(el.dataset.btnBorderW || 1, 0, 6);
   const radius  = clamp(el.dataset.btnRadius || 10, 0, 30);
   const letter  = clamp(el.dataset.btnLetter || 0, 0, 6);
-
+  const fontSize = clamp(el.dataset.btnFontSize || 13, 8, 72);
   btn.style.setProperty('--sgbtn-bg', bg);
   btn.style.setProperty('--sgbtn-color', el.dataset.btnColor || '#fff');
   btn.style.setProperty('--sgbtn-border', el.dataset.btnBorderColor || '#156fe5');
@@ -218,11 +282,23 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
   btn.style.setProperty('--sgbtn-shadow', getShadowCss(el.dataset.btnShadow || 'soft'));
   btn.style.setProperty('--sgbtn-weight', el.dataset.btnWeight || '600');
   btn.style.setProperty('--sgbtn-align', el.dataset.btnAlign || 'center');
+  btn.style.setProperty('--sgbtn-font-size', fontSize + 'px');
+  const align = el.dataset.btnAlign || 'center';
+let justify = 'center';
+
+if (align === 'left') justify = 'flex-start';
+else if (align === 'right') justify = 'flex-end';
+else if (align === 'justify') justify = 'space-between';
+
+btn.style.setProperty('--sgbtn-justify', justify);
   btn.style.setProperty('--sgbtn-letter', letter + 'px');
+  btn.style.setProperty('--sgbtn-font-family', el.dataset.btnFontFamily || "'Segoe UI', system-ui, -apple-system, sans-serif");
+btn.style.setProperty('--sgbtn-font-style', el.dataset.btnFontStyle || 'normal');
+btn.style.setProperty('--sgbtn-text-decoration', el.dataset.btnTextDecoration || 'none');
+btn.style.textTransform = 'none';
 
-  btn.style.textTransform = (el.dataset.btnUpper === '1') ? 'uppercase' : 'none';
   btn.dataset.grad = (el.dataset.btnGradient === '1') ? '1' : '0';
-
+  btn.dataset.clickEffect = el.dataset.btnClickEffect || 'none';
   buildButtonContent(btn, el);
   if (!el.style.width) el.style.width = '180px';
   if (!el.style.height) el.style.height = '44px';
@@ -263,7 +339,7 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
     const p = $("btn-preview");
     if (!p || !el) return;
 
-    const b = el.querySelector(".sgbtn-host button.sgbtn");
+    const b = el.querySelector(".sgbtn-wrap button.sgbtn");
     if (!b) return;
 
     p.className = b.className;
@@ -273,25 +349,65 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
     p.style.pointerEvents = "auto";
     p.style.cursor = "pointer";
   }
+  function playButtonEffect(btn, effect) {
+    if (!btn) return;
+    effect = String(effect || "none");
 
-  function syncButtonTargetButtons(el) {
-    const openBtn = $("btn-open-as-target");
-    const closeBtn = $("btn-close-target");
-    const state = $("btn-target-state");
-    if (!openBtn || !closeBtn) return;
+    btn.classList.remove(
+      "fx-scale-click",
+      "fx-bounce-click",
+      "fx-pulse-click",
+      "fx-glow-click",
+      "fx-shake-click"
+    );
 
-    const isOpen = (typeof window.activeContainer !== "undefined" && window.activeContainer === el);
+    void btn.offsetWidth;
 
-    openBtn.disabled = false;
-    closeBtn.disabled = !isOpen;
-    openBtn.textContent = isOpen ? "✅ Guzik jest otwarty" : "🎯 Otwórz (dodawaj do guzika)";
+    if (effect === "scale" || effect === "scale-ripple") {
+      btn.classList.add("fx-scale-click");
+      setTimeout(() => btn.classList.remove("fx-scale-click"), 120);
+    }
 
-    if (state) state.innerHTML = isOpen
-      ? "Dodajesz do: <b>Guzik</b>"
-      : "Dodajesz do: <b>Główny ekran</b>";
+    if (effect === "bounce") {
+      btn.classList.add("fx-bounce-click");
+      setTimeout(() => btn.classList.remove("fx-bounce-click"), 420);
+    }
+
+    if (effect === "pulse") {
+      btn.classList.add("fx-pulse-click");
+      setTimeout(() => btn.classList.remove("fx-pulse-click"), 380);
+    }
+
+    if (effect === "glow") {
+      btn.classList.add("fx-glow-click");
+      setTimeout(() => btn.classList.remove("fx-glow-click"), 470);
+    }
+
+    if (effect === "shake") {
+      btn.classList.add("fx-shake-click");
+      setTimeout(() => btn.classList.remove("fx-shake-click"), 380);
+    }
+
+    if (effect === "ripple" || effect === "scale-ripple") {
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height) * 1.2;
+      const r = document.createElement("span");
+      r.className = "sgbtn__ripple";
+      r.style.position = "absolute";
+      r.style.width = size + "px";
+      r.style.height = size + "px";
+      r.style.left = (rect.width / 2 - size / 2) + "px";
+      r.style.top = (rect.height / 2 - size / 2) + "px";
+      r.style.borderRadius = "999px";
+      r.style.background = "rgba(255,255,255,.28)";
+      r.style.transform = "scale(0)";
+      r.style.opacity = "1";
+      r.style.pointerEvents = "none";
+      r.style.animation = "sgbtnRipple .55s ease-out";
+      btn.appendChild(r);
+      r.addEventListener("animationend", () => r.remove(), { once: true });
+    }
   }
-
-  window.syncButtonTargetButtons = syncButtonTargetButtons;
 
   window.createButtonElement = function (x, y) {
     injectStyle();
@@ -323,7 +439,10 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
     if (typeof selectElement === "function") selectElement(div);
     if (typeof refreshLayers === "function") refreshLayers();
   };
-
+function setToolActive(id, on) {
+  const btn = $(id);
+  if (btn) btn.classList.toggle("active", !!on);
+}
   window.syncButtonInputs = function (el) {
     if (!el) return;
     ensureButtonDefaults(el);
@@ -336,16 +455,13 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
     setV("btn-icon-pos", el.dataset.btnIconPos || "left");
 
     setV("btn-action", el.dataset.btnAction || "none");
+    setV("btn-click-effect", el.dataset.btnClickEffect || "none");
     setV("btn-url", el.dataset.btnUrl || "https://");
     setV("btn-target", el.dataset.btnTarget || "_blank");
     setV("btn-scroll-target", el.dataset.btnScrollTargetId || "");
     setV("btn-scroll-offset", el.dataset.btnScrollOffset || "0");
 
-    setV("btn-title", el.dataset.btnTitle || "");
-    setV("btn-aria", el.dataset.btnAria || "");
-    setV("btn-type", el.dataset.btnType || "button");
 
-    setV("btn-preset", el.dataset.btnPreset || "primary");
     setV("btn-size", el.dataset.btnSize || "md");
 
     setV("btn-w", parseInt(el.style.width, 10) || 180);
@@ -356,10 +472,8 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
 
     setV("btn-weight", el.dataset.btnWeight || "600");
     setV("btn-align", el.dataset.btnAlign || "center");
-
-    setC("btn-upper", el.dataset.btnUpper === "1");
     setV("btn-letter", el.dataset.btnLetter || "0");
-
+    setV("btn-font-family", el.dataset.btnFontFamily || "'Segoe UI', system-ui, -apple-system, sans-serif");
     setV("btn-bg", el.dataset.btnBg || "#156fe5");
     setV("btn-color", el.dataset.btnColor || "#ffffff");
     setV("btn-border", el.dataset.btnBorderColor || "#156fe5");
@@ -372,26 +486,34 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
     setV("btn-grad-to", el.dataset.btnGradTo || "#22c55e");
     setV("btn-grad-angle", el.dataset.btnGradAngle || "135");
 
-    setV("btn-name", el.dataset.btnName || "");
     setC("btn-disabled", el.dataset.btnDisabled === "1");
 
     updateActionVisibility();
     updateGradientVisibility();
     applyButtonVisual(el);
     updatePreview(el);
-    syncButtonTargetButtons(el);
+    setToolActive("btn-tool-bold", parseInt(el.dataset.btnWeight || "600", 10) >= 700);
+setToolActive("btn-tool-italic", el.dataset.btnFontStyle === "italic");
+setToolActive("btn-tool-underline", (el.dataset.btnTextDecoration || "").includes("underline"));
+setToolActive("btn-tool-strike", (el.dataset.btnTextDecoration || "").includes("line-through"));
+
+setToolActive("btn-tool-align-left", el.dataset.btnAlign === "left");
+setToolActive("btn-tool-align-center", el.dataset.btnAlign === "center");
+setToolActive("btn-tool-align-right", el.dataset.btnAlign === "right");
+setToolActive("btn-tool-align-justify", el.dataset.btnAlign === "justify");
+setV("btn-font-size", el.dataset.btnFontSize || "13");
   };
 
   function bind() {
     const ids = [
       "btn-text", "btn-icon", "btn-icon-pos",
-      "btn-action", "btn-url", "btn-target", "btn-scroll-target", "btn-scroll-offset",
-      "btn-title", "btn-aria", "btn-type",
-      "btn-preset", "btn-size", "btn-w", "btn-h", "btn-radius", "btn-border-w",
-      "btn-weight", "btn-align", "btn-upper", "btn-letter",
+      "btn-action", "btn-click-effect", "btn-url", "btn-target", "btn-scroll-target", "btn-scroll-offset",
+       "btn-size", "btn-w", "btn-h", "btn-radius", "btn-border-w",
+      "btn-weight","btn-font-size", "btn-align", "btn-letter",
+      "btn-font-family",
       "btn-bg", "btn-color", "btn-border", "btn-hover-bg", "btn-hover-color", "btn-shadow",
       "btn-gradient", "btn-grad-from", "btn-grad-to", "btn-grad-angle",
-      "btn-name", "btn-disabled"
+       "btn-disabled"
     ];
 
     function onChange() {
@@ -400,22 +522,17 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
 
       const v = (id) => ($(id)?.value ?? "");
       const c = (id) => ($(id)?.checked ?? false);
-
       e.dataset.btnText = v("btn-text");
       e.dataset.btnIcon = v("btn-icon");
       e.dataset.btnIconPos = v("btn-icon-pos");
-
-      e.dataset.btnAction = v("btn-action");
+e.dataset.btnAction = v("btn-action");
+      e.dataset.btnClickEffect = v("btn-click-effect");
       e.dataset.btnUrl = v("btn-url");
       e.dataset.btnTarget = v("btn-target");
       e.dataset.btnScrollTargetId = v("btn-scroll-target");
       e.dataset.btnScrollOffset = v("btn-scroll-offset");
 
-      e.dataset.btnTitle = v("btn-title");
-      e.dataset.btnAria = v("btn-aria");
-      e.dataset.btnType = v("btn-type");
 
-      e.dataset.btnPreset = v("btn-preset");
       e.dataset.btnSize = v("btn-size");
 
       e.style.width = (parseInt(v("btn-w"), 10) || 180) + "px";
@@ -425,9 +542,9 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
       e.dataset.btnBorderW = v("btn-border-w");
       e.dataset.btnWeight = v("btn-weight");
       e.dataset.btnAlign = v("btn-align");
-      e.dataset.btnUpper = c("btn-upper") ? "1" : "0";
+      e.dataset.btnFontSize = v("btn-font-size");
       e.dataset.btnLetter = v("btn-letter");
-
+e.dataset.btnFontFamily = v("btn-font-family");
       e.dataset.btnBg = v("btn-bg");
       e.dataset.btnColor = v("btn-color");
       e.dataset.btnBorderColor = v("btn-border");
@@ -439,8 +556,6 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
       e.dataset.btnGradFrom = v("btn-grad-from");
       e.dataset.btnGradTo = v("btn-grad-to");
       e.dataset.btnGradAngle = v("btn-grad-angle");
-
-      e.dataset.btnName = v("btn-name");
       e.dataset.btnDisabled = c("btn-disabled") ? "1" : "0";
 
       updateActionVisibility();
@@ -450,36 +565,145 @@ wrap.style.background = 'rgba(0,0,0,0.001)';
 
       if (typeof refreshLayers === "function") refreshLayers();
     }
+function getActiveButton() {
+  const e = window.activeElement;
+  if (!e || e.dataset.type !== "button") return null;
+  return e;
+}
 
+function refreshButtonEditor() {
+  const e = getActiveButton();
+  if (!e) return;
+  applyButtonVisual(e);
+  updatePreview(e);
+  if (typeof refreshLayers === "function") refreshLayers();
+}
+
+const btnBold = $("btn-tool-bold");
+if (btnBold) {
+  btnBold.addEventListener("click", () => {
+    const e = getActiveButton();
+    if (!e) return;
+
+    const current = parseInt(e.dataset.btnWeight || "600", 10) || 600;
+    e.dataset.btnWeight = current >= 700 ? "600" : "700";
+
+    window.syncButtonInputs(e);
+    refreshButtonEditor();
+  });
+}
+
+const btnItalic = $("btn-tool-italic");
+if (btnItalic) {
+  btnItalic.addEventListener("click", () => {
+    const e = getActiveButton();
+    if (!e) return;
+    e.dataset.btnFontStyle = (e.dataset.btnFontStyle === "italic") ? "normal" : "italic";
+window.syncButtonInputs(e);
+refreshButtonEditor();
+  });
+}
+
+const btnUnderline = $("btn-tool-underline");
+if (btnUnderline) {
+  btnUnderline.addEventListener("click", () => {
+    const e = getActiveButton();
+    if (!e) return;
+    const cur = e.dataset.btnTextDecoration || "none";
+    e.dataset.btnTextDecoration = cur === "underline" ? "none" : "underline";
+    window.syncButtonInputs(e);
+    refreshButtonEditor();
+  });
+}
+
+const btnStrike = $("btn-tool-strike");
+if (btnStrike) {
+  btnStrike.addEventListener("click", () => {
+    const e = getActiveButton();
+    if (!e) return;
+    const cur = e.dataset.btnTextDecoration || "none";
+    e.dataset.btnTextDecoration = cur === "line-through" ? "none" : "line-through";
+    window.syncButtonInputs(e);
+    refreshButtonEditor();
+  });
+}
+
+const btnAlignLeft = $("btn-tool-align-left");
+if (btnAlignLeft) {
+  btnAlignLeft.addEventListener("click", () => {
+    const e = getActiveButton();
+    if (!e) return;
+    e.dataset.btnAlign = "left";
+    window.syncButtonInputs(e);
+    refreshButtonEditor();
+  });
+}
+
+const btnAlignCenter = $("btn-tool-align-center");
+if (btnAlignCenter) {
+  btnAlignCenter.addEventListener("click", () => {
+    const e = getActiveButton();
+    if (!e) return;
+    e.dataset.btnAlign = "center";
+    window.syncButtonInputs(e);
+    refreshButtonEditor();
+  });
+}
+
+const btnAlignRight = $("btn-tool-align-right");
+if (btnAlignRight) {
+  btnAlignRight.addEventListener("click", () => {
+    const e = getActiveButton();
+    if (!e) return;
+    e.dataset.btnAlign = "right";
+    window.syncButtonInputs(e);
+    refreshButtonEditor();
+  });
+}
+
+const btnAlignJustify = $("btn-tool-align-justify");
+if (btnAlignJustify) {
+  btnAlignJustify.addEventListener("click", () => {
+    const e = getActiveButton();
+    if (!e) return;
+    e.dataset.btnAlign = "justify";
+    window.syncButtonInputs(e);
+    refreshButtonEditor();
+  });
+}
+
+const btnClear = $("btn-tool-clear-format");
+if (btnClear) {
+  btnClear.addEventListener("click", () => {
+    const e = getActiveButton();
+    if (!e) return;
+
+    e.dataset.btnWeight = "600";
+    e.dataset.btnAlign = "center";
+    e.dataset.btnLetter = "0";
+    e.dataset.btnFontFamily = "'Segoe UI', system-ui, -apple-system, sans-serif";
+    e.dataset.btnFontStyle = "normal";
+    e.dataset.btnTextDecoration = "none";
+
+    window.syncButtonInputs(e);
+    refreshButtonEditor();
+  });
+}
     ids.forEach((id) => {
       const el = $(id);
       if (!el) return;
       el.addEventListener("input", onChange);
       el.addEventListener("change", onChange);
     });
-
-    const openT = $("btn-open-as-target");
-    if (openT && openT.dataset.bound !== "1") {
-      openT.dataset.bound = "1";
-      openT.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        const el = window.activeElement;
-        if (!el || el.dataset.type !== "button") return;
-        if (typeof window.setAsTarget === "function") window.setAsTarget(el.dataset.id);
-        syncButtonTargetButtons(el);
+    const btnPreview = $("btn-preview");
+    if (btnPreview) {
+      btnPreview.addEventListener("click", () => {
+        const e = getActiveButton();
+        if (!e) return;
+        playButtonEffect(btnPreview, e.dataset.btnClickEffect || "none");
       });
     }
 
-    const closeT = $("btn-close-target");
-    if (closeT && closeT.dataset.bound !== "1") {
-      closeT.dataset.bound = "1";
-      closeT.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        if (typeof window.resetToCanvas === "function") window.resetToCanvas();
-        const el = window.activeElement;
-        if (el && el.dataset.type === "button") syncButtonTargetButtons(el);
-      });
-    }
 
     updateActionVisibility();
     updateGradientVisibility();

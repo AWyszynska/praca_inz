@@ -118,6 +118,31 @@
         <input type="checkbox" id="nav-divider" style="width:auto;"> separatory
       </label>
     </div>
+      <div id="nav-divider-wrap" style="display:none; margin-top:10px; border:1px solid #e2e8f0; background:#fff; border-radius:10px; padding:10px;">
+    <div style="font-size:12px; font-weight:800; color:#0f172a; margin-bottom:6px;">
+      Separatory między linkami
+    </div>
+
+    <label>Co wstawić między linkami?</label>
+    <input type="text" id="nav-divider-text" placeholder='np. |   albo  •   albo  <img src="icons/paw.svg">'>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">
+      <div>
+        <label>Wielkość separatora (px)</label>
+        <input type="number" id="nav-divider-size" min="6" max="60" value="14">
+      </div>
+
+      <div>
+        <label>Kolor separatora</label>
+        <input type="color" id="nav-divider-color" value="#ffffff">
+      </div>
+    </div>
+
+    <div style="font-size:12px; color:#64748b; margin-top:8px; line-height:1.35;">
+      Możesz wpisać tekst (np. <b>|</b>, <b>-</b>, <b>•</b>) albo wkleić mini-HTML (np. <b>&lt;img ...&gt;</b>).
+    </div>
+  </div>
+
   </div>
 
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
@@ -293,6 +318,18 @@
       <input type="number" id="nav-font-size" min="10" max="60" value="15">
     </div>
   </div>
+  <label style="margin-top:10px;">Rozciąganie NAV</label>
+
+<label style="display:flex; gap:8px; align-items:center; margin-top:6px; font-weight:600; text-transform:none;">
+  <input type="checkbox" id="nav-fill-x">
+  Pełna szerokość (X = 100%)
+</label>
+
+<label style="display:flex; gap:8px; align-items:center; margin-top:6px; font-weight:600; text-transform:none;">
+  <input type="checkbox" id="nav-fill-y">
+  Pełna wysokość (Y = 100%)
+</label>
+
   <div style="margin-top:12px; border-top:1px solid #e5e7eb; padding-top:10px;">
     <div style="font-size:12px; color:#334155; font-weight:800; margin-bottom:6px;">Wygląd linków</div>
 

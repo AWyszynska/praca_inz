@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-09-03 13:19:02</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <element id="blk_1788434307609" type="block">
+    <x>471</x>
+    <y>230</y>
+    <w>260px</w>
+    <h>140px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1788434304056" type="text">
+        <x>150</x>
+        <y>-62</y>
+        <w>220px</w>
+        <h>90px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Wpisz tekst...fgzdgfdzg</content>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1788434321289_2341" type="form">
+        <x>370</x>
+        <y>97</y>
+        <w>34px</w>
+        <h>70px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>14</zIndex>
+        <fontSize>26px</fontSize>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>61</formInputHeight>
+        <formMinHeight>70</formMinHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+    </children>
+  </element>
+  <element id="blk_1788434315584" type="block">
+    <x>480</x>
+    <y>413</y>
+    <w>260px</w>
+    <h>140px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+  </element>
+</customPage>

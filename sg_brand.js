@@ -141,7 +141,6 @@ const getChk = (id, fallback = false) => {
     const base = defaultCfg();
     const cfg = { ...base, ...(raw || {}) };
 
-    // backwards compatibility (old: textA/textB etc.)
     if (!cfg.seg && (raw?.textA || raw?.textB || raw?.color)) {
       cfg.seg = [
         {
@@ -404,6 +403,19 @@ const getChk = (id, fallback = false) => {
       : buildSvg(cfg, el.dataset.id);
 
     el.innerHTML = svg;
+const svgEl = el.querySelector("svg");
+if (svgEl) {
+  svgEl.classList.add("brand-logo");     
+  svgEl.removeAttribute("width");        
+  svgEl.removeAttribute("height");
+  svgEl.style.width = "100%";
+  svgEl.style.height = "100%";
+  svgEl.style.display = "block";
+
+  if (!svgEl.getAttribute("preserveAspectRatio")) {
+    svgEl.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  }
+}
 
     el.style.height = cfg.heightPx + "px";
 
@@ -519,23 +531,26 @@ function syncUiFromCfg(cfg) {
 
     cfg.heightPx = parseInt(getVal("brand-height", 44), 10) || 44;
     cfg.autoWidth = getChk("brand-auto-width", true) ? "1" : "0";
-    cfg.widthPx = parseInt($("brand-width").value, 10) || 280;
+    cfg.widthPx = parseInt(getVal("brand-width", 280), 10) || 280;
 
-    cfg.fontFamily = $("brand-font").value || defaultCfg().fontFamily;
-    cfg.anchor = $("brand-anchor").value || "end";
-    cfg.textX = parseInt($("brand-text-x").value, 10) || 520;
-    cfg.textY = parseInt($("brand-text-y").value, 10) || 104;
+    cfg.fontFamily = getVal("brand-font", defaultCfg().fontFamily);
+    cfg.anchor = getVal("brand-anchor", "end") || "end";
+cfg.textX = parseInt(getVal("brand-text-x", 520), 10) || 520;
+cfg.textY = parseInt(getVal("brand-text-y", 104), 10) || 104;
 
-    cfg.gradOn = $("brand-grad-on").checked ? "1" : "0";
-    cfg.gradFrom = $("brand-grad-from").value || "#7c3aed";
-    cfg.gradTo = $("brand-grad-to").value || "#06b6d4";
-    cfg.gradAngle = parseInt($("brand-grad-angle").value, 10) || 0;
-    cfg.gradAffectsStroke = $("brand-grad-affects-stroke").checked ? "1" : "0";
 
-    cfg.strokeOn = $("brand-stroke-on").checked ? "1" : "0";
-    cfg.strokeW = parseFloat($("brand-stroke-w").value) || 1;
-    cfg.strokeColor = $("brand-stroke-color").value || "#0f172a";
-    cfg.strokeMatchFill = $("brand-stroke-match-fill").checked ? "1" : "0";
+    cfg.gradOn = getChk("brand-grad-on", false) ? "1" : "0";
+cfg.gradFrom = getVal("brand-grad-from", "#7c3aed");
+cfg.gradTo = getVal("brand-grad-to", "#06b6d4");
+cfg.gradAngle = parseInt(getVal("brand-grad-angle", 0), 10) || 0;
+cfg.gradAffectsStroke = getChk("brand-grad-affects-stroke", false) ? "1" : "0";
+
+
+cfg.strokeOn = getChk("brand-stroke-on", false) ? "1" : "0";
+cfg.strokeW = parseFloat(getVal("brand-stroke-w", 1)) || 1;
+cfg.strokeColor = getVal("brand-stroke-color", "#0f172a");
+cfg.strokeMatchFill = getChk("brand-stroke-match-fill", true) ? "1" : "0";
+
 
     cfg.shadowOn = $("brand-shadow-on").checked ? "1" : "0";
     cfg.shadowBlur = parseFloat($("brand-shadow-blur").value) || 8;
@@ -573,8 +588,8 @@ function syncUiFromCfg(cfg) {
     s1.italic = $("seg1-italic").checked ? "1" : "0";
     s1.underline = $("seg1-underline").checked ? "1" : "0";
     s1.ownFillOnGradient = $("seg1-own-fill").checked ? "1" : "0";
-    s1.letter = parseFloat($("seg1-letter").value) || 0;
-    s1.dx = parseInt($("seg1-dx").value, 10) || 0;
+s1.letter = parseFloat(getVal("seg1-letter", 0)) || 0;
+s1.dx     = parseInt(getVal("seg1-dx", 0), 10) || 0;
 
     s2.text = $("seg2-text").value || "";
     s2.size = parseInt($("seg2-size").value, 10) || 60;
@@ -583,8 +598,9 @@ function syncUiFromCfg(cfg) {
     s2.italic = $("seg2-italic").checked ? "1" : "0";
     s2.underline = $("seg2-underline").checked ? "1" : "0";
     s2.ownFillOnGradient = $("seg2-own-fill").checked ? "1" : "0";
-    s2.letter = parseFloat($("seg2-letter").value) || 0;
-    s2.dx = parseInt($("seg2-dx").value, 10) || 0;
+    s2.letter = parseFloat(getVal("seg2-letter", 0)) || 0;
+s2.dx     = parseInt(getVal("seg2-dx", 0), 10) || 0;
+
 
     s3.enabled = $("seg3-enabled").checked ? "1" : "0";
     s3.text = $("seg3-text").value || "";
@@ -597,7 +613,7 @@ function syncUiFromCfg(cfg) {
     s3.letter = parseFloat($("seg3-letter").value) || 0;
     s3.dx = parseInt($("seg3-dx").value, 10) || 6;
 
-    cfg.rawSvg = $("brand-raw").value || "";
+    cfg.rawSvg = getVal("brand-raw", "");
 
     return normalizeCfg(cfg);
   }
@@ -840,8 +856,6 @@ setDis("brand-width", next.autoWidth === "1");
     el.className = "canvas-element type-brand";
     el.dataset.id = "brand_" + Date.now();
     el.dataset.type = "brand";
-
-    // z index
     const zNow = (window.zCounter = (window.zCounter || 10) + 1);
     el.style.zIndex = zNow;
 
@@ -873,9 +887,11 @@ setDis("brand-width", next.autoWidth === "1");
     const st = document.createElement("style");
     st.id = "sg-brand-css";
     st.textContent = `
-      .type-brand{ display:block; }
-      .type-brand .brand-logo{ width:100%; height:100%; display:block; }
-    `;
+  .type-brand{ display:block; }
+  .type-brand svg{ width:100%; height:100%; display:block; }
+  .type-brand .brand-logo{ width:100%; height:100%; display:block; }
+`;
+
     document.head.appendChild(st);
   }
   window.createBrandElement = createBrandElement;

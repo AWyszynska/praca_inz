@@ -1,4 +1,203 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <customPage>
-  <generatedAt>2026-01-21 22:51:39</generatedAt>
+  <generatedAt>2026-05-13 20:00:40</generatedAt>
+  <pageHeight>1600</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <element id="footer_1769034113302" type="block">
+    <x>0</x>
+    <y>0</y>
+    <w>calc(100% + 0px)</w>
+    <h>80px</h>
+    <bg>rgb(163, 201, 251)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <isFooter>1</isFooter>
+    <footerDock>top</footerDock>
+    <footerMode>page</footerMode>
+    <footerBgSolid>#a3c9fb</footerBgSolid>
+    <footerFlex>0</footerFlex>
+    <children>
+      <element id="brand_1769034030744" type="brand">
+        <brandCfg>{"mode":"raw","heightPx":67,"autoWidth":"1","widthPx":280,"fontFamily":"system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif","anchor":"end","textX":520,"textY":104,"gradOn":"0","gradFrom":"#7c3aed","gradTo":"#06b6d4","gradAngle":0,"gradAffectsStroke":"0","strokeOn":"0","strokeW":1,"strokeColor":"#0f172a","strokeMatchFill":"1","shadowOn":"0","shadowBlur":8,"shadowX":0,"shadowY":4,"shadowColor":"rgba(0,0,0,0.25)","lineOn":"0","lineX1":120,"lineX2":520,"lineY":118,"lineW":1.5,"lineColor":"#06b6d4","lineUseTextPaint":"1","lineDash":"0","dotOn":"0","dotR":4.2,"dotX":520,"dotY":118,"dotColor":"#06b6d4","dotUseTextPaint":"1","bgOn":"0","bgColor":"rgba(255,255,255,0)","bgRadius":0,"bgPad":"0px","seg":[{"text":"Nova","size":143,"weight":700,"italic":"0","underline":"0","fill":"#0f172a","ownFillOnGradient":"0","letter":0.2,"dx":6},{"text":"Labs","size":72,"weight":500,"italic":"0","underline":"0","fill":"#06b6d4","ownFillOnGradient":"1","letter":0,"dx":2},{"text":"™","size":42,"weight":900,"italic":"0","underline":"0","fill":"#0f172a","ownFillOnGradient":"0","letter":0,"dx":6,"enabled":"0"}],"rawSvg":"&lt;svg class=\"brand-logo\" viewBox=\"0 0 720 160\" xmlns=\"http://www.w3.org/2000/svg\" aria-label=\"VetMell\"&gt;\n\n  &lt;g fill=\"#ffffff\" stroke=\"#ffffff\" stroke-linecap=\"round\"&gt;\n    \n    &lt;text x=\"500\" y=\"102\" text-anchor=\"end\" fill=\"#ffffff\"\n          style=\"transform: scale(1.4); transform-origin: 500px 102px;\"\n          font-family=\"Merriweather, Georgia, 'Times New Roman', serif\"&gt;\n      &lt;tspan font-size=\"70\" font-style=\"italic\" font-weight=\"700\" letter-spacing=\".2\"&gt;Vet&lt;/tspan&gt;\n      &lt;tspan font-size=\"72\" font-weight=\"500\" dx=\"2\"&gt;Mell&lt;/tspan&gt;\n    &lt;/text&gt;\n    \n    &lt;path d=\"M100 118h400\" fill=\"none\" stroke-width=\"1.5\"/&gt;\n    \n    &lt;circle cx=\"500\" cy=\"118\" r=\"4.2\" fill=\"#ffffff\" stroke=\"none\"/&gt;\n  &lt;/g&gt;\n&lt;/svg&gt;"}</brandCfg>
+        <x>578</x>
+        <y>7</y>
+        <w>302px</w>
+        <h>67px</h>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <opacity>0.98</opacity>
+        <content>&lt;svg class="brand-logo" viewBox="0 0 720 160" xmlns="http://www.w3.org/2000/svg" aria-label="VetMell" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; display: block;"&gt;
+
+  &lt;g fill="#ffffff" stroke="#ffffff" stroke-linecap="round"&gt;
+    
+    &lt;text x="500" y="102" text-anchor="end" fill="#ffffff" style="transform: scale(1.4); transform-origin: 500px 102px;" font-family="Merriweather, Georgia, 'Times New Roman', serif"&gt;
+      &lt;tspan font-size="70" font-style="italic" font-weight="700" letter-spacing=".2"&gt;Vet&lt;/tspan&gt;
+      &lt;tspan font-size="72" font-weight="500" dx="2"&gt;Mell&lt;/tspan&gt;
+    &lt;/text&gt;
+    
+    &lt;path d="M100 118h400" fill="none" stroke-width="1.5"&gt;&lt;/path&gt;
+    
+    &lt;circle cx="500" cy="118" r="4.2" fill="#ffffff" stroke="none"&gt;&lt;/circle&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</content>
+      </element>
+      <element id="img_1769034191385_5647" type="image">
+        <x>28</x>
+        <y>10</y>
+        <w>60px</w>
+        <h>60px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <opacity>0.98</opacity>
+        <content>uploads/img_20260121_232311_5b417760.png</content>
+      </element>
+      <element id="el_1778528282666" type="button">
+        <htmlId>sgbtn_el_1778528282666</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>1340</x>
+        <y>24</y>
+        <w>123px</w>
+        <h>33px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <btnText>KONTO</btnText>
+        <btnAction>none</btnAction>
+        <btnIconPos>right</btnIconPos>
+        <btnWeight>600</btnWeight>
+        <btnFontSize>14</btnFontSize>
+        <btnFontFamily>'Gill Sans', 'Segoe UI', sans-serif</btnFontFamily>
+        <btnTextDecoration>underline</btnTextDecoration>
+        <btnFontFamily>'Gill Sans', 'Segoe UI', sans-serif</btnFontFamily>
+        <btnTextDecoration>underline</btnTextDecoration>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#08346d</btnGradFrom>
+        <btnGradTo>#dee8e2</btnGradTo>
+      </element>
+      <element id="nav_1778694770291_8972" type="nav">
+        <x>1339</x>
+        <y>70</y>
+        <w>125px</w>
+        <h>105px</h>
+        <bg>none rgb(236, 241, 254)</bg>
+        <border>1px solid rgba(255, 255, 255, 0.08)</border>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>6</zIndex>
+        <borderRadius>9px</borderRadius>
+        <boxShadow>rgba(0, 0, 0, 0.18) 0px 10px 24px</boxShadow>
+        <color>rgb(255, 255, 255)</color>
+        <fontSize>16px</fontSize>
+        <navItems>Moje konto|?page=uslugi|uslugi
+Wyloguj|?page=kontakt|kontakt</navItems>
+        <navOrientation>vertical</navOrientation>
+        <navAlign>center</navAlign>
+        <navGap>7</navGap>
+        <navPad>8</navPad>
+        <navLinkPadX>18</navLinkPadX>
+        <navLinkPadY>7</navLinkPadY>
+        <navLinkRadius>9</navLinkRadius>
+        <navLinkColor>#000000</navLinkColor>
+        <navLayout>sidebar</navLayout>
+        <navLinkBorderColor>rgba(255,255,255,0.10)</navLinkBorderColor>
+        <navBrandHref>#</navBrandHref>
+        <navBgSolid>#ecf1fe</navBgSolid>
+      </element>
+    </children>
+  </element>
+  <element id="nav_1769035392746_8705" type="nav">
+    <x>0</x>
+    <y>80</y>
+    <w>100%</w>
+    <h>41px</h>
+    <bg>none rgb(74, 136, 209)</bg>
+    <border>1px solid rgb(255, 255, 255)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <boxShadow>rgba(0, 0, 0, 0.18) 0px 10px 24px</boxShadow>
+    <opacity>0.98</opacity>
+    <color>rgb(0, 0, 0)</color>
+    <fontSize>18px</fontSize>
+    <navItems>Strona główna|?file=main_home.xml&amp;page=home|home
+O nas|?file=about_home.xml&amp;page=about|about
+Usługi|?file=uslugi_home.xml&amp;page=uslugi|uslugi
+Nasi weterynarze|?file=veterynarze_home.php&amp;page=about_vet|about_vet
+Kontakt|?file=kontakt_home.xml&amp;page=kontakt|kontakt
+Umów wizytę|?file=main_make_appointment.xml&amp;page=umow|umow</navItems>
+    <navAlign>center</navAlign>
+    <navGap>31</navGap>
+    <navPad>8</navPad>
+    <navLinkPadX>2</navLinkPadX>
+    <navLayout>underline</navLayout>
+    <navFillX>1</navFillX>
+    <navDivider>1</navDivider>
+    <navDividerSize>17</navDividerSize>
+    <navLinkBorderColor>rgba(255,255,255,0.10)</navLinkBorderColor>
+    <navBrandHref>#</navBrandHref>
+    <navBgSolid>#4a88d1</navBgSolid>
+    <navGradUseMid>1</navGradUseMid>
+  </element>
+  <element id="footer_1769076443694" type="block">
+    <x>0</x>
+    <y>1459</y>
+    <w>calc(100% + 0px)</w>
+    <h>141px</h>
+    <bg>rgb(168, 197, 220)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <isFooter>1</isFooter>
+    <footerMode>page</footerMode>
+    <footerBgSolid>#a8c5dc</footerBgSolid>
+    <footerHeight>141</footerHeight>
+  </element>
+  <element id="el_1769076682565" type="text">
+    <x>1049</x>
+    <y>1459</y>
+    <w>324px</w>
+    <h>136px</h>
+    <bg>rgb(248, 248, 237)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <opacity>0.98</opacity>
+    <content>Kontakt
+Email: support@twojadomena.pl
+Telefon: +48 123 456 789
+Adres: ul. Przykładowa 1, 
+   00-000 Warszawa
+Godziny wsparcia: Pon–Pt, 9:00–17:00</content>
+    <color>rgb(114, 81, 164)</color>
+    <fontSize>15px</fontSize>
+    <fontFamily>"Comic Sans MS", "Comic Sans", cursive</fontFamily>
+    <lineHeight>1.15</lineHeight>
+    <padding>16px</padding>
+  </element>
 </customPage>

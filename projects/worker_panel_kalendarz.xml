@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-05-17 15:26:59</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>worker_panel.xml</extends>
+  <element id="cal_1779024177198_4733" type="calendar">
+    <x>247</x>
+    <y>135</y>
+    <w>1027px</w>
+    <h>585px</h>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>24px</borderRadius>
+    <boxShadow>rgba(2, 6, 23, 0.18) 0px 14px 36px</boxShadow>
+    <calMonth>5</calMonth>
+    <calBgA>#bf98fb</calBgA>
+    <calBgB>#212e45</calBgB>
+    <calAccent>#7ac6f5</calAccent>
+    <calRadius>1</calRadius>
+    <calGap>7</calGap>
+    <calCellRadius>4</calCellRadius>
+    <calMonthSize>33</calMonthSize>
+    <calDaySize>14</calDaySize>
+    <calWeekSize>15</calWeekSize>
+    <calNavSize>45</calNavSize>
+  </element>
+  <element id="el_1779024351453" type="button">
+    <htmlId>sgbtn_el_1779024351453</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>582</x>
+    <y>746</y>
+    <w>357px</w>
+    <h>44px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <btnText>Dodaj notatkę do kalendarza</btnText>
+    <btnAction>none</btnAction>
+    <btnWeight>600</btnWeight>
+    <btnFontSize>18</btnFontSize>
+    <btnBg>#123563</btnBg>
+  </element>
+</customPage>

@@ -18,22 +18,40 @@
       <button type="button" class="tool-btn" id="brand-copy-svg">Kopiuj SVG</button>
       <button type="button" class="tool-btn" id="brand-export-png">Eksport PNG</button>
     </div>
-
+<div id="brand-common-box" style="margin-top:12px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+    <div>
+      <label>Wysokość logo (px)</label>
+      <input id="brand-height" type="number" min="20" max="240" step="1" value="44">
+    </div>
+    <div>
+      <label>Szerokość</label>
+      <div style="display:flex; gap:8px;">
+        <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin:0; text-transform:none; font-weight:700; color:#334155;">
+          <input id="brand-auto-width" type="checkbox" checked> auto
+        </label>
+        <input id="brand-width" type="number" min="80" max="1200" step="1" value="280">
+      </div>
+    </div>
+  </div>
+</div>
     <div id="brand-builder-box" style="margin-top:12px;">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div>
-          <label>Wysokość logo (px)</label>
-          <input id="brand-height" type="number" min="20" max="240" step="1" value="44">
-        </div>
-        <div>
-          <label>Szerokość</label>
-          <div style="display:flex; gap:8px;">
-            <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin:0; text-transform:none; font-weight:700; color:#334155;">
-              <input id="brand-auto-width" type="checkbox" checked> auto
-            </label>
-            <input id="brand-width" type="number" min="80" max="1200" step="1" value="280">
-          </div>
-        </div>
+     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+  <div>
+    <label>Wysokość logo (px)</label>
+    <input id="brand-height" type="number" min="20" max="240" step="1" value="44">
+  </div>
+  <div>
+    <label>Szerokość</label>
+    <div style="display:flex; gap:8px;">
+      <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin:0; text-transform:none; font-weight:700; color:#334155;">
+        <input id="brand-auto-width" type="checkbox" checked> auto
+      </label>
+      <input id="brand-width" type="number" min="80" max="1200" step="1" value="280">
+    </div>
+  </div>
+</div>
+
       </div>
 
       <label style="margin-top:10px;">Font (CSS)</label>
@@ -166,40 +184,32 @@
             </div>
           </div>
 
-          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;">
-            <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin:0; text-transform:none; font-weight:800; color:#334155;">
-              <input id="seg1-italic" type="checkbox"> italic
-            </label>
-            <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin:0; text-transform:none; font-weight:800; color:#334155;">
-              <input id="seg1-underline" type="checkbox"> underline
-            </label>
-            <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin:0; text-transform:none; font-weight:800; color:#334155;">
-              <input id="seg1-own-fill" type="checkbox"> własny kolor przy gradiencie
-            </label>
-          </div>
-
-<div style="margin-top:10px; padding:10px; border:1px solid #e5e7eb; border-radius:10px;">
-  <div style="font-size:11px; color:#64748b; font-weight:800; margin-bottom:6px; text-transform:uppercase;">
-    Rozmiar logo
-  </div>
-
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <div>
-      <label>Wysokość (px)</label>
-      <input id="brand-height" type="number" min="10" max="400" step="1" value="44">
-    </div>
-
-    <div>
-      <label>Szerokość (px)</label>
-      <input id="brand-width" type="number" min="30" max="1200" step="1" value="280">
-    </div>
-  </div>
-
-  <label style="margin-top:8px; font-size:11px; display:block;">
-    <input type="checkbox" id="brand-autowidth" checked>
-    Auto-szerokość (z proporcji SVG / viewBox)
+<div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;">
+  <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin:0; text-transform:none; font-weight:800; color:#334155;">
+    <input id="seg1-italic" type="checkbox"> italic
+  </label>
+  <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin:0; text-transform:none; font-weight:800; color:#334155;">
+    <input id="seg1-underline" type="checkbox"> underline
+  </label>
+  <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin:0; text-transform:none; font-weight:800; color:#334155;">
+    <input id="seg1-own-fill" type="checkbox"> własny kolor przy gradiencie
   </label>
 </div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">
+  <div>
+    <label>Letter spacing</label>
+    <input id="seg1-letter" type="number" min="-2" max="5" step="0.1" value="0">
+  </div>
+  <div>
+    <label>DX do następnego</label>
+    <input id="seg1-dx" type="number" min="-50" max="200" step="1" value="2">
+  </div>
+</div>
+
+</div> 
+
+
         <div style="padding:10px; border:1px solid #e5e7eb; border-radius:10px; margin-bottom:10px;">
           <div style="font-size:11px; font-weight:900; color:#334155; margin-bottom:8px;">Segment 2</div>
 
@@ -238,15 +248,15 @@
           </div>
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">
-            <div>
-              <label>Letter spacing</label>
-              <input id="seg2-letter" type="number" min="-2" max="5" step="0.1" value="0.0">
-            </div>
-            <div>
-              <label>DX do następnego</label>
-              <input id="seg2-dx" type="number" min="-50" max="200" step="1" value="2">
-            </div>
-          </div>
+  <div>
+    <label>Letter spacing</label>
+    <input id="seg2-letter" type="number" min="-2" max="5" step="0.1" value="0">
+  </div>
+  <div>
+    <label>DX do następnego</label>
+    <input id="seg2-dx" type="number" min="-50" max="200" step="1" value="2">
+  </div>
+</div>
         </div>
         <label style="display:flex; align-items:center; gap:8px; font-size:12px; margin-top:4px; text-transform:none; font-weight:900; color:#334155;">
           <input id="seg3-enabled" type="checkbox"> Włącz segment 3
@@ -409,12 +419,12 @@
       <label>Wklej swoje SVG</label>
       <textarea id="brand-raw" style="width:100%; min-height:180px; padding:10px; border:1px solid #d1d5db; border-radius:10px; font-size:12px;"></textarea>
       <div style="margin-top:8px; font-size:12px; color:#64748b;">
-        Tip: w trybie RAW edytujesz wklejone SVG, ale nadal możesz eksportować PNG.
+        .
       </div>
     </div>
 
     <div style="margin-top:10px; font-size:12px; color:#64748b;">
-      Tip: klikaj logo na canvasie żeby edytować. Zmiany aktualizują się na żywo.
+      .
     </div>
   </div>
 </div>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-04-13 14:54:14</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <element id="blk_1776084839884" type="block">
+    <x>489</x>
+    <y>105</y>
+    <w>260px</w>
+    <h>140px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+  </element>
+  <element id="el_1776084841371" type="text">
+    <x>464</x>
+    <y>347</y>
+    <w>220px</w>
+    <h>90px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <content>Wpisz tekst...</content>
+    <textAlign>start</textAlign>
+    <lineHeight>24px</lineHeight>
+  </element>
+  <element id="img_1776084846235_4177" type="image">
+    <x>704</x>
+    <y>288</y>
+    <w>320px</w>
+    <h>320px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <content>uploads/img_20260413_145406_e0791ddf.png</content>
+  </element>
+</customPage>

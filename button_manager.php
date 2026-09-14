@@ -6,30 +6,6 @@
   </div>
 
   <div style="border:1px solid #e2e8f0; border-radius:10px; padding:10px; background:#f8fafc; margin-bottom:10px;">
-    <div style="font-size:11px; color:#64748b; margin-bottom:8px;">Warstwa guzika</div>
-
-    <div id="btn-target-state" style="font-size:12px; color:#0f172a; margin-bottom:8px;">
-      Dodajesz do: <b>Główny ekran</b>
-    </div>
-
-    <div style="display:flex; gap:8px;">
-      <button type="button" id="btn-open-as-target"
-        style="flex:1; border:1px solid #cbd5e1; background:#fff; border-radius:8px; padding:8px 10px; cursor:pointer; font-weight:700;">
-        🎯 Otwórz (dodawaj do guzika)
-      </button>
-      <button type="button" id="btn-close-target"
-        style="width:90px; border:1px solid #cbd5e1; background:#fff; border-radius:8px; padding:8px 10px; cursor:pointer;">
-        Zamknij
-      </button>
-    </div>
-
-    <div style="font-size:12px; color:#64748b; margin-top:8px; line-height:1.35;">
-      Po otwarciu: nowe elementy (tekst/zdjęcie/ramka itd.) będą dodawane <b>do środka</b> tego guzika.
-      <br>Na razie guzik w final view może mieć akcję ustawioną na <b>NONE</b>.
-    </div>
-  </div>
-
-  <div style="border:1px solid #e2e8f0; border-radius:10px; padding:10px; background:#f8fafc; margin-bottom:10px;">
     <div style="font-size:11px; color:#64748b; margin-bottom:8px;">Podgląd</div>
     <div style="height:48px;">
       <button type="button" id="btn-preview" class="sgbtn" style="width:100%; height:100%;">Kliknij</button>
@@ -41,7 +17,56 @@
 
   <label>Tekst guzika</label>
   <input type="text" id="btn-text" placeholder="Np. Wyślij / Zobacz więcej">
+<div style="margin-top:10px;">
 
+  <div class="text-toolbar">
+    <button type="button" class="tool-btn" id="btn-tool-bold"><b>B</b></button>
+    <button type="button" class="tool-btn" id="btn-tool-italic"><i>I</i></button>
+    <button type="button" class="tool-btn" id="btn-tool-underline"><u>U</u></button>
+    <button type="button" class="tool-btn" id="btn-tool-strike"><s>S</s></button>
+
+    <span class="tool-sep"></span>
+
+    <button type="button" class="tool-btn" id="btn-tool-align-left">⬅</button>
+    <button type="button" class="tool-btn" id="btn-tool-align-center">↔</button>
+    <button type="button" class="tool-btn" id="btn-tool-align-right">➡</button>
+    <button type="button" class="tool-btn" id="btn-tool-align-justify">☰</button>
+
+    <span class="tool-sep"></span>
+
+    <button type="button" class="tool-btn" id="btn-tool-clear-format">🧹 Wyczyść</button>
+  </div>
+
+  <div style="margin-top:10px;">
+    <label>Krój pisma</label>
+    <select id="btn-font-family">
+      <option value="'Segoe UI', system-ui, -apple-system, sans-serif">Standardowa (Segoe UI / system)</option>
+
+      <option value="Arial, Helvetica, sans-serif">Arial / Helvetica</option>
+      <option value="Verdana, Geneva, sans-serif">Verdana</option>
+      <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+      <option value="'Trebuchet MS', Arial, sans-serif">Trebuchet MS</option>
+      <option value="Calibri, 'Segoe UI', sans-serif">Calibri</option>
+      <option value="'Gill Sans', 'Segoe UI', sans-serif">Gill Sans</option>
+      <option value="'Lucida Sans Unicode', 'Lucida Grande', sans-serif">Lucida Sans</option>
+
+      <option value="'Times New Roman', Times, serif">Times New Roman</option>
+      <option value="Georgia, serif">Georgia</option>
+      <option value="Garamond, 'Times New Roman', serif">Garamond</option>
+      <option value="'Palatino Linotype', Palatino, serif">Palatino</option>
+      <option value="Cambria, Georgia, serif">Cambria</option>
+      <option value="Baskerville, 'Times New Roman', serif">Baskerville</option>
+
+      <option value="'Courier New', Courier, monospace">Courier New</option>
+      <option value="Consolas, Monaco, monospace">Consolas</option>
+      <option value="'Lucida Console', Monaco, monospace">Lucida Console</option>
+
+      <option value="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif">Impact</option>
+      <option value="'Comic Sans MS', 'Comic Sans', cursive">Comic Sans</option>
+      <option value="'Brush Script MT', 'Comic Sans MS', cursive">Artystyczna (Brush Script)</option>
+    </select>
+  </div>
+</div>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
     <div>
       <label>Ikona (opcjonalnie)</label>
@@ -62,7 +87,17 @@
     <option value="link">Otwórz link</option>
     <option value="scroll">Przewiń do elementu</option>
   </select>
-
+<label>Efekt kliknięcia</label>
+<select id="btn-click-effect">
+  <option value="none" selected>Brak</option>
+  <option value="scale">Zmniejszenie</option>
+  <option value="ripple">Fala / kółko</option>
+  <option value="scale-ripple">Zmniejszenie + fala</option>
+  <option value="bounce">Odbicie</option>
+  <option value="pulse">Puls</option>
+  <option value="glow">Błysk / poświata</option>
+  <option value="shake">Potrząśnięcie</option>
+</select>
   <div id="btn-link-wrap" style="display:none;">
     <label>Adres URL</label>
     <input type="text" id="btn-url" placeholder="https://example.com">
@@ -81,58 +116,14 @@
     <label>Offset (px)</label>
     <input type="number" id="btn-scroll-offset" min="0" max="500" value="0">
   </div>
-
-  <div style="margin-top:10px; border-top:1px solid #e2e8f0; padding-top:10px;">
-    <div style="font-size:11px; color:#64748b; font-weight:700; margin-bottom:6px; text-transform:uppercase;">
-      Atrybuty HTML (opcjonalnie)
-    </div>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div>
-        <label>Tooltip (title)</label>
-        <input type="text" id="btn-title" placeholder="Np. Kliknij, aby...">
-      </div>
-      <div>
-        <label>Aria-label</label>
-        <input type="text" id="btn-aria" placeholder="Np. Główny CTA">
-      </div>
-    </div>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-      <div>
-        <label>Typ przycisku</label>
-        <select id="btn-type">
-          <option value="button" selected>button</option>
-          <option value="submit">submit</option>
-          <option value="reset">reset</option>
-        </select>
-      </div>
-      <div>
-        <label>Nazwa pola (name)</label>
-        <input type="text" id="btn-name" placeholder="Np. cta_main">
-      </div>
-    </div>
-  </div>
-
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-    <div>
-      <label>Wygląd (preset)</label>
-      <select id="btn-preset">
-        <option value="primary" selected>Primary</option>
-        <option value="secondary">Secondary</option>
-        <option value="outline">Outline</option>
-        <option value="ghost">Ghost</option>
-      </select>
-    </div>
-    <div>
-      <label>Rozmiar</label>
-      <select id="btn-size">
-        <option value="sm">Small</option>
-        <option value="md" selected>Medium</option>
-        <option value="lg">Large</option>
-      </select>
-    </div>
-  </div>
+<div style="margin-top:10px;">
+  <label>Rozmiar</label>
+  <select id="btn-size">
+    <option value="sm">Small</option>
+    <option value="md" selected>Medium</option>
+    <option value="lg">Large</option>
+  </select>
+</div>
 
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
     <div>
@@ -156,38 +147,38 @@
     </div>
   </div>
 
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <div>
-      <label>Waga czcionki</label>
-      <select id="btn-weight">
-        <option value="400">Normal</option>
-        <option value="500">Medium</option>
-        <option value="600" selected>Semibold</option>
-        <option value="700">Bold</option>
-      </select>
-    </div>
-    <div>
-      <label>Wyrównanie tekstu</label>
-      <select id="btn-align">
-        <option value="left">Lewo</option>
-        <option value="center" selected>Środek</option>
-        <option value="right">Prawo</option>
-      </select>
-    </div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+  <div>
+    <label>Rozmiar czcionki (px)</label>
+    <input type="number" id="btn-font-size" min="8" max="72" value="13">
   </div>
+  <div>
+    <label>Waga czcionki</label>
+    <select id="btn-weight">
+      <option value="400">Normal</option>
+      <option value="500">Medium</option>
+      <option value="600" selected>Semibold</option>
+      <option value="700">Bold</option>
+    </select>
+  </div>
+</div>
 
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <div>
-      <label>Caps</label>
-      <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-size:12px; color:#0f172a; margin-top:6px;">
-        <input type="checkbox" id="btn-upper" style="width:auto;"> WIELKIE LITERY
-      </label>
-    </div>
-    <div>
-      <label>Odstęp liter (px)</label>
-      <input type="number" id="btn-letter" min="0" max="6" step="0.5" value="0">
-    </div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+  <div>
+    <label>Wyrównanie tekstu</label>
+    <select id="btn-align">
+      <option value="left">Lewo</option>
+      <option value="center" selected>Środek</option>
+      <option value="right">Prawo</option>
+      <option value="justify">Justify</option>
+    </select>
   </div>
+</div>
+
+<div style="margin-top:10px;">
+  <label>Odstęp liter (px)</label>
+  <input type="number" id="btn-letter" min="0" max="6" step="0.5" value="0">
+</div>
 
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
     <div>

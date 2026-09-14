@@ -21,6 +21,39 @@
 
   <label>Odstęp od lewej (px)</label>
   <input type="number" id="footer-left" value="0" min="0">
+<hr style="margin:12px 0; border:none; border-top:1px solid #e2e8f0;">
+
+<label style="display:flex; align-items:center; gap:8px;">
+  <input type="checkbox" id="footer-flex" checked>
+  Układ: flex
+</label>
+
+<label>Rozstaw w poziomie (justify-content)</label>
+<select id="footer-justify">
+  <option value="flex-start">Do lewej</option>
+  <option value="center">Środek</option>
+  <option value="flex-end">Do prawej</option>
+  <option value="space-between" selected>Space-between</option>
+  <option value="space-around">Space-around</option>
+  <option value="space-evenly">Space-evenly</option>
+</select>
+
+<label>Wyrównanie w pionie (align-items)</label>
+<select id="footer-align">
+  <option value="stretch">Stretch</option>
+  <option value="flex-start">Góra</option>
+  <option value="center" selected>Środek</option>
+  <option value="flex-end">Dół</option>
+  <option value="baseline">Baseline</option>
+</select>
+
+<label style="display:flex; align-items:center; gap:8px;">
+  <input type="checkbox" id="footer-wrap" checked>
+  Zawijaj elementy (flex-wrap: wrap)
+</label>
+
+<label>Odstęp między elementami (gap px)</label>
+<input type="number" id="footer-gap" value="12" min="0" step="1">
 
   <div style="margin-top:12px; padding-top:12px; border-top:1px solid #e5e7eb;">
     <div style="font-size:12px; font-weight:800; color:#0f172a; margin-bottom:8px;">

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-06-01 22:08:17</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <element id="brand_1779823440285" type="brand">
+    <brandCfg>{"mode":"raw","heightPx":127,"autoWidth":"1","widthPx":280,"fontFamily":"system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif","anchor":"end","textX":520,"textY":104,"gradOn":"0","gradFrom":"#7c3aed","gradTo":"#06b6d4","gradAngle":0,"gradAffectsStroke":"0","strokeOn":"0","strokeW":1,"strokeColor":"#0f172a","strokeMatchFill":"1","shadowOn":"0","shadowBlur":8,"shadowX":0,"shadowY":4,"shadowColor":"rgba(0,0,0,0.25)","lineOn":"0","lineX1":120,"lineX2":520,"lineY":118,"lineW":1.5,"lineColor":"#06b6d4","lineUseTextPaint":"1","lineDash":"0","dotOn":"0","dotR":4.2,"dotX":520,"dotY":118,"dotColor":"#06b6d4","dotUseTextPaint":"1","bgOn":"0","bgColor":"rgba(255,255,255,0)","bgRadius":0,"bgPad":"0px","seg":[{"text":"Nova","size":72,"weight":700,"italic":"0","underline":"0","fill":"#0f172a","ownFillOnGradient":"0","letter":0.2,"dx":6},{"text":"Labs","size":72,"weight":500,"italic":"0","underline":"0","fill":"#06b6d4","ownFillOnGradient":"1","letter":0,"dx":2},{"text":"™","size":42,"weight":900,"italic":"0","underline":"0","fill":"#0f172a","ownFillOnGradient":"0","letter":0,"dx":6,"enabled":"0"}],"rawSvg":"&lt;svg class=\"brand-logo\" viewBox=\"0 0 720 160\" xmlns=\"http://www.w3.org/2000/svg\" aria-label=\"VetMell\" role=\"img\" preserveAspectRatio=\"xMidYMid meet\" style=\"width: 100%; height: 100%; display: block;\"&gt; &lt;g&gt; &lt;text x=\"560\" y=\"102\" text-anchor=\"end\" font-family=\"Merriweather, Georgia, 'Times New Roman', serif\"&gt; &lt;tspan font-size=\"70\" font-weight=\"700\" font-style=\"italic\" letter-spacing=\"0.2\" fill=\"#5c99e6\"&gt;Vet&lt;/tspan&gt; &lt;tspan font-size=\"72\" font-weight=\"500\" font-style=\"normal\" letter-spacing=\"0\" dx=\"2\" fill=\"#5c99e6\"&gt;Mell&lt;/tspan&gt; &lt;/text&gt; &lt;path d=\"M100 118H560\" fill=\"none\" stroke=\"#5c99e6\" stroke-width=\"1.5\"&gt;&lt;/path&gt; &lt;circle cx=\"560\" cy=\"118\" r=\"4.2\" fill=\"#5c99e6\" stroke=\"none\"&gt;&lt;/circle&gt; &lt;/g&gt; &lt;/svg&gt;"}</brandCfg>
+    <x>449</x>
+    <y>-20</y>
+    <w>572px</w>
+    <h>127px</h>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <content>&lt;svg class="brand-logo" viewBox="0 0 720 160" xmlns="http://www.w3.org/2000/svg" aria-label="VetMell" role="img" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; display: block;"&gt; &lt;g&gt; &lt;text x="560" y="102" text-anchor="end" font-family="Merriweather, Georgia, 'Times New Roman', serif"&gt; &lt;tspan font-size="70" font-weight="700" font-style="italic" letter-spacing="0.2" fill="#5c99e6"&gt;Vet&lt;/tspan&gt; &lt;tspan font-size="72" font-weight="500" font-style="normal" letter-spacing="0" dx="2" fill="#5c99e6"&gt;Mell&lt;/tspan&gt; &lt;/text&gt; &lt;path d="M100 118H560" fill="none" stroke="#5c99e6" stroke-width="1.5"&gt;&lt;/path&gt; &lt;circle cx="560" cy="118" r="4.2" fill="#5c99e6" stroke="none"&gt;&lt;/circle&gt; &lt;/g&gt; &lt;/svg&gt;</content>
+  </element>
+  <element id="nav_1779823507045_6642" type="nav">
+    <x>0</x>
+    <y>89</y>
+    <w>100%</w>
+    <h>56px</h>
+    <bg>none rgb(175, 187, 213)</bg>
+    <border>1px solid rgba(255, 255, 255, 0.08)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <boxShadow>rgba(0, 0, 0, 0.18) 0px 10px 24px</boxShadow>
+    <color>rgb(105, 63, 63)</color>
+    <fontSize>16px</fontSize>
+<navItems>Panel główny|/praca_inz/final_view.php?file=admin_panel_glowny.xml|admin_glowny
+Przegląd wizyt|/praca_inz/final_view.php?file=admin_panel_wizyty.xml|admin_wizyty
+Kalendarz wizyt|/praca_inz/final_view.php?file=admin_panel_kalendarz.xml|admin_kalendarz
+Lista pacjentów|/praca_inz/final_view.php?file=admin_panel_pacjenci.xml|admin_pacjenci
+Pracownicy|/praca_inz/final_view.php?file=admin_panel_pracownicy.xml|admin_pracownicy
+Usługi i cennik|/praca_inz/final_view.php?file=admin_panel_uslugi.xml|admin_uslugi
+Płatności|/praca_inz/final_view.php?file=admin_panel_platnosci.xml|admin_platnosci
+Statystyki|/praca_inz/final_view.php?file=admin_panel_statystki.xml|admin_statystki
+</navItems>
+    <navAlign>center</navAlign>
+    <navGap>1</navGap>
+    <navPad>21</navPad>
+    <navLinkColor>#090101</navLinkColor>
+    <navLayout>underline</navLayout>
+    <navFillX>1</navFillX>
+    <navJustify>center</navJustify>
+    <navDivider>1</navDivider>
+    <navDividerText>||</navDividerText>
+    <navDividerSize>9</navDividerSize>
+    <navLinkBorderColor>rgba(255,255,255,0.10)</navLinkBorderColor>
+    <navLinkShadow>none</navLinkShadow>
+    <navBrandHref>#</navBrandHref>
+    <navBgSolid>#afbbd5</navBgSolid>
+  </element>
+</customPage>

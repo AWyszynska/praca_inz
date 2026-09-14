@@ -1,0 +1,71 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R /F3 6 0 R >> >> /Contents 7 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Times-BoldItalic /Encoding /WinAnsiEncoding >>
+endobj
+7 0 obj
+<< /Length 1041 >>
+stream
+0.38 0.57 0.91 rg
+BT /F3 42 Tf 198.00 770.00 Td (VetMell) Tj ET
+0.38 0.57 0.91 RG
+1.6 w
+160 748 m 435 748 l S
+0 0 0 rg
+BT /F1 20 Tf 135.00 695.00 Td (Zalecenia / recepta po wizycie) Tj ET
+0.36 0.43 0.54 rg
+BT /F1 9 Tf 60.00 645.00 Td (PACJENT / KLIENT) Tj ET
+0 0 0 rg
+BT /F2 11 Tf 60.00 628.00 Td (Ola Wyszy´nska) Tj ET
+0.36 0.43 0.54 rg
+BT /F1 9 Tf 60.00 600.00 Td (DATA WYSTAWIENIA) Tj ET
+0 0 0 rg
+BT /F2 11 Tf 60.00 583.00 Td (02.06.2026) Tj ET
+0.36 0.43 0.54 rg
+BT /F1 9 Tf 315.00 645.00 Td (NUMER WIZYTY) Tj ET
+0 0 0 rg
+BT /F2 11 Tf 315.00 628.00 Td (681) Tj ET
+0.36 0.43 0.54 rg
+BT /F1 9 Tf 315.00 600.00 Td (GODZINA WIZYTY) Tj ET
+0 0 0 rg
+BT /F2 11 Tf 315.00 583.00 Td (15:30) Tj ET
+0 0 0 rg
+BT /F1 15 Tf 60.00 525.00 Td (Tresc zalecen:) Tj ET
+BT /F2 11 Tf 60.00 495.00 Td (ibougo) Tj ET
+0.35 0.42 0.50 rg
+BT /F2 9 Tf 60.00 70.00 Td (Dokument wygenerowany elektronicznie.) Tj ET
+BT /F2 9 Tf 60.00 56.00 Td (Data wydruku: 02.06.2026 16:52) Tj ET
+0.35 0.42 0.50 RG
+330 74 m 520 74 l S
+BT /F2 9 Tf 390.00 58.00 Td (podpis lekarza) Tj ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000261 00000 n 
+0000000363 00000 n 
+0000000460 00000 n 
+0000000564 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+1656
+%%EOF

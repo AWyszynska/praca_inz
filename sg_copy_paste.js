@@ -4,6 +4,30 @@
   window.__SG_COPY_PASTE_READY__ = true;
 
   window.sgCopyBuffer = null;
+function sg_plainTextFromClipboard(raw) {
+  const s = String(raw || "");
+
+  const tmp = document.createElement("div");
+  tmp.innerHTML = s;
+  const text = (tmp.textContent || tmp.innerText || "").replace(/\u00A0/g, " ");
+  return text;
+}
+
+function sg_isEditingTextNow() {
+  const el = window.activeElement;
+  return !!el && el.dataset?.type === "text" && el.dataset?.editing === "1" && el.isContentEditable;
+}
+
+function sg_insertTextAtCursor(text) {
+  const sel = window.getSelection?.();
+  if (!sel || !sel.rangeCount) return;
+  sel.deleteFromDocument();
+  const range = sel.getRangeAt(0);
+  range.insertNode(document.createTextNode(text));
+  range.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
 
   function sg_walkCanvasElements(root, fn) {
     if (!root) return;
@@ -199,9 +223,33 @@
         e.preventDefault();
         sg_copyActive();
       } else if (k === "v") {
-        e.preventDefault();
-        sg_paste();
-      } else if (k === "x") {
+  
+  if (sg_isEditingTextNow()) {
+
+    e.preventDefault();
+    (async () => {
+      try {
+        const raw = await navigator.clipboard?.readText?.();
+        if (!raw) return;
+
+        if (raw.startsWith("SG_ELEMENT:")) {
+          const pack = JSON.parse(raw.slice("SG_ELEMENT:".length));
+          const node = sg_unpackToNode(pack);
+          const txt = node ? (node.innerText || "").trim() : "";
+          if (txt) sg_insertTextAtCursor(txt);
+          return;
+        }
+
+        sg_insertTextAtCursor(sg_plainTextFromClipboard(raw));
+      } catch (_) {}
+    })();
+    return;
+  }
+
+  e.preventDefault();
+  sg_paste();
+}
+ else if (k === "x") {
         e.preventDefault();
         sg_cutActive();
       }
@@ -217,14 +265,30 @@
     } catch (err) {}
   });
 
-  document.addEventListener("paste", (e) => {
-    try {
-      const t = e.clipboardData.getData("text/plain");
-      if (t && t.startsWith("SG_ELEMENT:")) {
+ document.addEventListener("paste", (e) => {
+  try {
+    const t = e.clipboardData.getData("text/plain");
+
+    if (sg_isEditingTextNow()) {
+      e.preventDefault();
+      if (!t) return;
+      if (t.startsWith("SG_ELEMENT:")) {
         const pack = JSON.parse(t.slice("SG_ELEMENT:".length));
-        sg_pastePack(pack);
-        e.preventDefault();
+        const node = sg_unpackToNode(pack);
+        const txt = node ? (node.innerText || "").trim() : "";
+        if (txt) sg_insertTextAtCursor(txt);
+      } else {
+        sg_insertTextAtCursor(sg_plainTextFromClipboard(t));
       }
-    } catch (err) {}
-  });
+      return;
+    }
+
+    if (t && t.startsWith("SG_ELEMENT:")) {
+      const pack = JSON.parse(t.slice("SG_ELEMENT:".length));
+      sg_pastePack(pack);
+      e.preventDefault();
+    }
+  } catch (err) {}
+});
+
 })();

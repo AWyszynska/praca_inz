@@ -57,7 +57,6 @@ if (!function_exists('sidescroll_menager_window')) {
         </div>
         <input type="hidden" id="sgWinScrollJson" value="{}">
         <div style="margin-top:10px; font-size:11px; color:#64748b;">
-          Konfiguracja siedzi w <code>window.sgWindowScrollConfig</code> i w <code>#sgWinScrollJson</code>.
         </div>
       </div>
     </div>

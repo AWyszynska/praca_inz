@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-05-17 17:54:23</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>worker_panel.xml</extends>
+  <element id="blk_1779033243301" type="block">
+    <x>252</x>
+    <y>174</y>
+    <w>1000px</w>
+    <h>600px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+  </element>
+</customPage>

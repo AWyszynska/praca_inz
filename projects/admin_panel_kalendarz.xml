@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-06-01 20:33:18</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>admin_panel.xml</extends>
+  <element id="cal_1780338636378_8652" type="calendar">
+    <x>224</x>
+    <y>212</y>
+    <w>1023px</w>
+    <h>614px</h>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>24px</borderRadius>
+    <boxShadow>rgba(2, 6, 23, 0.18) 0px 14px 36px</boxShadow>
+    <calMonth>6</calMonth>
+    <calTheme>light</calTheme>
+    <calBgA>#419b95</calBgA>
+    <calBgB>#4ba091</calBgB>
+    <calAccent>#ffc02e</calAccent>
+    <calRadius>4</calRadius>
+    <calOuterPad>80</calOuterPad>
+    <calGap>8</calGap>
+    <calCellRadius>9</calCellRadius>
+    <calDaySize>20</calDaySize>
+  </element>
+</customPage>

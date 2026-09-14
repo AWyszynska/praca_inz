@@ -174,6 +174,8 @@ if (mode === "gradient") {
 
     if (!el.dataset.navJustify) el.dataset.navJustify = "start";
     if (!el.dataset.navVJustify) el.dataset.navVJustify = "top";
+if (el.dataset.navFillX == null) el.dataset.navFillX = "0";
+if (el.dataset.navFillY == null) el.dataset.navFillY = "0";
 
     if (!el.dataset.navWrap) el.dataset.navWrap = "0";
     if (!el.dataset.navStretch) el.dataset.navStretch = "0";
@@ -216,7 +218,7 @@ if (el.dataset.navBgMode === undefined) {
 if (!el.dataset.navBgSolid) el.dataset.navBgSolid = "#111827";
 
     if (!el.dataset.navBgSolid) el.dataset.navBgSolid = "#111827";
-if (el.dataset.navBgMode !== "gradient" || hadGradData) {
+if (el.dataset.navBgMode === "gradient" || hadGradData) {
   if (!el.dataset.navGradType) el.dataset.navGradType = "linear";
   if (!el.dataset.navGradAngle) el.dataset.navGradAngle = "135";
   if (!el.dataset.navGradPosX) el.dataset.navGradPosX = "50";
@@ -242,6 +244,9 @@ if (el.dataset.navBgMode !== "gradient" || hadGradData) {
     if (!el.style.color) el.style.color = "#ffffff";
     if (!el.style.fontSize) el.style.fontSize = "20px";
     if (!el.style.fontFamily) el.style.fontFamily = "'Segoe UI', sans-serif";
+    if (!el.dataset.navDividerText)  el.dataset.navDividerText  = "|";
+    if (!el.dataset.navDividerSize)  el.dataset.navDividerSize  = "14";
+    if (!el.dataset.navDividerColor) el.dataset.navDividerColor = "#ffffff";
 
  
   }
@@ -319,6 +324,9 @@ if (el.dataset.navBgMode !== "gradient" || hadGradData) {
       stretch,
       divider,
       gap,
+      fillX: el.dataset.navFillX === "1",
+      fillY: el.dataset.navFillY === "1",
+
       pad,
       linkPadX,
       linkPadY,
@@ -349,6 +357,10 @@ if (el.dataset.navBgMode !== "gradient" || hadGradData) {
       gradTo,
       gradUseMid,
       gradPreset,
+      dividerText:  String(el.dataset.navDividerText || "|"),
+      dividerSize:  parseInt(el.dataset.navDividerSize || "14", 10) || 14,
+      dividerColor: String(el.dataset.navDividerColor || "#ffffff"),
+
     };
   }
 
@@ -373,22 +385,55 @@ return "flex-start";
 
   }
 
-  function buildLinksHtml(cfg) {
-    const parts = [];
+    function buildLinksHtml(items, cfg){
+    const safe = (s) => String(s ?? "");
+    const esc = (s) => safe(s).replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
 
+    const dividerOn = !!cfg.divider;
+    const rawDiv = safe(cfg.dividerText || "|").trim();
+    const divSize = parseInt(cfg.dividerSize || 14, 10) || 14;
+    const divColor = safe(cfg.dividerColor || "#ffffff");
 
-    cfg.items.forEach((it, idx) => {
-      const key = (it.key || it.pageKey || `item_${idx}`).trim();
-      const dp = it.pageKey ? ` data-page="${escapeAttr(it.pageKey)}"` : "";
-      const dk = key ? ` data-key="${escapeAttr(key)}"` : "";
-      const u = (cfg.layout === "underline") ? `<span class="sgnav__u"></span>` : "";
-parts.push(`<a href="${escapeAttr(it.href)}"${dp}${dk}>${escapeHtml(it.label)}${u}</a>`);
+    // jeśli zaczyna się od "<" traktujemy jako mini-HTML (np. <img ...>)
+    const dividerIsHtml = rawDiv.startsWith("<");
+    const dividerInner = dividerIsHtml ? rawDiv : esc(rawDiv);
 
-     
+    // styl separatora
+    const sepStyle =
+      `display:inline-flex;align-items:center;justify-content:center;` +
+      `font-size:${divSize}px;color:${divColor};opacity:.9;` +
+      `user-select:none;pointer-events:none;line-height:1;`;
+
+    // dla <img> ustaw wysokość po rozmiarze
+    const sepImgFix = dividerIsHtml
+      ? `<style>.sgnav__sep img{height:${divSize}px;width:auto;display:block;}</style>`
+      : "";
+
+    let out = sepImgFix;
+
+    items.forEach((it, i) => {
+      if (!it) return;
+
+      // separator pomiędzy (nie przed pierwszym)
+      if (dividerOn && i > 0) {
+        out += `<span class="sgnav__sep" aria-hidden="true" style="${sepStyle}">${dividerInner}</span>`;
+      }
+
+      const txt = esc(it.label || "Link");
+      const href = safe(it.href || "#");
+      const key = esc(it.key || "");
+
+      const dataKey  = key ? ` data-key="${key}"` : "";
+      const dataPage = it.pageKey ? ` data-page="${esc(it.pageKey)}"` : "";
+
+      out += `<a href="${href.replaceAll('"','&quot;')}"${dataPage}${dataKey}>${txt}<span class="sgnav__u"></span></a>`;
     });
 
-    return parts.join("");
+    return out;
   }
+
 
   function computeNavBgCss(cfg) {
     return cfg.bgMode === "gradient" ? makeGradientCss(cfg) : (cfg.bgSolid || "#111827");
@@ -402,7 +447,20 @@ parts.push(`<a href="${escapeAttr(it.href)}"${dp}${dk}>${escapeHtml(it.label)}${
     const bgCss = computeNavBgCss(cfg);
 
     const flexDir = cfg.orientation === "vertical" ? "column" : "row";
-    const justify = cfg.orientation === "vertical" ? vJustifyFromMode(cfg.vJustify) : justifyFromMode(cfg.justify);
+    const justify = (() => {
+  if (cfg.orientation === "vertical") return vJustifyFromMode(cfg.vJustify);
+
+  const j = String(cfg.justify || "start").toLowerCase();
+  if (j === "start" || j === "flex-start") {
+    const a = String(cfg.align || "left").toLowerCase();
+    if (a === "center") return "center";
+    if (a === "right") return "flex-end";
+    return "flex-start"; 
+  }
+
+  return justifyFromMode(j);
+})();
+
 
     const alignItems =
       cfg.orientation === "vertical" ? alignItemsFromAlign(cfg.align) : "center";
@@ -443,7 +501,7 @@ if (cfg.layout === "underline") {
     const htmlId = cfg.htmlId ? ` id="${escapeAttr(cfg.htmlId)}"` : "";
     const navNameAttr = cfg.navName ? ` data-nav-name="${escapeAttr(cfg.navName)}"` : "";
 
-    const linksHtml = buildLinksHtml(cfg);
+    const linksHtml = buildLinksHtml(cfg.items, cfg);
 
     const stopDrag = previewMode ? "" : `
       (function(){
@@ -496,7 +554,6 @@ if (cfg.layout === "underline") {
     if(activeMode === 'query_page') setActiveByPage();
     else if(activeMode === 'url') setActiveByUrl();
 
-    // preview: klik = symulacja działania + status
     if(root.getAttribute('data-preview') === '1'){
       root.addEventListener('click', function(ev){
         var a = ev.target && ev.target.closest ? ev.target.closest('a') : null;
@@ -529,7 +586,6 @@ if (cfg.layout === "underline") {
       return;
     }
 
-    // runtime: hook event
     if(hookMode === 'event'){
       root.addEventListener('click', function(ev){
         var a = ev.target && ev.target.closest ? ev.target.closest('a') : null;
@@ -547,7 +603,8 @@ if (cfg.layout === "underline") {
   }catch(e){}
 })();`.trim();
 
-    const pointerEvents = previewMode ? "auto" : "none";
+    const pointerEvents = previewMode ? "auto" : (inEditor() ? "none" : "auto");
+
 const brandHtml = cfg.brandText
   ? `<a class="sgnav__brand" href="${escapeAttr(cfg.brandHref || "#")}" data-key="brand" data-page="">${escapeHtml(cfg.brandText)}</a>`
   : "";
@@ -669,19 +726,50 @@ ${runtime}
 </script>
     `.trim();
   }
-
-  function updateNavVisuals(el) {
-    if (!isNav(el)) return;
-    ensureDefaults(el);
-
-    applyBackground(el);
-
-    el.contentEditable = "false";
-    el.innerHTML = buildMarkup(el, false);
-
-    const panelPrev = $("nav-panel-preview");
-    if (panelPrev) panelPrev.innerHTML = buildMarkup(el, true);
+function applyFillMode(el, cfg){
+  // X
+  if (cfg.fillX) {
+    if (el.dataset.navPrevLeft == null)  el.dataset.navPrevLeft  = el.style.left  || "";
+    if (el.dataset.navPrevWidth == null) el.dataset.navPrevWidth = el.style.width || "";
+    el.style.left = "0px";
+    el.style.width = "100%";
+  } else {
+    if (el.dataset.navPrevLeft != null)  el.style.left  = el.dataset.navPrevLeft;
+    if (el.dataset.navPrevWidth != null) el.style.width = el.dataset.navPrevWidth;
+    delete el.dataset.navPrevLeft;
+    delete el.dataset.navPrevWidth;
   }
+
+  // Y
+  if (cfg.fillY) {
+    if (el.dataset.navPrevTop == null)    el.dataset.navPrevTop    = el.style.top    || "";
+    if (el.dataset.navPrevHeight == null) el.dataset.navPrevHeight = el.style.height || "";
+    el.style.top = "0px";
+    el.style.height = "100%";
+  } else {
+    if (el.dataset.navPrevTop != null)    el.style.top    = el.dataset.navPrevTop;
+    if (el.dataset.navPrevHeight != null) el.style.height = el.dataset.navPrevHeight;
+    delete el.dataset.navPrevTop;
+    delete el.dataset.navPrevHeight;
+  }
+}
+
+function updateNavVisuals(el) {
+  if (!isNav(el)) return;
+  ensureDefaults(el);
+
+  const cfg = getCfg(el); 
+
+  applyBackground(el);
+
+  el.contentEditable = "false";
+  el.innerHTML = buildMarkup(el, false);
+
+  const panelPrev = $("nav-panel-preview");
+  if (panelPrev) panelPrev.innerHTML = buildMarkup(el, true);
+
+  applyFillMode(el, cfg);   
+}
 
   window.updateNavVisuals = updateNavVisuals;
 
@@ -804,8 +892,18 @@ ${runtime}
     setChk("nav-stretch", cfg.stretch);
     setChk("nav-divider", cfg.divider);
 
+const divWrap = document.getElementById("nav-divider-wrap");
+if (divWrap) divWrap.style.display = cfg.divider ? "block" : "none";
+
+setVal("nav-divider-text", el.dataset.navDividerText || "|");
+setVal("nav-divider-size", String(parseInt(el.dataset.navDividerSize || "14", 10) || 14));
+setVal("nav-divider-color", el.dataset.navDividerColor || "#ffffff");
+
+
     setVal("nav-active-mode", cfg.activeMode);
     setChk("nav-underline", cfg.underline);
+setChk("nav-fill-x", cfg.fillX);
+setChk("nav-fill-y", cfg.fillY);
 
     setVal("nav-gap", cfg.gap);
     setVal("nav-pad", cfg.pad);
@@ -813,7 +911,13 @@ ${runtime}
     setVal("nav-w", parseInt(el.style.width || "680", 10) || 680);
     setVal("nav-h", parseInt(el.style.height || "56", 10) || 56);
 
-    setVal("nav-radius", parseInt(el.style.borderRadius || "12", 10) || 12);
+    {
+  const br = String(el.style.borderRadius || "").trim(); // np. "0px"
+  let radius = parseInt(br, 10);
+  if (Number.isNaN(radius)) radius = 12;
+  setVal("nav-radius", radius);
+}
+
 
     const borderW = parseInt(String(el.style.border || "").match(/(\d+)px/)?.[1] || "1", 10) || 1;
     setVal("nav-border-w", borderW);
@@ -825,7 +929,13 @@ ${runtime}
     setVal("nav-shadow", shadowName);
 
     setVal("nav-text-color", el.style.color || "#ffffff");
-    setVal("nav-font-size", parseInt(el.style.fontSize || "15", 10) || 15);
+    {
+  const raw = (el.style.fontSize || el.dataset.fontSize || "20px");
+  let n = parseInt(raw, 10);
+  if (Number.isNaN(n)) n = 20;
+  setVal("nav-font-size", n);
+}
+
 
     setVal("nav-link-pad-x", cfg.linkPadX);
     setVal("nav-link-pad-y", cfg.linkPadY);
@@ -884,7 +994,25 @@ ${runtime}
 
     bindVal("nav-layout", (el) => { el.dataset.navLayout = $("nav-layout").value || "pills"; });
     bindVal("nav-orientation", (el) => { el.dataset.navOrientation = $("nav-orientation").value || "horizontal"; });
-    bindVal("nav-align", (el) => { el.dataset.navAlign = $("nav-align").value || "left"; });
+    bindVal("nav-align", (el) => {
+  const val = $("nav-align").value || "left";
+  el.dataset.navAlign = val;
+  const ori = (el.dataset.navOrientation || "horizontal").toLowerCase();
+  if (ori !== "vertical") {
+    const hasJustify = !!(el.dataset.navJustify && String(el.dataset.navJustify).trim() !== "");
+    const curJustify = String(el.dataset.navJustify || "start");
+    if (!hasJustify || curJustify === "start") {
+      el.dataset.navJustify =
+        val === "center" ? "center" :
+        val === "right" ? "end" :
+        "start";
+
+      const justifySelect = document.getElementById("nav-justify");
+      if (justifySelect) justifySelect.value = el.dataset.navJustify;
+    }
+  }
+});
+
 
     bindVal("nav-hook-mode", (el) => { el.dataset.navHookMode = $("nav-hook-mode").value || "none"; });
     bindVal("nav-name", (el) => { el.dataset.navName = $("nav-name").value || ""; });
@@ -900,18 +1028,42 @@ ${runtime}
 
     bindChk("nav-wrap", (el) => { el.dataset.navWrap = $("nav-wrap").checked ? "1" : "0"; });
     bindChk("nav-stretch", (el) => { el.dataset.navStretch = $("nav-stretch").checked ? "1" : "0"; });
-    bindChk("nav-divider", (el) => { el.dataset.navDivider = $("nav-divider").checked ? "1" : "0"; });
+    bindChk("nav-divider", (el) => {
+  el.dataset.navDivider = $("nav-divider").checked ? "1" : "0";
+
+  // pokaż/ukryj UI separatora
+  const wrap = document.getElementById("nav-divider-wrap");
+  if (wrap) wrap.style.display = (el.dataset.navDivider === "1") ? "block" : "none";
+});
+
+// pola separatora (tekst / rozmiar / kolor)
+bindVal("nav-divider-text", (el) => { el.dataset.navDividerText = $("nav-divider-text").value || "|"; });
+bindVal("nav-divider-size", (el) => { el.dataset.navDividerSize = String(parseInt($("nav-divider-size").value || "14", 10) || 14); });
+bindVal("nav-divider-color", (el) => { el.dataset.navDividerColor = $("nav-divider-color").value || "#ffffff"; });
+
+
 
     bindVal("nav-active-mode", (el) => { el.dataset.navActiveMode = $("nav-active-mode").value || "query_page"; });
     bindChk("nav-underline", (el) => { el.dataset.navUnderline = $("nav-underline").checked ? "1" : "0"; });
 
     bindVal("nav-gap", (el) => { el.dataset.navGap = String(parseInt($("nav-gap").value || "10", 10) || 10); });
     bindVal("nav-pad", (el) => { el.dataset.navPad = String(parseInt($("nav-pad").value || "10", 10) || 10); });
+bindChk("nav-fill-x", (el) => { el.dataset.navFillX = $("nav-fill-x").checked ? "1" : "0"; });
+bindChk("nav-fill-y", (el) => { el.dataset.navFillY = $("nav-fill-y").checked ? "1" : "0"; });
 
     bindVal("nav-w", (el) => { el.style.width = (parseInt($("nav-w").value || "680", 10) || 680) + "px"; });
     bindVal("nav-h", (el) => { el.style.height = (parseInt($("nav-h").value || "56", 10) || 56) + "px"; });
 
-    bindVal("nav-radius", (el) => { el.style.borderRadius = (parseInt($("nav-radius").value || "12", 10) || 12) + "px"; });
+    bindVal("nav-radius", (el) => {
+  const raw = $("nav-radius") ? $("nav-radius").value : "";
+  let radius = parseInt(raw, 10);
+
+  if (Number.isNaN(radius)) radius = 12;
+  radius = clamp(radius, 0, 80);
+
+  el.style.borderRadius = radius + "px";
+});
+
 
     bindVal("nav-border-w", (el) => {
       const w = clamp(parseInt($("nav-border-w").value || "1", 10) || 1, 0, 12);
@@ -927,7 +1079,18 @@ ${runtime}
     bindVal("nav-shadow", (el) => { el.style.boxShadow = containerShadowCss($("nav-shadow").value || "soft"); });
 
     bindVal("nav-text-color", (el) => { el.style.color = $("nav-text-color").value || "#ffffff"; });
-    bindVal("nav-font-size", (el) => { el.style.fontSize = (parseInt($("nav-font-size").value || "15", 10) || 15) + "px"; });
+    bindVal("nav-font-size", (el) => {
+  const raw = $("nav-font-size") ? $("nav-font-size").value : "";
+  let n = parseInt(raw, 10);
+
+  if (Number.isNaN(n)) n = 20;
+  n = clamp(n, 8, 120);
+
+  const cssVal = n + "px";
+  el.style.fontSize = cssVal;
+  el.dataset.fontSize = cssVal; 
+});
+
 
     bindVal("nav-link-pad-x", (el) => { el.dataset.navLinkPadX = String(parseInt($("nav-link-pad-x").value || "12", 10) || 12); });
     bindVal("nav-link-pad-y", (el) => { el.dataset.navLinkPadY = String(parseInt($("nav-link-pad-y").value || "8", 10) || 8); });
@@ -1124,6 +1287,10 @@ ${runtime}
         data.navGradTo = cfg.gradTo;
         data.navGradUseMid = cfg.gradUseMid ? "1" : "0";
         data.navGradPreset = cfg.gradPreset;
+        data.navDividerText  = el.dataset.navDividerText  || "|";
+        data.navDividerSize  = el.dataset.navDividerSize  || "14";
+        data.navDividerColor = el.dataset.navDividerColor || "#ffffff";
+
       }
 
       return data;

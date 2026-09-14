@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-03-09 20:15:42</generatedAt>
+  <pageHeight>1600</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>pulpit_pacjent.xml</extends>
+  <element id="blk_1773074162512" type="block">
+    <x>229</x>
+    <y>207</y>
+    <w>1086px</w>
+    <h>1186px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1773075135176" type="text">
+        <x>480</x>
+        <y>37</y>
+        <w>123px</w>
+        <h>63px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>O nas </content>
+        <color>rgb(72, 129, 199)</color>
+        <fontSize>39px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1773075270216" type="text">
+        <x>139</x>
+        <y>115</y>
+        <w>805px</w>
+        <h>98px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>W VetMell troszczymy się o zdrowie Twoich zwierząt z pasją i pełnym zaangażowaniem. Nasz zespół lekarzy weterynarii łączy wiedzę, doświadczenie i serce, aby zapewnić każdemu pacjentowi najlepszą opiekę - od profilaktyki po specjalistyczne zabiegi.</content>
+        <color>rgb(72, 66, 66)</color>
+        <textAlign>center</textAlign>
+        <lineHeight>1.6</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="img_1773075345534_9686" type="image">
+    <x>887</x>
+    <y>429</y>
+    <w>375px</w>
+    <h>563px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>37px</borderRadius>
+    <content>uploads/img_20260309_175545_770eeb37.png</content>
+  </element>
+  <element id="el_1773075425111" type="text">
+    <x>288</x>
+    <y>460</y>
+    <w>181px</w>
+    <h>36px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <content>Nasza misja</content>
+    <color>rgb(72, 129, 199)</color>
+    <fontSize>27px</fontSize>
+    <fontWeight>700</fontWeight>
+    <textAlign>start</textAlign>
+    <lineHeight>32.4px</lineHeight>
+    <letterSpacing>1px</letterSpacing>
+  </element>
+  <element id="el_1773075510383" type="text">
+    <x>263</x>
+    <y>509</y>
+    <w>569px</w>
+    <h>100px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <content>Wierzymy, że każde zwierzę zasługuje na zdrowie, bezpieczeństwo i troskę. Dlatego nieustannie rozwijamy nasze umiejętności i inwestujemy w nowoczesny sprzęt diagnostyczny. Chcemy, by każda wizyta u nas była nie tylko skuteczna, ale też przyjemna dla Ciebie i Twojego pupila.</content>
+    <color>rgb(82, 81, 81)</color>
+    <fontSize>17px</fontSize>
+    <textAlign>justify</textAlign>
+    <lineHeight>20.4px</lineHeight>
+  </element>
+  <element id="el_1773075605863_76603" type="text">
+    <x>276</x>
+    <y>633</y>
+    <w>205px</w>
+    <h>44px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <content>Dlaczego my?</content>
+    <color>rgb(72, 129, 199)</color>
+    <fontSize>27px</fontSize>
+    <fontWeight>700</fontWeight>
+    <textAlign>start</textAlign>
+    <lineHeight>32.4px</lineHeight>
+    <letterSpacing>1px</letterSpacing>
+  </element>
+  <element id="el_1773075895616_730556" type="block">
+    <x>293</x>
+    <y>702</y>
+    <w>509px</w>
+    <h>43px</h>
+    <bg>rgb(72, 129, 199)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <borderRadius>7px</borderRadius>
+    <children>
+      <element id="blk_1773075753513" type="block">
+        <x>10</x>
+        <y>0</y>
+        <w>509px</w>
+        <h>43px</h>
+        <bg>rgb(229, 241, 255)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <borderRadius>7px</borderRadius>
+        <children>
+          <element id="el_1773075870272" type="text">
+            <x>17</x>
+            <y>8</y>
+            <w>433px</w>
+            <h>28px</h>
+            <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+            <backgroundClip>border-box</backgroundClip>
+            <backgroundOrigin>padding-box</backgroundOrigin>
+            <zIndex>11</zIndex>
+            <content>🐾 Doświadczony i empatyczny zespół lekarzy</content>
+            <fontSize>18px</fontSize>
+            <textAlign>start</textAlign>
+            <lineHeight>22.8px</lineHeight>
+          </element>
+        </children>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773076021931_539797" type="block">
+    <x>293</x>
+    <y>760</y>
+    <w>509px</w>
+    <h>43px</h>
+    <bg>rgb(72, 129, 199)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <borderRadius>7px</borderRadius>
+    <children>
+      <element id="el_1773076021931_663555" type="block">
+        <x>10</x>
+        <y>0</y>
+        <w>509px</w>
+        <h>43px</h>
+        <bg>rgb(229, 241, 255)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <borderRadius>7px</borderRadius>
+        <children>
+          <element id="el_1773076021931_994727" type="text">
+            <x>17</x>
+            <y>8</y>
+            <w>480px</w>
+            <h>25px</h>
+            <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+            <backgroundClip>border-box</backgroundClip>
+            <backgroundOrigin>padding-box</backgroundOrigin>
+            <zIndex>11</zIndex>
+            <content>🔬 Najnowsze technologie diagnostyczne i laboratoryjne</content>
+            <fontSize>18px</fontSize>
+            <textAlign>start</textAlign>
+            <lineHeight>22.8px</lineHeight>
+          </element>
+        </children>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773076248455_986232" type="block">
+    <x>293</x>
+    <y>819</y>
+    <w>509px</w>
+    <h>43px</h>
+    <bg>rgb(72, 129, 199)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <borderRadius>7px</borderRadius>
+    <children>
+      <element id="el_1773076248455_793900" type="block">
+        <x>10</x>
+        <y>0</y>
+        <w>509px</w>
+        <h>43px</h>
+        <bg>rgb(229, 241, 255)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <borderRadius>7px</borderRadius>
+        <children>
+          <element id="el_1773076248455_370300" type="text">
+            <x>17</x>
+            <y>8</y>
+            <w>480px</w>
+            <h>25px</h>
+            <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+            <backgroundClip>border-box</backgroundClip>
+            <backgroundOrigin>padding-box</backgroundOrigin>
+            <zIndex>11</zIndex>
+            <content>🏥 Komfortowa przestrzeń przyjazna zwierzętom</content>
+            <fontSize>18px</fontSize>
+            <textAlign>start</textAlign>
+            <lineHeight>22.8px</lineHeight>
+          </element>
+        </children>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773076271063_114025" type="block">
+    <x>293</x>
+    <y>879</y>
+    <w>509px</w>
+    <h>43px</h>
+    <bg>rgb(72, 129, 199)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>15</zIndex>
+    <borderRadius>7px</borderRadius>
+    <children>
+      <element id="el_1773076271063_171247" type="block">
+        <x>10</x>
+        <y>0</y>
+        <w>509px</w>
+        <h>43px</h>
+        <bg>rgb(229, 241, 255)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <borderRadius>7px</borderRadius>
+        <children>
+          <element id="el_1773076271063_116494" type="text">
+            <x>17</x>
+            <y>8</y>
+            <w>480px</w>
+            <h>25px</h>
+            <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+            <backgroundClip>border-box</backgroundClip>
+            <backgroundOrigin>padding-box</backgroundOrigin>
+            <zIndex>11</zIndex>
+            <content>💙 Indywidualne podejście do każdego pacjenta</content>
+            <fontSize>18px</fontSize>
+            <textAlign>start</textAlign>
+            <lineHeight>22.8px</lineHeight>
+          </element>
+        </children>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773076364497" type="button">
+    <htmlId>sgbtn_el_1773076364497</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>241</x>
+    <y>1026</y>
+    <w>253px</w>
+    <h>173px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <btnAction>none</btnAction>
+    <btnWeight>600</btnWeight>
+    <children>
+      <element id="img_1773076444154_5785" type="image">
+        <x>0</x>
+        <y>0</y>
+        <w>253px</w>
+        <h>173px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>uploads/img_20260309_181404_608317b5.png</content>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773082632504_141299" type="button">
+    <htmlId>sgbtn_el_1773082632504_141299</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>508</x>
+    <y>1026</y>
+    <w>253px</w>
+    <h>173px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <btnAction>none</btnAction>
+    <btnWeight>600</btnWeight>
+    <children>
+      <element id="el_1773082632504_361442" type="image">
+        <x>0</x>
+        <y>0</y>
+        <w>253px</w>
+        <h>173px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>uploads/img_20260309_201257_c1c530e1.png</content>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773082653615_566511" type="button">
+    <htmlId>sgbtn_el_1773082653615_566511</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>779</x>
+    <y>1026</y>
+    <w>253px</w>
+    <h>173px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <btnAction>none</btnAction>
+    <btnWeight>600</btnWeight>
+    <children>
+      <element id="el_1773082653615_323469" type="image">
+        <x>0</x>
+        <y>0</y>
+        <w>253px</w>
+        <h>173px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>uploads/img_20260309_201302_742c3d2a.png</content>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773082665765_865902" type="button">
+    <htmlId>sgbtn_el_1773082665765_865902</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>1049</x>
+    <y>1026</y>
+    <w>253px</w>
+    <h>173px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <btnAction>none</btnAction>
+    <btnWeight>600</btnWeight>
+    <children>
+      <element id="el_1773082665765_934678" type="image">
+        <x>0</x>
+        <y>0</y>
+        <w>253px</w>
+        <h>173px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>uploads/img_20260309_201308_6c8584b1.png</content>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773083684256" type="text">
+    <x>411</x>
+    <y>1238</y>
+    <w>700px</w>
+    <h>51px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <content>Zaufaj nam - zdrowie Twojego pupila to nasza misja!</content>
+    <color>rgb(72, 129, 199)</color>
+    <fontSize>26px</fontSize>
+    <fontWeight>700</fontWeight>
+    <textAlign>center</textAlign>
+    <lineHeight>31.2px</lineHeight>
+  </element>
+</customPage>

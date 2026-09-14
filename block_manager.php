@@ -1,14 +1,5 @@
 <div id="block-edit-section" style="display:none; margin-top:15px; border-top:1px solid #e2e8f0; padding-top:15px;">
 
-  <label style="color:#1e293b; font-size:12px;">Presety (1 klik)</label>
-  <div style="display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 12px;">
-    <button type="button" class="tool-btn" id="block-preset-card">Card</button>
-    <button type="button" class="tool-btn" id="block-preset-glass">Glass</button>
-    <button type="button" class="tool-btn" id="block-preset-ombre">Ombre</button>
-    <button type="button" class="tool-btn" id="block-preset-glow">Glow</button>
-    <button type="button" class="tool-btn" id="block-preset-flat">Flat</button>
-  </div>
-
   <label style="color:#1e293b; font-size:12px;">Rozmiar</label>
   <label style="color:#475569; font-size:12px; margin-top:8px;">Szerokość (px)</label>
   <input type="number" id="prop-width" value="260" min="1">
@@ -33,24 +24,46 @@
     <input type="color" id="prop-bg-color" value="#ffffff">
   </div>
 
-  <div id="block-bg-gradient-controls" style="display:none; margin-top:8px;">
-    <label style="color:#475569; font-size:12px;">Typ gradientu</label>
-    <select id="block-bg-grad-type">
-      <option value="linear">Linear</option>
-      <option value="radial">Radial</option>
-    </select>
+<div id="block-bg-gradient-controls" style="display:none; margin-top:8px;">
+  <label style="color:#475569; font-size:12px;">Typ gradientu</label>
+  <select id="block-bg-grad-type">
+    <option value="linear">Linear</option>
+    <option value="radial">Radial</option>
+    <option value="conic">Conic</option>
+  </select>
 
-    <label style="color:#475569; font-size:12px; margin-top:8px;">Kąt (0-360)</label>
+  <div id="block-bg-grad-angle-wrap" style="margin-top:8px;">
+    <label style="color:#475569; font-size:12px;">Kąt (0-360)</label>
     <input type="number" id="block-bg-grad-angle" value="135" min="0" max="360">
-
-    <label style="color:#475569; font-size:12px; margin-top:8px;">Kolor 1</label>
-    <input type="color" id="block-bg-grad-1" value="#ffffff">
-
-    <label style="color:#475569; font-size:12px; margin-top:8px;">Kolor 2</label>
-    <input type="color" id="block-bg-grad-2" value="#c7d2fe">
   </div>
 
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Kolor start</label>
+  <input type="color" id="block-bg-grad-from" value="#ffffff">
+
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Kolor środek</label>
+  <input type="color" id="block-bg-grad-mid" value="#a78bfa">
+
+  <label style="text-transform:none; font-weight:600; font-size:12px; color:#334155; margin-top:6px; display:block;">
+    <input type="checkbox" id="block-bg-grad-use-mid"> Użyj koloru środkowego
+  </label>
+
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Kolor koniec</label>
+  <input type="color" id="block-bg-grad-to" value="#c7d2fe">
+
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Pozycja (X%, Y%)</label>
+  <div style="display:flex; gap:10px;">
+    <input type="number" id="block-bg-grad-posx" value="50" min="0" max="100" style="width:100%;">
+    <input type="number" id="block-bg-grad-posy" value="50" min="0" max="100" style="width:100%;">
+  </div>
+</div>
+
   <label style="color:#1e293b; font-size:12px; margin-top:12px;">Obramowanie</label>
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Tryb</label>
+<select id="block-border-mode">
+  <option value="solid">Jednolity kolor</option>
+  <option value="gradient">Gradient</option>
+</select>
+
   <label style="color:#475569; font-size:12px; margin-top:8px;">Styl</label>
   <select id="prop-border-style">
     <option value="solid">Solid</option>
@@ -62,8 +75,43 @@
   <label style="color:#475569; font-size:12px; margin-top:8px;">Grubość (px)</label>
   <input type="number" id="prop-border-width" value="1" min="0">
 
-  <label style="color:#475569; font-size:12px; margin-top:8px;">Kolor</label>
+<div id="block-border-solid-controls" style="margin-top:8px;">
+  <label style="color:#475569; font-size:12px;">Kolor</label>
   <input type="color" id="prop-border-color" value="#e2e8f0">
+</div>
+<div id="block-border-gradient-controls" style="display:none; margin-top:8px;">
+  <label style="color:#475569; font-size:12px;">Typ gradientu</label>
+  <select id="block-border-grad-type">
+    <option value="linear">Linear</option>
+    <option value="radial">Radial</option>
+    <option value="conic">Conic</option>
+  </select>
+
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Kąt / start (0-360)</label>
+  <input type="number" id="block-border-grad-angle" value="135" min="0" max="360">
+
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Pozycja X (%)</label>
+  <input type="number" id="block-border-grad-x" value="50" min="0" max="100">
+
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Pozycja Y (%)</label>
+  <input type="number" id="block-border-grad-y" value="50" min="0" max="100">
+
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Kolor 1</label>
+  <input type="color" id="block-border-grad-1" value="#60a5fa">
+
+  <label style="color:#475569; font-size:12px; margin-top:8px;">Kolor 2</label>
+  <input type="color" id="block-border-grad-2" value="#a78bfa">
+
+  <label style="text-transform:none; font-weight:600; font-size:12px; color:#334155; margin-top:10px;">
+    <input type="checkbox" id="block-border-grad-mid-enable"> Użyj koloru środkowego
+  </label>
+
+  <div id="block-border-grad-mid-controls" style="display:none; margin-top:8px;">
+    <label style="color:#475569; font-size:12px;">Kolor środkowy</label>
+    <input type="color" id="block-border-grad-mid" value="#ffffff">
+  </div>
+</div>
+
 
   <label style="color:#1e293b; font-size:12px; margin-top:12px;">Cień</label>
   <select id="block-shadow-enable">

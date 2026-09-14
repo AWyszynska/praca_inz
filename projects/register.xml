@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-05-17 14:01:39</generatedAt>
+  <pageHeight>900</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>gradient</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#dbf4ff</gradFrom>
+    <gradMid>#ffffff</gradMid>
+    <gradTo>#5c99e6</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <element id="blk_1779017123352" type="block">
+    <x>498</x>
+    <y>172</y>
+    <w>565px</w>
+    <h>600px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="form_1779018339752_1261" type="form">
+        <x>30</x>
+        <y>119</y>
+        <w>234px</w>
+        <h>49px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <accentColor>#000000</accentColor>
+        <formPlaceholder>.</formPlaceholder>
+        <formInputBg>#fdf6fe</formInputBg>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>36</formInputHeight>
+        <formMinHeight>49</formMinHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779018468656_486617" type="form">
+        <x>309</x>
+        <y>119</y>
+        <w>234px</w>
+        <h>49px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>14</zIndex>
+        <accentColor>#000000</accentColor>
+        <formPlaceholder>.</formPlaceholder>
+        <formInputBg>#fdf6fe</formInputBg>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>36</formInputHeight>
+        <formMinHeight>49</formMinHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779018479969" type="text">
+        <x>30</x>
+        <y>91</y>
+        <w>55px</w>
+        <h>18px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>15</zIndex>
+        <content>Imię</content>
+        <color>rgb(44, 16, 183)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779018520336_497434" type="text">
+        <x>319</x>
+        <y>91</y>
+        <w>86px</w>
+        <h>24px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>16</zIndex>
+        <content>Nazwisko</content>
+        <color>rgb(44, 16, 183)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779018551402_119803" type="form">
+        <x>30</x>
+        <y>211</y>
+        <w>518px</w>
+        <h>49px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>14</zIndex>
+        <accentColor>#000000</accentColor>
+        <formPlaceholder>.</formPlaceholder>
+        <formInputBg>#fdf6fe</formInputBg>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>36</formInputHeight>
+        <formMinHeight>49</formMinHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779018581048_486736" type="text">
+        <x>30</x>
+        <y>183</y>
+        <w>108px</w>
+        <h>22px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>16</zIndex>
+        <content>E-mail</content>
+        <color>rgb(44, 16, 183)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779018610858_366303" type="form">
+        <x>309</x>
+        <y>299</y>
+        <w>234px</w>
+        <h>49px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>14</zIndex>
+        <accentColor>#000000</accentColor>
+        <formPlaceholder>.</formPlaceholder>
+        <formInputBg>#fdf6fe</formInputBg>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>36</formInputHeight>
+        <formMinHeight>49</formMinHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779018656326_973456" type="form">
+        <x>30</x>
+        <y>299</y>
+        <w>234px</w>
+        <h>49px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>15</zIndex>
+        <accentColor>#000000</accentColor>
+        <formPlaceholder>.</formPlaceholder>
+        <formInputBg>#fdf6fe</formInputBg>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>36</formInputHeight>
+        <formMinHeight>49</formMinHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779018663128_474782" type="text">
+        <x>30</x>
+        <y>271</y>
+        <w>55px</w>
+        <h>18px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>16</zIndex>
+        <content>Hasło</content>
+        <color>rgb(44, 16, 183)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779018676044_346279" type="text">
+        <x>309</x>
+        <y>271</y>
+        <w>110px</w>
+        <h>24px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>17</zIndex>
+        <content>Powtórz hasło</content>
+        <color>rgb(44, 16, 183)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779018700025_412519" type="form">
+        <x>30</x>
+        <y>396</y>
+        <w>234px</w>
+        <h>49px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>16</zIndex>
+        <accentColor>#000000</accentColor>
+        <formPlaceholder>.</formPlaceholder>
+        <formInputBg>#fdf6fe</formInputBg>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>36</formInputHeight>
+        <formMinHeight>49</formMinHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779018708486_587731" type="text">
+        <x>28</x>
+        <y>368</y>
+        <w>250px</w>
+        <h>26px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>17</zIndex>
+        <content>Numer telefonu (opcjonalnie)</content>
+        <color>rgb(44, 16, 183)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779018747018_710969" type="form">
+        <x>309</x>
+        <y>396</y>
+        <w>234px</w>
+        <h>49px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>17</zIndex>
+        <formType>date</formType>
+        <accentColor>#000000</accentColor>
+        <formPlaceholder>.</formPlaceholder>
+        <formInputBg>#fdf6fe</formInputBg>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>36</formInputHeight>
+        <formMinHeight>49</formMinHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779018771711_82571" type="text">
+        <x>309</x>
+        <y>368</y>
+        <w>250px</w>
+        <h>26px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>18</zIndex>
+        <content>Data urodzenia (opcjonalnie)</content>
+        <color>rgb(44, 16, 183)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1779018814889_833" type="form">
+        <x>11</x>
+        <y>457</y>
+        <w>308px</w>
+        <h>60px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>19</zIndex>
+        <formType>radio</formType>
+        <options>Wyrażam zgode z polityką prywatności </options>
+        <formInputPadY>6</formInputPadY>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779018212073" type="text">
+        <x>220</x>
+        <y>22</y>
+        <w>125px</w>
+        <h>32px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Zarejestruj się</content>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779018286889" type="text">
+        <x>208</x>
+        <y>54</y>
+        <w>151px</w>
+        <h>21px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>To zajmię kilka minut</content>
+        <color>rgb(77, 76, 76)</color>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779018887283" type="button">
+        <htmlId>sgbtn_el_1779018887283</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>141</x>
+        <y>500</y>
+        <w>281px</w>
+        <h>34px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>20</zIndex>
+        <btnText>Stwórz konto</btnText>
+        <btnAction>none</btnAction>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>600</btnWeight>
+        <btnFontSize>17</btnFontSize>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#a5c7f3</btnGradFrom>
+        <btnGradTo>#e1cbeb</btnGradTo>
+      </element>
+      <element id="el_1779019028763" type="text">
+        <x>147</x>
+        <y>534</y>
+        <w>118px</w>
+        <h>31px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>21</zIndex>
+        <content>Masz już konto?</content>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="el_1779017226063" type="text">
+    <x>676</x>
+    <y>46</y>
+    <w>210px</w>
+    <h>70px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <content>&lt;span style="font-weight: 700;"&gt;Vet&lt;/span&gt;Mell</content>
+    <color>rgb(92, 153, 230)</color>
+    <fontSize>55px</fontSize>
+    <textAlign>start</textAlign>
+    <letterSpacing>1px</letterSpacing>
+  </element>
+  <element id="el_1779017325016" type="text">
+    <x>705</x>
+    <y>116</y>
+    <w>181px</w>
+    <h>29px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <content>Stwórz swoje konto</content>
+    <color>rgb(130, 130, 130)</color>
+    <fontSize>17px</fontSize>
+    <textAlign>start</textAlign>
+    <lineHeight>20.4px</lineHeight>
+  </element>
+  <element id="el_1779019123083" type="text">
+    <x>770</x>
+    <y>710</y>
+    <w>192px</w>
+    <h>33px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>22</zIndex>
+    <content>&lt;a href="https://" target="_self" class="link"&gt;Wróć do panelu logowania&lt;/a&gt;</content>
+    <color>rgb(63, 141, 243)</color>
+    <fontSize>16px</fontSize>
+    <textAlign>start</textAlign>
+    <lineHeight>19.2px</lineHeight>
+  </element>
+</customPage>

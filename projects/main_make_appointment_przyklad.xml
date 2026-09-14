@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-05-10 21:05:22</generatedAt>
+  <pageHeight>2000</pageHeight>
+
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+
+  <extends>pulpit_pacjent.xml</extends>
+
+  <element id="el_1778439031093_959747" type="text">
+    <x>594</x>
+    <y>146</y>
+    <w>333px</w>
+    <h>52px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <content>Umów wizytę</content>
+    <color>rgb(86, 126, 179)</color>
+    <fontSize>33px</fontSize>
+    <fontWeight>700</fontWeight>
+    <textAlign>center</textAlign>
+    <lineHeight>39.6px</lineHeight>
+  </element>
+
+  <element id="el_1778439093934_650792" type="text">
+    <x>483</x>
+    <y>189</y>
+    <w>556px</w>
+    <h>43px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>15</zIndex>
+    <content>Wybierz dzień w kalendarzu, a następnie godzinę, aby zarezerwować wizytę.</content>
+    <color>rgb(62, 56, 56)</color>
+    <fontSize>16px</fontSize>
+    <textAlign>center</textAlign>
+    <lineHeight>19.2px</lineHeight>
+  </element>
+
+  <element id="cal_1778439146162_3759" type="calendar">
+    <x>353</x>
+    <y>250</y>
+    <w>817px</w>
+    <h>520px</h>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>16</zIndex>
+    <borderRadius>24px</borderRadius>
+    <boxShadow>rgba(2, 6, 23, 0.18) 0px 14px 36px</boxShadow>
+
+    <calYear>2026</calYear>
+    <calMonth>5</calMonth>
+    <calWeekStart>mon</calWeekStart>
+    <calTheme>blue</calTheme>
+
+    <calBgA>#739bd3</calBgA>
+    <calBgB>#b8bdc6</calBgB>
+    <calAccent>#f2c150</calAccent>
+
+    <calRadius>24</calRadius>
+    <calOuterPad>22</calOuterPad>
+    <calGap>10</calGap>
+    <calCellRadius>8</calCellRadius>
+
+    <calMonthSize>34</calMonthSize>
+    <calDaySize>16</calDaySize>
+    <calWeekSize>15</calWeekSize>
+    <calNavSize>37</calNavSize>
+
+    <calShowOutside>0</calShowOutside>
+    <calShowToday>1</calShowToday>
+
+    <calUseVisits>1</calUseVisits>
+  </element>
+</customPage>

@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-03-09 17:29:21</generatedAt>
+  <pageHeight>1600</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>pulpit_pacjent.xml</extends>
+  <element id="blk_1770836976219" type="block">
+    <x>211</x>
+    <y>176</y>
+    <w>1100px</w>
+    <h>340px</h>
+    <bg>linear-gradient(135deg, rgb(93, 154, 231), rgb(199, 210, 254)) rgb(93, 154, 231)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="img_1772291291432_9695" type="image">
+        <x>704</x>
+        <y>56</y>
+        <w>344px</w>
+        <h>229px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <borderRadius>22px</borderRadius>
+        <boxShadow>rgba(0, 0, 0, 0.25) 0px 6px 12px</boxShadow>
+        <opacity>0.97</opacity>
+        <content>uploads/img_20260228_160811_64a8be81.png</content>
+        <imgPosX>0</imgPosX>
+        <imgPosY>51</imgPosY>
+      </element>
+      <element id="el_1772291462484" type="text">
+        <x>34</x>
+        <y>26</y>
+        <w>368px</w>
+        <h>61px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Witamy w VetMell </content>
+        <color>rgb(255, 255, 255)</color>
+        <fontSize>48px</fontSize>
+        <fontFamily>"Times New Roman", Times, serif</fontFamily>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1772291657622" type="text">
+        <x>65</x>
+        <y>95</y>
+        <w>433px</w>
+        <h>172px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Jesteśmy miejscem, w którym troska o Twojego pupila łączy się z profesjonalizmem i nowoczesną opieką weterynaryjną. Nasz zespół pasjonatów zwierząt dba o zdrowie, bezpieczeństwo i komfort każdego pacjenta.</content>
+        <color>rgb(255, 255, 255)</color>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1772293176714" type="button">
+        <htmlId>sgbtn_el_1772293176714</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>101</x>
+        <y>267</y>
+        <w>180px</w>
+        <h>44px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <btnText>Umów wizytę online</btnText>
+        <btnAction>none</btnAction>
+        <btnPreset>ghost</btnPreset>
+        <btnSize>lg</btnSize>
+        <btnRadius>26</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>600</btnWeight>
+        <btnBg>#99a8bd</btnBg>
+        <btnShadow>strong</btnShadow>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#5d9ae7</btnGradFrom>
+        <btnGradTo>#82b2f1</btnGradTo>
+        <btnGradAngle>81</btnGradAngle>
+      </element>
+    </children>
+  </element>
+  <element id="el_1772293869290" type="text">
+    <x>655</x>
+    <y>567</y>
+    <w>212px</w>
+    <h>44px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <content>Nasza klinika </content>
+    <color>rgb(93, 154, 231)</color>
+    <fontSize>33px</fontSize>
+    <fontFamily>Georgia, serif</fontFamily>
+    <textAlign>start</textAlign>
+    <lineHeight>39.6px</lineHeight>
+  </element>
+  <element id="el_1772293961298" type="text">
+    <x>297</x>
+    <y>611</y>
+    <w>928px</w>
+    <h>54px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <content>W VetMell znajdziesz kompleksową opiekę dla swojego zwierzaka - od badań profilaktycznych, przez diagnostykę, aż po leczenie i zabiegi chirurgiczne.</content>
+    <color>rgb(147, 153, 165)</color>
+    <textAlign>center</textAlign>
+    <lineHeight>24px</lineHeight>
+  </element>
+  <element id="blk_1772294171098" type="block">
+    <x>211</x>
+    <y>717</y>
+    <w>283px</w>
+    <h>283px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="img_1772295394695_7976" type="image">
+        <x>85</x>
+        <y>19</y>
+        <w>112px</w>
+        <h>112px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>uploads/img_20260228_171634_e5562a38.png</content>
+      </element>
+      <element id="el_1773071237515" type="text">
+        <x>44</x>
+        <y>141</y>
+        <w>188px</w>
+        <h>24px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Doświadczony zespół</content>
+        <color>rgb(93, 154, 231)</color>
+        <fontSize>18px</fontSize>
+        <fontFamily>"Segoe UI", system-ui, -apple-system, sans-serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1773071455505" type="text">
+        <x>28</x>
+        <y>169</y>
+        <w>220px</w>
+        <h>90px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Nasi lekarze to specjaliści z wieloletnim doświadczeniem i pasją do zwierząt.</content>
+        <color>rgb(77, 77, 77)</color>
+        <fontSize>15px</fontSize>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773072575421_362633" type="block">
+    <x>620</x>
+    <y>717</y>
+    <w>283px</w>
+    <h>283px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1773072575421_516406" type="image">
+        <x>85</x>
+        <y>19</y>
+        <w>112px</w>
+        <h>112px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>uploads/img_20260309_171030_bbea553a.png</content>
+      </element>
+      <element id="el_1773072575421_495170" type="text">
+        <x>50</x>
+        <y>141</y>
+        <w>182px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Nowoczesny sprzęt</content>
+        <color>rgb(93, 154, 231)</color>
+        <fontSize>18px</fontSize>
+        <fontFamily>"Segoe UI", system-ui, -apple-system, sans-serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1773072575421_183616" type="text">
+        <x>31</x>
+        <y>169</y>
+        <w>220px</w>
+        <h>90px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Posiadamy nowoczesną aparaturę diagnostyczną - RTG, USG i laboratorium.</content>
+        <color>rgb(77, 77, 77)</color>
+        <fontSize>15px</fontSize>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="el_1773072698702_563677" type="block">
+    <x>1037</x>
+    <y>717</y>
+    <w>283px</w>
+    <h>283px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>15</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1773072698702_583783" type="image">
+        <x>85</x>
+        <y>19</y>
+        <w>112px</w>
+        <h>112px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>uploads/img_20260309_171213_f979be67.png</content>
+      </element>
+      <element id="el_1773072698702_199276" type="text">
+        <x>50</x>
+        <y>141</y>
+        <w>182px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Komfort i opieka</content>
+        <color>rgb(93, 154, 231)</color>
+        <fontSize>18px</fontSize>
+        <fontFamily>"Segoe UI", system-ui, -apple-system, sans-serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1773072698702_416168" type="text">
+        <x>31</x>
+        <y>169</y>
+        <w>220px</w>
+        <h>90px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Zapewniamy ciepłą, spokojną atmosferę, w której każdy pupil czuje się bezpiecznie.</content>
+        <color>rgb(77, 77, 77)</color>
+        <fontSize>15px</fontSize>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="blk_1773072774889" type="block">
+    <x>355</x>
+    <y>1091</y>
+    <w>814px</w>
+    <h>267px</h>
+    <bg>rgb(85, 139, 206)</bg>
+    <border>0.8px solid rgb(93, 154, 231)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>16</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+  </element>
+  <element id="el_1773072981938" type="text">
+    <x>477</x>
+    <y>1144</y>
+    <w>567px</w>
+    <h>40px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>17</zIndex>
+    <content>Gotowy zadbać o zdrowie swojego pupila?</content>
+    <color>rgb(255, 255, 255)</color>
+    <fontSize>28px</fontSize>
+    <fontWeight>700</fontWeight>
+    <textAlign>center</textAlign>
+    <lineHeight>33.6px</lineHeight>
+  </element>
+  <element id="el_1773073052866" type="text">
+    <x>483</x>
+    <y>1184</y>
+    <w>559px</w>
+    <h>29px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>18</zIndex>
+    <content>Umów wizytę online w zaledwie minutę - szybko i wygodnie!</content>
+    <color>rgb(255, 255, 255)</color>
+    <textAlign>center</textAlign>
+    <lineHeight>24px</lineHeight>
+  </element>
+  <element id="el_1773073090426" type="button">
+    <htmlId>sgbtn_el_1773073090426</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>671</x>
+    <y>1249</y>
+    <w>227px</w>
+    <h>44px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>19</zIndex>
+    <btnText>Zarezerwuj termin</btnText>
+    <btnAction>none</btnAction>
+    <btnBorderW>0</btnBorderW>
+    <btnWeight>600</btnWeight>
+    <btnBg>#79a4dc</btnBg>
+    <btnHoverBg>#8bafe4</btnHoverBg>
+    <btnGradFrom>#79a4dc</btnGradFrom>
+  </element>
+</customPage>

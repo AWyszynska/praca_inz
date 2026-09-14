@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <customPage>
-  <generatedAt>2026-01-21 22:49:30</generatedAt>
+  <generatedAt>2026-06-22 21:10:43</generatedAt>
   <pageHeight>800</pageHeight>
   <windowScroll>
     <enabled>1</enabled>
@@ -30,15 +30,30 @@
     <y>28</y>
     <w>698px</w>
     <h>155px</h>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
     <zIndex>12</zIndex>
+    <content>&lt;svg class="brand-logo" viewBox="0 0 720 160" xmlns="http://www.w3.org/2000/svg" aria-label="VetMell" role="img" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; display: block;"&gt;
+  
+  &lt;g&gt;
+    &lt;text x="560" y="102" text-anchor="end" font-family="Merriweather, Georgia, 'Times New Roman', serif"&gt;
+      &lt;tspan font-size="70" font-weight="700" font-style="italic" letter-spacing="0.2" fill="#5c99e6"&gt;Vet&lt;/tspan&gt;
+      &lt;tspan font-size="72" font-weight="500" font-style="normal" letter-spacing="0" dx="2" fill="#5c99e6"&gt;Mell&lt;/tspan&gt;
+    &lt;/text&gt;
+    &lt;path d="M100 118H560" fill="none" stroke="#5c99e6" stroke-width="1.5"&gt;&lt;/path&gt;
+    &lt;circle cx="560" cy="118" r="4.2" fill="#5c99e6" stroke="none"&gt;&lt;/circle&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</content>
   </element>
   <element id="blk_1768945526302" type="block">
     <x>530</x>
     <y>183</y>
     <w>400px</w>
     <h>409px</h>
-    <bg>rgb(255, 255, 255)</bg>
-    <border>1px solid rgb(255, 255, 255)</border>
+    <bg>padding-box border-box rgb(255, 255, 255)</bg>
+    <border>0.8px solid rgb(20, 44, 93)</border>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
     <zIndex>14</zIndex>
     <borderRadius>16px</borderRadius>
     <boxShadow>rgba(0, 0, 0, 0.18) 0px 12px 30px 0px</boxShadow>
@@ -51,6 +66,8 @@
         <w>128px</w>
         <h>34px</h>
         <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
         <zIndex>11</zIndex>
         <content>Logowanie</content>
         <fontSize>23px</fontSize>
@@ -64,6 +81,8 @@
         <w>184px</w>
         <h>30px</h>
         <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
         <zIndex>12</zIndex>
         <content>Witaj ponownie</content>
         <color>rgb(73, 70, 70)</color>
@@ -78,12 +97,12 @@
         <y>112</y>
         <w>319px</w>
         <h>38.8px</h>
-        <bg>rgb(255, 255, 255)</bg>
-        <border>1px solid rgb(226, 232, 240)</border>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
         <zIndex>11</zIndex>
-        <borderRadius>14px</borderRadius>
-        <boxShadow>rgba(0, 0, 0, 0.1) 0px 10px 24px 0px</boxShadow>
         <formType>email</formType>
+        <color>rgb(0, 0, 0)</color>
         <accentColor>#4d5975</accentColor>
         <formPlaceholder>Wpisz email...</formPlaceholder>
         <formName>email</formName>
@@ -99,8 +118,10 @@
         <formInputBorderStyle>dotted</formInputBorderStyle>
         <formInputShadow>strong</formInputShadow>
         <formInputPadX>5</formInputPadX>
+        <formInputPadY>6</formInputPadY>
         <formPlaceholderColor>#496a97</formPlaceholderColor>
         <formFocusRing>3</formFocusRing>
+        <formNoBg>1</formNoBg>
       </element>
       <element id="el_1769000039592" type="text">
         <x>25</x>
@@ -108,6 +129,8 @@
         <w>83px</w>
         <h>20px</h>
         <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
         <zIndex>12</zIndex>
         <content>Adres email</content>
         <color>rgb(83, 70, 82)</color>
@@ -121,12 +144,12 @@
         <y>204</y>
         <w>320px</w>
         <h>38.8px</h>
-        <bg>rgb(255, 255, 255)</bg>
-        <border>1px solid rgb(226, 232, 240)</border>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
         <zIndex>12</zIndex>
-        <borderRadius>14px</borderRadius>
-        <boxShadow>rgba(0, 0, 0, 0.1) 0px 10px 24px 0px</boxShadow>
         <formType>password</formType>
+        <color>rgb(0, 0, 0)</color>
         <accentColor>#8893a0</accentColor>
         <formPlaceholder>Wpisz hasło...</formPlaceholder>
         <formName>password</formName>
@@ -138,7 +161,9 @@
         <formIconBg>#f0f6ff</formIconBg>
         <formInputStyle>underline</formInputStyle>
         <formInputBg>#f9f7fd</formInputBg>
+        <formInputPadY>6</formInputPadY>
         <formPlaceholderColor>#5a78a1</formPlaceholderColor>
+        <formNoBg>1</formNoBg>
       </element>
       <element id="el_1769019799718" type="text">
         <x>25</x>
@@ -146,8 +171,10 @@
         <w>63px</w>
         <h>32px</h>
         <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
         <zIndex>12</zIndex>
-        <content>&lt;span style="color: rgb(95, 84, 96);"&gt;Hasło&lt;/span&gt;</content>
+        <content>Hasło</content>
         <color>rgb(95, 84, 96)</color>
         <fontSize>15px</fontSize>
         <fontStyle>italic</fontStyle>
@@ -160,8 +187,10 @@
         <w>200px</w>
         <h>27px</h>
         <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
         <zIndex>11</zIndex>
-        <content>&lt;a href="https://1" target="_self" class="link"&gt;Nie pamiętasz hasła ?&lt;/a&gt;</content>
+        <content>Nie pamiętasz hasła ?</content>
         <fontSize>14px</fontSize>
         <textAlign>start</textAlign>
         <lineHeight>normal</lineHeight>
@@ -172,9 +201,13 @@
         <w>150px</w>
         <h>21.6px</h>
         <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
         <zIndex>12</zIndex>
         <formType>radio</formType>
+        <color>rgb(0, 0, 0)</color>
         <options>Zapamiętaj mnie</options>
+        <formInputPadY>6</formInputPadY>
         <formNoBg>1</formNoBg>
       </element>
     </children>
@@ -185,6 +218,8 @@
     <w>216px</w>
     <h>216px</h>
     <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
     <zIndex>13</zIndex>
     <content>uploads/img_20260121_192439_6eec2b66.png</content>
   </element>
@@ -192,10 +227,12 @@
     <htmlId>sgbtn_el_1769019984261</htmlId>
     <htmlClass>sgbtn-wrap</htmlClass>
     <x>576</x>
-    <y>480</y>
+    <y>506</y>
     <w>309px</w>
     <h>35px</h>
     <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
     <zIndex>14</zIndex>
     <btnText>Zaloguj się </btnText>
     <btnAction>none</btnAction>
@@ -209,11 +246,13 @@
     <btnGradTo>#67c4fe</btnGradTo>
   </element>
   <element id="footer_1769031947027" type="block">
-    <x>11</x>
-    <y>713</y>
+    <x>0</x>
+    <y>675</y>
     <w>calc(100% + 0px)</w>
     <h>125px</h>
     <bg>rgb(255, 255, 255)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
     <zIndex>12</zIndex>
     <isFooter>1</isFooter>
     <footerMode>page</footerMode>
@@ -221,17 +260,42 @@
     <footerHeight>125</footerHeight>
     <children>
       <element id="el_1769032000258" type="text">
-        <x>1156</x>
+        <x>0</x>
         <y>0</y>
         <w>288px</w>
         <h>100px</h>
         <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
         <zIndex>12</zIndex>
         <content>&lt;div class="footer-title" style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(107, 114, 128); margin-bottom: 6px; font-family: system-ui, -apple-system, &amp;quot;Segoe UI&amp;quot;, Roboto, Inter, &amp;quot;Helvetica Neue&amp;quot;, Arial, &amp;quot;Noto Sans&amp;quot;; text-align: right; white-space-collapse: collapse; background-color: rgb(255, 255, 255);"&gt;Kontakt&lt;/div&gt;&lt;ul class="footer-list" style="list-style: none; margin: 0px; padding: 0px; font-size: 14px; line-height: 1.4; color: rgb(107, 114, 128); font-family: system-ui, -apple-system, &amp;quot;Segoe UI&amp;quot;, Roboto, Inter, &amp;quot;Helvetica Neue&amp;quot;, Arial, &amp;quot;Noto Sans&amp;quot;; text-align: right; white-space-collapse: collapse; background-color: rgb(255, 255, 255);"&gt;&lt;li&gt;&lt;strong&gt;Email:&lt;/strong&gt;&amp;nbsp;&lt;a href="mailto:support@twojadomena.pl" style="color: rgb(17, 24, 39); text-decoration-line: none;"&gt;support@twojadomena.pl&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Telefon:&lt;/strong&gt;&amp;nbsp;&lt;a href="tel:+48123456789" style="color: rgb(17, 24, 39); text-decoration-line: none;"&gt;+48 123 456 789&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Adres:&lt;/strong&gt;&amp;nbsp;ul. Przykładowa 1, 00-000 Warszawa&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Godziny wsparcia:&lt;/strong&gt;&amp;nbsp;Pon–Pt, 9:00–17:00&lt;/li&gt;&lt;/ul&gt;</content>
         <color>rgb(255, 255, 255)</color>
         <textAlign>right</textAlign>
         <lineHeight>normal</lineHeight>
+        <padding>16px</padding>
       </element>
     </children>
+  </element>
+  <element id="el_1782155353490_418631" type="button">
+    <htmlId>sgbtn_el_1782155353490_418631</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>592</x>
+    <y>550</y>
+    <w>276px</w>
+    <h>28px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>15</zIndex>
+    <btnText>Zarejestruj się</btnText>
+    <btnAction>none</btnAction>
+    <btnSize>sm</btnSize>
+    <btnBorderW>0</btnBorderW>
+    <btnWeight>600</btnWeight>
+    <btnUpper>1</btnUpper>
+    <btnBg>#526c8e</btnBg>
+    <btnGradient>1</btnGradient>
+    <btnGradFrom>#98bcec</btnGradFrom>
+    <btnGradTo>#fb93d5</btnGradTo>
   </element>
 </customPage>

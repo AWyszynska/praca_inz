@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-05-26 11:18:51</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>worker_panel.xml</extends>
+  <element id="blk_1779785134916" type="block">
+    <x>251</x>
+    <y>174</y>
+    <w>1000px</w>
+    <h>700px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1779785327572" type="text">
+        <x>17</x>
+        <y>21</y>
+        <w>93px</w>
+        <h>26px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>imie</content>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779785354676" type="button">
+        <htmlId>sgbtn_el_1779785354676</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>750</x>
+        <y>378</y>
+        <w>169px</w>
+        <h>32px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>14</zIndex>
+        <btnText>Zatwierdź</btnText>
+        <btnAction>none</btnAction>
+        <btnWeight>600</btnWeight>
+      </element>
+      <element id="form_1779785526661_9772" type="form">
+        <x>32</x>
+        <y>442</y>
+        <w>323px</w>
+        <h>60px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>16</zIndex>
+        <formType>textarea</formType>
+        <color>rgb(0, 0, 0)</color>
+        <fontSize>13px</fontSize>
+        <formRows>7</formRows>
+        <formInputPadY>6</formInputPadY>
+        <formMinHeight>94</formMinHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779785632141" type="button">
+        <htmlId>sgbtn_el_1779785632141</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>194</x>
+        <y>603</y>
+        <w>164px</w>
+        <h>33px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>17</zIndex>
+        <btnText>Wygeneruj recepte</btnText>
+        <btnAction>none</btnAction>
+        <btnWeight>600</btnWeight>
+      </element>
+    </children>
+  </element>
+  <element id="form_1779785221613_9682" type="form">
+    <x>273</x>
+    <y>243</y>
+    <w>900px</w>
+    <h>89px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <formType>textarea</formType>
+    <color>rgb(0, 0, 0)</color>
+    <fontSize>10px</fontSize>
+    <formRows>20</formRows>
+    <formInputPadY>6</formInputPadY>
+    <formInputHeight>111</formInputHeight>
+    <formMinHeight>299</formMinHeight>
+    <formNoBg>1</formNoBg>
+  </element>
+</customPage>

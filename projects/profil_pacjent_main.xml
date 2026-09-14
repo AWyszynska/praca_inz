@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-05-15 22:31:59</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>solid</mode>
+    <solid>#e0f0ff</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>profil_pacjent.xml</extends>
+  <extends>pulpit_pacjent.xml</extends>
+  <element id="blk_1778870721222" type="block">
+    <x>324</x>
+    <y>224</y>
+    <w>500px</w>
+    <h>300px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1778870926687" type="text">
+        <x>12</x>
+        <y>14</y>
+        <w>170px</w>
+        <h>18px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>14</zIndex>
+        <content>Informacje o mnie</content>
+        <color>rgb(54, 53, 53)</color>
+        <fontSize>18px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1778870979361" type="text">
+        <x>29</x>
+        <y>44</y>
+        <w>460px</w>
+        <h>120px</h>
+        <bg>padding-box border-box transparent</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>16</zIndex>
+        <content>&lt;span style="font-weight: 700;"&gt;Imię:&lt;/span&gt; im&lt;br&gt;&lt;span style="font-weight: 700;"&gt;Nazwisko:&lt;/span&gt; naz&lt;br&gt;&lt;span style="font-weight: 700;"&gt;Email:&lt;/span&gt; ema&lt;br&gt;&lt;span style="font-weight: 700;"&gt;Telefon:&lt;/span&gt; tel&lt;br&gt;&lt;span style="font-weight: 700;"&gt;Data urodzenia:&lt;/span&gt; dat</content>
+        <fontSize>17px</fontSize>
+        <letterSpacing>0px</letterSpacing>
+      </element>
+      <element id="el_1778871150192" type="text">
+        <x>12</x>
+        <y>164</y>
+        <w>364px</w>
+        <h>22px</h>
+        <bg>padding-box border-box rgb(202, 236, 247)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>17</zIndex>
+        <content>Te dane pochodzą z Twojego konta w klinice VetMell.</content>
+        <color>rgb(133, 128, 128)</color>
+        <fontSize>15px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="el_1778870747499_496459" type="block">
+    <x>843</x>
+    <y>224</y>
+    <w>500px</w>
+    <h>300px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1778871233434_314582" type="text">
+        <x>9</x>
+        <y>9</y>
+        <w>170px</w>
+        <h>18px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>16</zIndex>
+        <content>Adres zamieszkania</content>
+        <color>rgb(54, 53, 53)</color>
+        <fontSize>18px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1778871275193" type="text">
+        <x>23</x>
+        <y>37</y>
+        <w>312px</w>
+        <h>19px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>18</zIndex>
+        <content>Uzupełnij swoje dane adresowe.</content>
+        <color>rgb(92, 92, 92)</color>
+        <fontSize>14px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1778871381521_4423" type="form">
+        <x>19</x>
+        <y>79</y>
+        <w>205px</w>
+        <h>30px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <formInputRadius>36</formInputRadius>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>32</formInputHeight>
+        <formAutoHeight>1</formAutoHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1778871549138" type="text">
+        <x>19</x>
+        <y>65</y>
+        <w>65px</w>
+        <h>22px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Ulica*</content>
+        <color>rgb(84, 79, 79)</color>
+        <fontSize>15px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1778871605543_868531" type="text">
+        <x>259</x>
+        <y>65</y>
+        <w>131px</w>
+        <h>25px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>14</zIndex>
+        <content>Numer budynku*</content>
+        <color>rgb(84, 79, 79)</color>
+        <fontSize>15px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1778871624792_925697" type="text">
+        <x>21</x>
+        <y>132</y>
+        <w>114px</w>
+        <h>29px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>14</zIndex>
+        <content>Numer lokalu</content>
+        <color>rgb(84, 79, 79)</color>
+        <fontSize>15px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1778872265815_402284" type="text">
+        <x>261</x>
+        <y>135</y>
+        <w>114px</w>
+        <h>29px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>15</zIndex>
+        <content>Kod pocztowy*</content>
+        <color>rgb(84, 79, 79)</color>
+        <fontSize>15px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1778872298304_412184" type="text">
+        <x>23</x>
+        <y>204</y>
+        <w>114px</w>
+        <h>29px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>16</zIndex>
+        <content>Miasto*</content>
+        <color>rgb(84, 79, 79)</color>
+        <fontSize>15px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1778872869664_4023" type="form">
+        <x>5</x>
+        <y>264</y>
+        <w>320px</w>
+        <h>18.4px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>17</zIndex>
+        <formType>checkbox</formType>
+        <options>Ustaw jako domyślny adres</options>
+        <formInputPadY>6</formInputPadY>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1778872931715" type="button">
+        <htmlId>sgbtn_el_1778872931715</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>277</x>
+        <y>229</y>
+        <w>161px</w>
+        <h>35px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>18</zIndex>
+        <btnText>Zapisz adres</btnText>
+        <btnAction>none</btnAction>
+        <btnRadius>27</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>400</btnWeight>
+        <btnFontSize>14</btnFontSize>
+        <btnBg>#8bb2e5</btnBg>
+        <btnGradFrom>#8bb2e5</btnGradFrom>
+      </element>
+      <element id="el_1778877027856_325373" type="form">
+        <x>255</x>
+        <y>79</y>
+        <w>205px</w>
+        <h>30px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <formInputRadius>36</formInputRadius>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>32</formInputHeight>
+        <formAutoHeight>1</formAutoHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1778877034579_218734" type="form">
+        <x>19</x>
+        <y>150</y>
+        <w>205px</w>
+        <h>30px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <formInputRadius>36</formInputRadius>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>32</formInputHeight>
+        <formAutoHeight>1</formAutoHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1778877039852_506711" type="form">
+        <x>255</x>
+        <y>150</y>
+        <w>205px</w>
+        <h>30px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <formInputRadius>36</formInputRadius>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>32</formInputHeight>
+        <formAutoHeight>1</formAutoHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1778877042934_733982" type="form">
+        <x>19</x>
+        <y>224</y>
+        <w>205px</w>
+        <h>30px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <formInputRadius>36</formInputRadius>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>32</formInputHeight>
+        <formAutoHeight>1</formAutoHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+    </children>
+  </element>
+  <element id="blk_1778870758598" type="block">
+    <x>324</x>
+    <y>545</y>
+    <w>1023px</w>
+    <h>140px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1778873093442" type="text">
+        <x>15</x>
+        <y>15</y>
+        <w>152px</w>
+        <h>25px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>19</zIndex>
+        <content>Moje adresy</content>
+        <color>rgb(75, 73, 73)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="el_1778870894638" type="text">
+    <x>336</x>
+    <y>174</y>
+    <w>128px</w>
+    <h>40px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <content>Mój profil</content>
+    <color>rgb(75, 51, 113)</color>
+    <fontSize>23px</fontSize>
+    <fontWeight>700</fontWeight>
+    <textAlign>start</textAlign>
+    <lineHeight>27.6px</lineHeight>
+  </element>
+</customPage>

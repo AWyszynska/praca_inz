@@ -1,7 +1,9 @@
 (function () {
-  function isFooter(el) {
-    return !!el && el.dataset && el.dataset.isFooter === "1";
-  }
+function isFooter(el) {
+
+  return !!el && el.dataset && (el.dataset.isFooter === "1" || el.dataset.footer === "1");
+}
+
 
   function normMode(v) {
     v = String(v || "").toLowerCase().trim();
@@ -52,6 +54,12 @@
 
     if (!el.dataset.footerBlur) el.dataset.footerBlur = "0";
     if (!el.dataset.footerOpacity) el.dataset.footerOpacity = "100";
+    if (!el.dataset.footerFlex) el.dataset.footerFlex = "1";
+if (!el.dataset.footerJustify) el.dataset.footerJustify = "space-between";
+if (!el.dataset.footerAlign) el.dataset.footerAlign = "center";
+if (!el.dataset.footerWrap) el.dataset.footerWrap = "1";
+if (!el.dataset.footerGap) el.dataset.footerGap = "12";
+
   }
 
   function footerInner(el){
@@ -116,19 +124,66 @@
     const off = parseInt(el.dataset.footerBottom || "0", 10) || 0;
     const left = parseInt(el.dataset.footerLeft || "0", 10) || 0;
 
+
     el.style.left = left + "px";
     el.style.right = "0px";
     el.style.width = `calc(100% - ${left}px)`;
     el.style.bottom = "";
     el.style.top = "";
     applyFooterVisuals(el);
+    const flexOn = (el.dataset.footerFlex || "1") === "1";
+el.style.display = flexOn ? "flex" : "block";
 
-    if (mode === "fixed") {
-      el.style.position = "fixed";
-      if (dock === "top") el.style.top = off + "px";
-      else el.style.bottom = off + "px";
-      return;
-    }
+if (flexOn) {
+  el.style.justifyContent = el.dataset.footerJustify || "space-between";
+  el.style.alignItems = el.dataset.footerAlign || "center";
+  el.style.flexWrap = (el.dataset.footerWrap || "1") === "1" ? "wrap" : "nowrap";
+
+  const gap = parseInt(el.dataset.footerGap || "12", 10);
+  el.style.gap = (isFinite(gap) ? Math.max(0, gap) : 0) + "px";
+} else {
+  el.style.justifyContent = "";
+  el.style.alignItems = "";
+  el.style.flexWrap = "";
+  el.style.gap = "";
+}
+// --- FIX: flex w stopce nie działa na absolutnych dzieciach ---
+const kids = Array.from(el.children || []).filter(ch =>
+  ch && ch.classList && ch.classList.contains("canvas-element")
+);
+
+if (flexOn) {
+  kids.forEach(ch => {
+    // zapisz pozycję absolutną tylko raz
+    if (ch.dataset._footerPrevLeft == null) ch.dataset._footerPrevLeft = ch.style.left || "";
+    if (ch.dataset._footerPrevTop  == null) ch.dataset._footerPrevTop  = ch.style.top  || "";
+    if (ch.dataset._footerPrevPos  == null) ch.dataset._footerPrevPos  = ch.style.position || "absolute";
+
+    // przełącz na flow layout
+    ch.style.position = "relative";
+    ch.style.left = "";
+    ch.style.top  = "";
+  });
+} else {
+  kids.forEach(ch => {
+    // wróć do absolutnego pozycjonowania
+    ch.style.position = ch.dataset._footerPrevPos || "absolute";
+    ch.style.left = ch.dataset._footerPrevLeft || ch.style.left || "0px";
+    ch.style.top  = ch.dataset._footerPrevTop  || ch.style.top  || "0px";
+  });
+}
+
+if (mode === "fixed") {
+  el.style.position = "fixed";
+  if (dock === "top") {
+    el.style.bottom = "";
+    el.style.top = off + "px";
+  } else {
+    el.style.top = "";
+    el.style.bottom = off + "px";
+  }
+  return;
+}
 
     el.style.position = "absolute";
     const pageH = getPageHeightPx();
@@ -140,6 +195,8 @@
     }
     const topPx = Math.max(0, pageH - h - off);
     el.style.top = topPx + "px";
+
+
   }
 
   function syncFooterInputs(el) {
@@ -148,6 +205,11 @@
     const setVal = (id, v) => { const n = document.getElementById(id); if (n) n.value = String(v ?? ""); };
     const setChk = (id, v) => { const n = document.getElementById(id); if (n) n.checked = !!v; };
     const setDisp = (id, show) => { const n = document.getElementById(id); if (n) n.style.display = show ? "block" : "none"; };
+const flexChk = document.getElementById("footer-flex");
+const justifySel = document.getElementById("footer-justify");
+const alignSel = document.getElementById("footer-align");
+const wrapChk = document.getElementById("footer-wrap");
+const gapInp = document.getElementById("footer-gap");
 
     setVal("footer-dock", el.dataset.footerDock || "bottom");
     setVal("footer-mode", normMode(el.dataset.footerMode || "fixed"));
@@ -187,6 +249,12 @@
     const bgMode = (el.dataset.footerBgMode || "solid") === "gradient";
     setDisp("footer-bg-solid-wrap", !bgMode);
     setDisp("footer-bg-grad-wrap", bgMode);
+    if (flexChk) flexChk.checked = (el.dataset.footerFlex || "1") === "1";
+if (justifySel) justifySel.value = el.dataset.footerJustify || "space-between";
+if (alignSel) alignSel.value = el.dataset.footerAlign || "center";
+if (wrapChk) wrapChk.checked = (el.dataset.footerWrap || "1") === "1";
+if (gapInp) gapInp.value = String(parseInt(el.dataset.footerGap || "12", 10) || 0);
+
   }
 
   function showFooterPanel(show) {
@@ -236,6 +304,12 @@
     div.dataset.footerMode = "fixed";
     div.dataset.footerBottom = "0";
     div.dataset.footerLeft = "0";
+    div.dataset.footerFlex = "1";
+div.dataset.footerJustify = "space-between";
+div.dataset.footerAlign = "center";
+div.dataset.footerWrap = "1";
+div.dataset.footerGap = "12";
+
     div.dataset.footerBgMode = "solid";
     div.dataset.footerBgSolid = "#111827";
     div.dataset.footerGradFrom = "#111827";
@@ -337,6 +411,7 @@
       syncFooterInputs(el);
       applyFooterStyles(el);
       syncFooterTargetButtons(el);
+
     } else {
       showFooterPanel(false);
     }
@@ -378,6 +453,18 @@
     }
     if (id === "footer-border-w") { el.dataset.footerBorderW = String(parseInt(e.target.value || "1",10) || 1); applyFooterStyles(el); }
     if (id === "footer-border-color") { el.dataset.footerBorderColor = e.target.value; applyFooterStyles(el); }
+if (id === "footer-justify") {
+  el.dataset.footerJustify = String(e.target.value || "space-between");
+  applyFooterStyles(el);
+}
+if (id === "footer-align") {
+  el.dataset.footerAlign = String(e.target.value || "center");
+  applyFooterStyles(el);
+}
+if (id === "footer-gap") {
+  el.dataset.footerGap = String(parseInt(e.target.value || "0", 10) || 0);
+  applyFooterStyles(el);
+}
 
     if (id === "footer-shadow-on") { el.dataset.footerShadowOn = e.target.value; syncFooterInputs(el); applyFooterStyles(el); }
     if (id === "footer-shadow-x") { el.dataset.footerShadowX = String(parseInt(e.target.value || "0",10) || 0); applyFooterStyles(el); }
@@ -390,6 +477,22 @@
     if (id === "footer-blur") { el.dataset.footerBlur = String(parseInt(e.target.value || "0",10) || 0); applyFooterStyles(el); }
     if (id === "footer-opacity") { el.dataset.footerOpacity = String(parseInt(e.target.value || "100",10) || 100); applyFooterStyles(el); }
   });
+document.addEventListener("change", (e) => {
+  const el = window.activeElement;
+  if (!isFooter(el)) return;
+
+  const id = e.target.id;
+
+  if (id === "footer-flex") {
+    el.dataset.footerFlex = e.target.checked ? "1" : "0";
+    applyFooterStyles(el);
+  }
+
+  if (id === "footer-wrap") {
+    el.dataset.footerWrap = e.target.checked ? "1" : "0";
+    applyFooterStyles(el);
+  }
+});
 
   function hookTargetChange() {
     if (typeof window.setAsTarget === "function" && !window.setAsTarget.__footerUiHooked) {
@@ -418,7 +521,68 @@
       window.resetToCanvas.__footerUiHooked = true;
     }
     window.__footerTargetHooked = true;
+
+
   }
+function hookGetElementData() {
+  if (typeof window.getElementData !== "function") return;
+  if (window.getElementData.__sgFooterHooked) return;
+
+  const orig = window.getElementData;
+  window.getElementData = function (el) {
+    const data = orig(el);
+
+    if (isFooter(el)) {
+      // core
+      data.isFooter = "1";
+      data.footerDock = el.dataset.footerDock || "bottom";
+      data.footerMode = el.dataset.footerMode || "fixed";
+      data.footerBottom = el.dataset.footerBottom || "0";
+      data.footerLeft = el.dataset.footerLeft || "0";
+
+      // layout
+      data.footerFlex = el.dataset.footerFlex || "1";
+      data.footerJustify = el.dataset.footerJustify || "space-between";
+      data.footerAlign = el.dataset.footerAlign || "center";
+      data.footerWrap = el.dataset.footerWrap || "1";
+      data.footerGap = el.dataset.footerGap || "12";
+
+      // visuals
+      data.footerBgMode = el.dataset.footerBgMode || "solid";
+      data.footerBgSolid = el.dataset.footerBgSolid || "#111827";
+      data.footerGradFrom = el.dataset.footerGradFrom || "#111827";
+      data.footerGradTo = el.dataset.footerGradTo || "#0f172a";
+      data.footerGradAngle = el.dataset.footerGradAngle || "135";
+
+      data.footerTextColor = el.dataset.footerTextColor || "#ffffff";
+      data.footerHeight = el.dataset.footerHeight || "80";
+      data.footerPad = el.dataset.footerPad || "16";
+      data.footerRadius = el.dataset.footerRadius || "0";
+
+      data.footerBorderOn = el.dataset.footerBorderOn || "0";
+      data.footerBorderW = el.dataset.footerBorderW || "1";
+      data.footerBorderColor = el.dataset.footerBorderColor || "#334155";
+
+      data.footerShadowOn = el.dataset.footerShadowOn || "off";
+      data.footerShadowX = el.dataset.footerShadowX || "0";
+      data.footerShadowY = el.dataset.footerShadowY || "12";
+      data.footerShadowBlur = el.dataset.footerShadowBlur || "30";
+      data.footerShadowSpread = el.dataset.footerShadowSpread || "0";
+      data.footerShadowColor = el.dataset.footerShadowColor || "#000000";
+      data.footerShadowAlpha = el.dataset.footerShadowAlpha || "18";
+
+      data.footerBlur = el.dataset.footerBlur || "0";
+      data.footerOpacity = el.dataset.footerOpacity || "100";
+    }
+
+    return data;
+  };
+
+  window.getElementData.__sgFooterHooked = true;
+}
+
+// odpal hook (tak jak w innych modułach)
+hookGetElementData();
 
 
   window.applyFooterStyles = applyFooterStyles;

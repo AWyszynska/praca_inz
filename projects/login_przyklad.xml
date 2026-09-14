@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-09-03 13:19:49</generatedAt>
+  <pageHeight>800</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>solid</mode>
+    <solid>#fffafd</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#3e6375</gradFrom>
+    <gradMid>#3b3c87</gradMid>
+    <gradTo>#4970c5</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <element id="brand_1768944627537" type="brand">
+    <brandCfg>{"mode":"builder","heightPx":155,"autoWidth":"1","widthPx":280,"fontFamily":"Merriweather, Georgia, 'Times New Roman', serif","anchor":"end","textX":560,"textY":102,"gradOn":"0","gradFrom":"#7c3aed","gradTo":"#06b6d4","gradAngle":0,"gradAffectsStroke":"0","strokeOn":"0","strokeW":1,"strokeColor":"#0f172a","strokeMatchFill":"1","shadowOn":"0","shadowBlur":8,"shadowX":0,"shadowY":4,"shadowColor":"rgba(0,0,0,0.25)","lineOn":"1","lineX1":100,"lineX2":560,"lineY":118,"lineW":1.5,"lineColor":"#06b6d4","lineUseTextPaint":"1","lineDash":"0","dotOn":"1","dotR":4.2,"dotX":560,"dotY":118,"dotColor":"#06b6d4","dotUseTextPaint":"1","bgOn":"0","bgColor":"rgba(255,255,255,0)","bgRadius":0,"bgPad":"0px","seg":[{"text":"Spa","size":70,"weight":700,"italic":"1","underline":"0","fill":"#ae5ce6","ownFillOnGradient":"1","letter":0.2,"dx":2},{"text":"Mell","size":72,"weight":500,"italic":"0","underline":"0","fill":"#e65cda","ownFillOnGradient":"0","letter":0,"dx":2},{"text":"","size":42,"weight":900,"italic":"0","underline":"0","fill":"#0f172a","ownFillOnGradient":"0","letter":0,"dx":6,"enabled":"0"}],"rawSvg":""}</brandCfg>
+    <x>454</x>
+    <y>10</y>
+    <w>698px</w>
+    <h>155px</h>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <content>&lt;svg class="brand-logo" viewBox="0 0 720 160" xmlns="http://www.w3.org/2000/svg" aria-label="SpaMell" role="img" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; display: block;"&gt;
+  
+  &lt;g&gt;
+    &lt;text x="560" y="102" text-anchor="end" font-family="Merriweather, Georgia, 'Times New Roman', serif"&gt;
+      &lt;tspan font-size="70" font-weight="700" font-style="italic" letter-spacing="0.2" fill="#ae5ce6"&gt;Spa&lt;/tspan&gt;
+      &lt;tspan font-size="72" font-weight="500" font-style="normal" letter-spacing="0" dx="2" fill="#e65cda"&gt;Mell&lt;/tspan&gt;
+    &lt;/text&gt;
+    &lt;path d="M100 118H560" fill="none" stroke="#ae5ce6" stroke-width="1.5"&gt;&lt;/path&gt;
+    &lt;circle cx="560" cy="118" r="4.2" fill="#ae5ce6" stroke="none"&gt;&lt;/circle&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</content>
+  </element>
+  <element id="blk_1768945526302" type="block">
+    <x>530</x>
+    <y>183</y>
+    <w>400px</w>
+    <h>409px</h>
+    <bg>linear-gradient(135deg, rgb(255, 240, 248), rgb(231, 234, 243)) rgb(255, 240, 248)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.18) 0px 12px 30px 0px</boxShadow>
+    <opacity>0.92</opacity>
+    <backdropFilter>blur(12px)</backdropFilter>
+    <children>
+      <element id="el_1768950822627" type="text">
+        <x>92</x>
+        <y>13</y>
+        <w>214px</w>
+        <h>37px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Logowanie</content>
+        <fontSize>27px</fontSize>
+        <fontFamily>"Palatino Linotype", Palatino, serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1768950891603" type="text">
+        <x>108</x>
+        <y>50</y>
+        <w>184px</w>
+        <h>30px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Witaj ponownie</content>
+        <color>rgb(73, 70, 70)</color>
+        <fontSize>15px</fontSize>
+        <fontFamily>Georgia, serif</fontFamily>
+        <fontStyle>italic</fontStyle>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1768999777529_1488" type="form">
+        <x>41</x>
+        <y>112</y>
+        <w>319px</w>
+        <h>38.8px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <formType>email</formType>
+        <color>rgb(0, 0, 0)</color>
+        <accentColor>#4d5975</accentColor>
+        <formPlaceholder>Wpisz email...</formPlaceholder>
+        <formName>email</formName>
+        <formInputRadius>12</formInputRadius>
+        <formMarkerText>EMAIL</formMarkerText>
+        <formIcon>at</formIcon>
+        <formIconMode>bubble</formIconMode>
+        <formIconBg>#eff6ff</formIconBg>
+        <formIconColor>#1d4ed8</formIconColor>
+        <formInputBorder>#ffffff</formInputBorder>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadX>5</formInputPadX>
+        <formInputPadY>6</formInputPadY>
+        <formPlaceholderColor>#054bad</formPlaceholderColor>
+        <formFocusRing>3</formFocusRing>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1769000039592" type="text">
+        <x>25</x>
+        <y>84</y>
+        <w>83px</w>
+        <h>20px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Adres email</content>
+        <color>rgb(83, 70, 82)</color>
+        <fontSize>15px</fontSize>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1769019483654_256" type="form">
+        <x>41</x>
+        <y>204</y>
+        <w>320px</w>
+        <h>38.8px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <formType>password</formType>
+        <color>rgb(0, 0, 0)</color>
+        <accentColor>#8893a0</accentColor>
+        <formPlaceholder>Wpisz hasło...</formPlaceholder>
+        <formName>password</formName>
+        <passMeter>0</passMeter>
+        <passAutocomplete>new-password</passAutocomplete>
+        <formMarkerText>HASŁO</formMarkerText>
+        <formIcon>lock</formIcon>
+        <formIconMode>bubble</formIconMode>
+        <formIconBg>#f0f6ff</formIconBg>
+        <formInputBg>#f9f7fd</formInputBg>
+        <formInputShadow>none</formInputShadow>
+        <formInputPadY>6</formInputPadY>
+        <formPlaceholderColor>#0c4eac</formPlaceholderColor>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1769019799718" type="text">
+        <x>25</x>
+        <y>172</y>
+        <w>63px</w>
+        <h>32px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Hasło</content>
+        <color>rgb(95, 84, 96)</color>
+        <fontSize>15px</fontSize>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1769022324800" type="text">
+        <x>241</x>
+        <y>256</y>
+        <w>200px</w>
+        <h>27px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Nie pamiętasz hasła ?</content>
+        <fontSize>14px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="form_1769022724415_1533" type="form">
+        <x>23</x>
+        <y>270</y>
+        <w>171px</w>
+        <h>21.6px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <formType>radio</formType>
+        <color>rgb(0, 0, 0)</color>
+        <options>Zapamiętaj mnie</options>
+        <formInputPadY>6</formInputPadY>
+        <formNoBg>1</formNoBg>
+      </element>
+    </children>
+  </element>
+  <element id="img_1769019879661_1040" type="image">
+    <x>1239</x>
+    <y>28</y>
+    <w>216px</w>
+    <h>216px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <content>uploads/img_20260121_192439_6eec2b66.png</content>
+  </element>
+  <element id="el_1769019984261" type="button">
+    <htmlId>sgbtn_el_1769019984261</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>576</x>
+    <y>506</y>
+    <w>309px</w>
+    <h>35px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <btnText>Zaloguj się </btnText>
+    <btnAction>none</btnAction>
+    <btnSize>sm</btnSize>
+    <btnRadius>2</btnRadius>
+    <btnBorderW>0</btnBorderW>
+    <btnWeight>600</btnWeight>
+    <btnFontSize>17</btnFontSize>
+    <btnUpper>1</btnUpper>
+    <btnFontFamily>'Trebuchet MS', Arial, sans-serif</btnFontFamily>
+    <btnFontFamily>'Trebuchet MS', Arial, sans-serif</btnFontFamily>
+    <btnBg>#c9d2de</btnBg>
+    <btnColor>#000000</btnColor>
+    <btnGradient>1</btnGradient>
+    <btnGradFrom>#fafafa</btnGradFrom>
+    <btnGradTo>#cfe0f7</btnGradTo>
+  </element>
+  <element id="footer_1769031947027" type="block">
+    <x>0</x>
+    <y>675</y>
+    <w>calc(100% + 0px)</w>
+    <h>125px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <isFooter>1</isFooter>
+    <footerMode>page</footerMode>
+    <footerBgSolid>#ffffff</footerBgSolid>
+    <footerHeight>125</footerHeight>
+    <children>
+      <element id="el_1769032000258" type="text">
+        <x>0</x>
+        <y>0</y>
+        <w>288px</w>
+        <h>100px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>&lt;div class="footer-title" style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(107, 114, 128); margin-bottom: 6px; font-family: system-ui, -apple-system, &amp;quot;Segoe UI&amp;quot;, Roboto, Inter, &amp;quot;Helvetica Neue&amp;quot;, Arial, &amp;quot;Noto Sans&amp;quot;; text-align: right; white-space-collapse: collapse; background-color: rgb(255, 255, 255);"&gt;Kontakt&lt;/div&gt;&lt;ul class="footer-list" style="list-style: none; margin: 0px; padding: 0px; font-size: 14px; line-height: 1.4; color: rgb(107, 114, 128); font-family: system-ui, -apple-system, &amp;quot;Segoe UI&amp;quot;, Roboto, Inter, &amp;quot;Helvetica Neue&amp;quot;, Arial, &amp;quot;Noto Sans&amp;quot;; text-align: right; white-space-collapse: collapse; background-color: rgb(255, 255, 255);"&gt;&lt;li&gt;&lt;strong&gt;Email:&lt;/strong&gt;&amp;nbsp;&lt;a href="mailto:support@twojadomena.pl" style="color: rgb(17, 24, 39); text-decoration-line: none;"&gt;support@twojadomena.pl&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Telefon:&lt;/strong&gt;&amp;nbsp;&lt;a href="tel:+48123456789" style="color: rgb(17, 24, 39); text-decoration-line: none;"&gt;+48 123 456 789&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Adres:&lt;/strong&gt;&amp;nbsp;ul. Przykładowa 1, 00-000 Warszawa&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Godziny wsparcia:&lt;/strong&gt;&amp;nbsp;Pon–Pt, 9:00–17:00&lt;/li&gt;&lt;/ul&gt;</content>
+        <color>rgb(255, 255, 255)</color>
+        <textAlign>right</textAlign>
+        <lineHeight>normal</lineHeight>
+        <padding>16px</padding>
+      </element>
+    </children>
+  </element>
+  <element id="el_1782155353490_418631" type="button">
+    <htmlId>sgbtn_el_1782155353490_418631</htmlId>
+    <htmlClass>sgbtn-wrap</htmlClass>
+    <x>592</x>
+    <y>550</y>
+    <w>276px</w>
+    <h>28px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>15</zIndex>
+    <btnText>Zarejestruj się</btnText>
+    <btnAction>none</btnAction>
+    <btnSize>sm</btnSize>
+    <btnBorderW>0</btnBorderW>
+    <btnWeight>600</btnWeight>
+    <btnUpper>1</btnUpper>
+    <btnBg>#f0f6ff</btnBg>
+    <btnColor>#000000</btnColor>
+    <btnGradFrom>#98bcec</btnGradFrom>
+    <btnGradTo>#fb93d5</btnGradTo>
+  </element>
+</customPage>

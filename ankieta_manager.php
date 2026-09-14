@@ -115,7 +115,6 @@
     <label style="font-size:11px;">OPCJE (nowa linia lub przecinek)</label>
     <textarea id="form-options-list" style="width:100%; height:72px; font-size:12px;" placeholder="Opcja 1\nOpcja 2\nOpcja 3"></textarea>
     <div style="font-size:11px; color:#64748b; margin-top:6px; line-height:1.3;">
-      Tip: możesz wkleić listę z Excela — każda opcja w osobnej linii.
     </div>
   </div>
 
@@ -171,7 +170,6 @@
   </div>
 
   <div style="font-size:11px; color:#64748b; margin-top:6px; line-height:1.3;">
-    Tip: 👁 i pasek siły działają tylko w <b>final_view</b> (w edytorze wszystko jest zablokowane).
   </div>
 </div>
 
@@ -294,7 +292,8 @@
         <input type="range" id="form-input-pad-y" min="4" max="22" value="9">
       </div>
     </div>
-
+<label style="margin-top:10px;">WYSOKOŚĆ INPUTA (PX)</label>
+<input type="number" id="form-input-height" min="20" max="120" value="38">
     <label style="margin-top:10px;">KOLOR PLACEHOLDER</label>
     <input type="color" id="form-placeholder-color" value="#94a3b8">
 
@@ -309,8 +308,30 @@
       </div>
     </div>
   </div>
+<div style="margin-top:14px; padding:10px; border:1px dashed #cbd5e1; border-radius:12px; background:#f8fafc;">
+  <div style="font-size:11px; font-weight:900; color:#334155; letter-spacing:.3px;">
+    UKŁAD / ODSTĘPY POLA
+  </div>
 
-  <label style="margin-top:10px;">SZEROKOŚĆ ELEMENTU (PX)</label>
-  <input type="number" id="form-width" value="320" min="140" max="1200">
+  <label style="margin-top:8px;">PADDING CAŁEGO POLA (PX)</label>
+  <input type="range" id="form-inner-pad" min="0" max="60" value="6">
+
+  <label style="margin-top:8px;">ODSTĘP ETYKIETA → INPUT (PX)</label>
+  <input type="range" id="form-field-gap" min="0" max="80" value="6">
+
+  <label style="display:flex; gap:8px; align-items:center; margin-top:10px; text-transform:none; font-weight:700; color:#1e293b;">
+    <input type="checkbox" id="form-auto-height">
+    Automatycznie dopasuj wysokość pola
+  </label>
+
+<label style="margin-top:8px;">MINIMALNA WYSOKOŚĆ POLA (PX)</label>
+<input type="number" id="form-min-height" min="0" max="2000" placeholder="puste = brak">
+
+<label style="margin-top:8px;">WYSOKOŚĆ RAMKI / ELEMENTU (PX)</label>
+<input type="number" id="form-height" min="20" max="2000" value="60">
+</div>
+
+<label style="margin-top:10px;">SZEROKOŚĆ ELEMENTU (PX)</label>
+<input type="number" id="form-width" value="320" min="140" max="1200">
 
 </div>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-05-17 15:13:18</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>gradient</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#e5f7ff</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#6b9aff</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>worker_panel.xml</extends>
+  <element id="el_1779022286451" type="text">
+    <x>269</x>
+    <y>141</y>
+    <w>222px</w>
+    <h>33px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <content>Dzień dobry, imie</content>
+    <fontFamily>Georgia, serif</fontFamily>
+    <fontWeight>700</fontWeight>
+    <fontStyle>italic</fontStyle>
+    <textAlign>start</textAlign>
+    <lineHeight>24px</lineHeight>
+  </element>
+  <element id="el_1779022353550_808201" type="text">
+    <x>1035</x>
+    <y>141</y>
+    <w>222px</w>
+    <h>33px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <content>Data</content>
+    <fontFamily>Georgia, serif</fontFamily>
+    <fontWeight>700</fontWeight>
+    <fontStyle>italic</fontStyle>
+    <textAlign>start</textAlign>
+    <lineHeight>24px</lineHeight>
+  </element>
+  <element id="blk_1779022146700" type="block">
+    <x>257</x>
+    <y>174</y>
+    <w>1000px</w>
+    <h>600px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>9</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="blk_1779022476228" type="block">
+        <x>707</x>
+        <y>18</y>
+        <w>260px</w>
+        <h>140px</h>
+        <bg>rgb(251, 250, 208)</bg>
+        <border>1px solid rgb(226, 232, 240)</border>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>9</zIndex>
+        <children>
+          <element id="el_1779022399188" type="text">
+            <x>11</x>
+            <y>42</y>
+            <w>209px</w>
+            <h>82px</h>
+            <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+            <backgroundClip>border-box</backgroundClip>
+            <backgroundOrigin>padding-box</backgroundOrigin>
+            <zIndex>12</zIndex>
+            <content>&lt;span style="font-weight: 700;"&gt;Dzisiejsze wizyty:&lt;/span&gt; 1
+&lt;span style="font-weight: 700;"&gt;Najbliższa wizyta:&lt;/span&gt; 2
+&lt;span style="font-weight: 700;"&gt;Pacjenci dzisiaj:&lt;/span&gt; 3&lt;br&gt;</content>
+            <color>rgb(59, 53, 53)</color>
+            <fontSize>17px</fontSize>
+            <textAlign>start</textAlign>
+            <lineHeight>normal</lineHeight>
+          </element>
+          <element id="el_1779022542157" type="text">
+            <x>28</x>
+            <y>10</y>
+            <w>176px</w>
+            <h>32px</h>
+            <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+            <backgroundClip>border-box</backgroundClip>
+            <backgroundOrigin>padding-box</backgroundOrigin>
+            <zIndex>11</zIndex>
+            <content>Informacje ogólne </content>
+            <fontSize>19px</fontSize>
+            <fontWeight>700</fontWeight>
+            <textAlign>start</textAlign>
+            <lineHeight>normal</lineHeight>
+          </element>
+        </children>
+      </element>
+    </children>
+  </element>
+  <element id="blk_1779022709733" type="block">
+    <x>299</x>
+    <y>198</y>
+    <w>531px</w>
+    <h>139px</h>
+    <bg>padding-box border-box rgb(255, 255, 255)</bg>
+    <border>4px solid rgb(225, 122, 122)</border>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <borderRadius>16px</borderRadius>
+    <children>
+      <element id="el_1779022813717" type="text">
+        <x>11</x>
+        <y>9</y>
+        <w>163px</w>
+        <h>25px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Najbliższe wizyty</content>
+        <color>rgb(50, 42, 42)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="el_1779022811093" type="text">
+    <x>516</x>
+    <y>235</y>
+    <w>220px</w>
+    <h>90px</h>
+    <bg>rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <content>Wpisz tekst...</content>
+    <textAlign>start</textAlign>
+    <lineHeight>24px</lineHeight>
+  </element>
+  <element id="blk_1779022900669" type="block">
+    <x>864</x>
+    <y>383</y>
+    <w>368px</w>
+    <h>343px</h>
+    <bg>rgb(225, 253, 191)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <borderRadius>3px</borderRadius>
+    <children>
+      <element id="form_1779022987453_8193" type="form">
+        <x>9</x>
+        <y>28</y>
+        <w>348px</w>
+        <h>60px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>14</zIndex>
+        <formType>textarea</formType>
+        <formInputPadY>6</formInputPadY>
+        <formInputHeight>35</formInputHeight>
+        <formNoBg>1</formNoBg>
+      </element>
+      <element id="el_1779023051845" type="text">
+        <x>9</x>
+        <y>14</y>
+        <w>182px</w>
+        <h>28px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>15</zIndex>
+        <content>Dodaj notatkę</content>
+        <color>rgb(13, 11, 147)</color>
+        <fontSize>19px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="blk_1779023246661" type="block">
+    <x>1275</x>
+    <y>128</y>
+    <w>217px</w>
+    <h>140px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>16</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1779023261982" type="text">
+        <x>23</x>
+        <y>36</y>
+        <w>170px</w>
+        <h>84px</h>
+        <bg>rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>17</zIndex>
+        <content>&lt;span style="font-weight: 700;"&gt;&lt;span style="font-style: italic;"&gt;&lt;span style="font-size: 17px;"&gt;Mój grafik dzisiaj &lt;div&gt;&lt;/div&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;div&gt;08:00–16:00 &lt;/div&gt;&lt;div&gt;Status: dostępny&lt;/div&gt;</content>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+</customPage>

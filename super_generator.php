@@ -1,11 +1,17 @@
 <?php
 session_start();
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 $projectsDir = __DIR__ . DIRECTORY_SEPARATOR . 'projects';
 if (!is_dir($projectsDir)) {
   mkdir($projectsDir, 0777, true);
 }
-
+$toggleDir = $projectsDir . DIRECTORY_SEPARATOR . '_toggle';
+if (!is_dir($toggleDir)) {
+  mkdir($toggleDir, 0777, true);
+}
 function sg_clean_file_name(string $name): string {
   $name = trim($name);
   $name = basename($name);
@@ -47,7 +53,12 @@ function sg_add_scroll_block_xml(SimpleXMLElement $elNode, string $raw): void {
     $sb->addChild($k, htmlspecialchars($v, ENT_QUOTES | ENT_XML1, 'UTF-8'));
   }
 }
-
+function sg_toggle_file_name(string $pageFile, string $controllerId): string {
+  $pageBase = preg_replace('/\.xml$/i', '', sg_clean_file_name($pageFile));
+  $ctrl = preg_replace('/[^a-zA-Z0-9_-]/', '_', trim($controllerId));
+  if ($ctrl === '') $ctrl = 'unknown';
+  return $pageBase . '__' . $ctrl . '.xml';
+}
 function sg_add_child_compact(SimpleXMLElement $node, string $name, $val, $default = null, bool $escape = false): void {
   $v = (string)($val ?? '');
 
@@ -104,10 +115,28 @@ if ($requested !== '') {
 
 $selected = sg_clean_file_name((string)($_SESSION['sg_xml_file'] ?? 'generated_page.xml'));
 
-$legacyXml = __DIR__ . DIRECTORY_SEPARATOR . 'generated_page.xml';
-$newXmlFile = ($selected === 'generated_page.xml')
-  ? $legacyXml
-  : ($projectsDir . DIRECTORY_SEPARATOR . $selected);
+if (($_GET['action'] ?? '') === 'read_toggle_diff') {
+$file = basename((string)($_GET['toggleFile'] ?? ''));
+$file = preg_replace('/[^a-zA-Z0-9._-]/', '_', $file);
+if ($file === '' || !preg_match('/\.xml$/i', $file)) {
+  http_response_code(400);
+  header('Content-Type: application/json; charset=utf-8');
+  echo json_encode(['ok' => false, 'error' => 'Nieprawidłowa nazwa pliku toggle']);
+  exit;
+}
+  $path = $toggleDir . DIRECTORY_SEPARATOR . $file;
+
+  if (!is_file($path)) {
+    http_response_code(404);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['ok' => false, 'error' => 'Plik toggle nie istnieje']);
+    exit;
+  }
+
+  header('Content-Type: application/xml; charset=utf-8');
+  readfile($path);
+  exit;
+}
 
 $FOOTER_PLUGIN_PART = 'functions';
 require_once __DIR__ . '/footer_plugin.php';
@@ -129,15 +158,135 @@ if (($_GET['action'] ?? '') === 'read_xml') {
   readfile($path);
   exit;
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'save_toggle_diff') {
+  if (empty($_POST['csrf']) || !hash_equals($_SESSION['csrf_token'] ?? '', (string)$_POST['csrf'])) {
+    http_response_code(403);
+    echo "CSRF blocked";
+    exit;
+  }
 
+  $pageFile = sg_clean_file_name((string)($_POST['file'] ?? 'generated_page.xml'));
+  $controllerId = trim((string)($_POST['controllerId'] ?? ''));
+  $beforeRaw = (string)($_POST['before'] ?? '');
+  $afterRaw  = (string)($_POST['after'] ?? '');
+
+  if ($controllerId === '') {
+http_response_code(400);
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode(['ok' => false, 'error' => 'Brak controllerId']);
+exit;
+  }
+
+  $before = json_decode($beforeRaw, true);
+  $after  = json_decode($afterRaw, true);
+
+if (!is_array($before) || !is_array($after)) {
+  http_response_code(400);
+  header('Content-Type: application/json; charset=utf-8');
+  echo json_encode(['ok' => false, 'error' => 'Błędne dane toggle']);
+  exit;
+}
+
+
+  $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><toggleDiff></toggleDiff>');
+  $xml->addAttribute('controller', $controllerId);
+  $xml->addAttribute('page', $pageFile);
+
+  $writeState = function(SimpleXMLElement $parent, array $snap): void {
+    if (array_key_exists('pageHeight', $snap) && $snap['pageHeight'] !== null && $snap['pageHeight'] !== '') {
+      $parent->addChild('pageHeight', (string)$snap['pageHeight']);
+    }
+
+    $elements = (isset($snap['elements']) && is_array($snap['elements'])) ? $snap['elements'] : [];
+
+    foreach ($elements as $id => $state) {
+      if (!is_array($state)) continue;
+
+      $el = $parent->addChild('element');
+      $el->addAttribute('id', (string)$id);
+
+      if (($state['removed'] ?? '') === '1') {
+        $el->addAttribute('removed', '1');
+        continue;
+      }
+
+      if (!empty($state['type']))      $el->addAttribute('type', (string)$state['type']);
+      if (!empty($state['tagName']))   $el->addAttribute('tagName', (string)$state['tagName']);
+$el->addAttribute('parentId', (string)($state['parentId'] ?? ''));
+$el->addAttribute('className', (string)($state['className'] ?? ''));
+$el->addChild('style', htmlspecialchars((string)($state['style'] ?? ''), ENT_QUOTES | ENT_XML1, 'UTF-8'));
+
+      if (!empty($state['attrs']) && is_array($state['attrs'])) {
+        $attrsNode = $el->addChild('attrs');
+        foreach ($state['attrs'] as $name => $value) {
+          $a = $attrsNode->addChild('attr', htmlspecialchars((string)$value, ENT_QUOTES | ENT_XML1, 'UTF-8'));
+          $a->addAttribute('name', (string)$name);
+        }
+      }
+
+$innerHtml = array_key_exists('innerHTML', $state) ? (string)$state['innerHTML'] : '';
+$el->addChild('innerHTML', htmlspecialchars($innerHtml, ENT_QUOTES | ENT_XML1, 'UTF-8'));
+    }
+  };
+
+  $beforeNode = $xml->addChild('before');
+  $afterNode  = $xml->addChild('after');
+
+  $writeState($beforeNode, $before);
+  $writeState($afterNode, $after);
+
+  $fileName = sg_toggle_file_name($pageFile, $controllerId);
+  $path = $toggleDir . DIRECTORY_SEPARATOR . $fileName;
+
+  $dom = new DOMDocument('1.0', 'UTF-8');
+  $dom->preserveWhiteSpace = false;
+  $dom->formatOutput = true;
+  $dom->loadXML($xml->asXML());
+  $xmlOut = $dom->saveXML();
+
+$tmp = $path . '.tmp';
+if (file_put_contents($tmp, $xmlOut, LOCK_EX) === false) {
+  http_response_code(500);
+  header('Content-Type: application/json; charset=utf-8');
+  echo json_encode(['ok' => false, 'error' => 'Nie udało się zapisać toggle tmp']);
+  exit;
+}
+
+if (!@rename($tmp, $path)) {
+  @unlink($tmp);
+  http_response_code(500);
+  header('Content-Type: application/json; charset=utf-8');
+  echo json_encode(['ok' => false, 'error' => 'Nie udało się zapisać toggle']);
+  exit;
+}
+
+  header('Content-Type: application/json; charset=utf-8');
+  echo json_encode([
+    'ok' => true,
+    'file' => $fileName
+  ]);
+  exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'generate_xml') {
+  if (empty($_POST['csrf']) || !hash_equals($_SESSION['csrf_token'] ?? '', (string)$_POST['csrf'])) {
+  http_response_code(403);
+  echo "CSRF blocked";
+  exit;
+}
+  $selected = sg_clean_file_name((string)($_POST['file'] ?? 'generated_page.xml'));
+
+  $legacyXml = __DIR__ . DIRECTORY_SEPARATOR . 'generated_page.xml';
+  $newXmlFile = ($selected === 'generated_page.xml')
+    ? $legacyXml
+    : ($projectsDir . DIRECTORY_SEPARATOR . $selected);
+
     $elements = json_decode($_POST['elements'], true);
     $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><customPage></customPage>');
     $xml->addChild('generatedAt', date('Y-m-d H:i:s'));
     $pageH = (int)($_POST['pageHeight'] ?? 2000);
-if ($pageH < 800) $pageH = 800;
-$xml->addChild('pageHeight', (string)$pageH);
+    if ($pageH < 800) $pageH = 800;
+    $xml->addChild('pageHeight', (string)$pageH);
 $winScroll = [];
 if (!empty($_POST['windowScroll'])) {
   $tmp = json_decode((string)$_POST['windowScroll'], true);
@@ -157,43 +306,65 @@ if ($projBg) {
   sg_add_project_bg_tags($xml, $projBg);
 }
 
-    $rawBase = trim((string)($_POST['baseFile'] ?? ''));
-$baseFile = $rawBase !== '' ? sg_clean_file_name($rawBase) : '';
-if ($baseFile !== '' && $baseFile !== $selected) {
+// WIELE TEŁ / BAZ PLIKU
+$baseFiles = [];
+
+if (!empty($_POST['baseFiles'])) {
+  $tmpBases = json_decode((string)$_POST['baseFiles'], true);
+
+  if (is_array($tmpBases)) {
+    foreach ($tmpBases as $bf) {
+      $bf = sg_clean_file_name((string)$bf);
+
+      if ($bf !== '' && $bf !== $selected && !in_array($bf, $baseFiles, true)) {
+        $baseFiles[] = $bf;
+      }
+    }
+  }
+}
+
+// kompatybilność ze starym jednym tłem
+if (!$baseFiles) {
+  $rawBase = trim((string)($_POST['baseFile'] ?? ''));
+  $baseFile = $rawBase !== '' ? sg_clean_file_name($rawBase) : '';
+
+  if ($baseFile !== '' && $baseFile !== $selected) {
+    $baseFiles[] = $baseFile;
+  }
+}
+
+foreach ($baseFiles as $baseFile) {
   $xml->addChild('extends', $baseFile);
 }
 
 
-    if (!empty($elements)) {
+
 
 function saveRecursive($items, $xmlNode) {
   foreach ($items as $item) {
     if (!is_array($item)) continue;
     if (empty($item['id']) || empty($item['type'])) continue;
-
     $type = (string)$item['type'];
-
     $el = $xmlNode->addChild('element');
     $el->addAttribute('id', (string)$item['id']);
     $el->addAttribute('type', $type);
-
     sg_add_child_compact($el, 'htmlId', $item['htmlId'] ?? '', '', true);
     sg_add_child_compact($el, 'htmlClass', $item['htmlClass'] ?? '', '', true);
-
-sg_add_child_compact($el, 'brandCfg', $item['brandCfg'] ?? '', '', true);
-
+    sg_add_child_compact($el, 'brandCfg', $item['brandCfg'] ?? '', '', true);
     $el->addChild('x', $item['x'] ?? 0);
     $el->addChild('y', $item['y'] ?? 0);
     $el->addChild('w', $item['w'] ?? 'auto');
     $el->addChild('h', $item['h'] ?? 'auto');
+    sg_add_child_compact($el, 'bg', $item['bg'] ?? 'transparent', 'transparent', true);
+sg_add_child_compact($el, 'border', $item['border'] ?? 'none', 'none', true);
+sg_add_child_compact($el, 'backgroundClip', $item['backgroundClip'] ?? '', '', true);
+sg_add_child_compact($el, 'backgroundOrigin', $item['backgroundOrigin'] ?? '', '', true);
 
-    sg_add_child_compact($el, 'bg', $item['bg'] ?? 'transparent', 'transparent');
-    sg_add_child_compact($el, 'border', $item['border'] ?? 'none', 'none');
     sg_add_child_compact($el, 'zIndex', $item['zIndex'] ?? '0', '0');
     sg_add_child_compact($el, 'borderRadius', $item['borderRadius'] ?? '0px', '0px');
-    sg_add_child_compact($el, 'boxShadow', $item['boxShadow'] ?? 'none', 'none');
+    sg_add_child_compact($el, 'boxShadow', $item['boxShadow'] ?? 'none', 'none', true);
     sg_add_child_compact($el, 'opacity', $item['opacity'] ?? '1', '1');
-    sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? 'none', 'none');
+    sg_add_child_compact($el, 'backdropFilter', $item['backdropFilter'] ?? 'none', 'none', true);
     sg_add_child_compact($el, 'sgLockMove', $item['sgLockMove'] ?? '0', '0');
 
 sg_add_child_compact($el, 'sgToggleTarget',    $item['sgToggleTarget'] ?? '', '', true);
@@ -201,7 +372,7 @@ sg_add_child_compact($el, 'sgToggleTrigger',   $item['sgToggleTrigger'] ?? '', '
 sg_add_child_compact($el, 'sgToggleArrow',     $item['sgToggleArrow'] ?? '', '');
 sg_add_child_compact($el, 'sgToggleInitial',   $item['sgToggleInitial'] ?? '', '', true);
 sg_add_child_compact($el, 'sgToggleArrowSide', $item['sgToggleArrowSide'] ?? '', '', true);
-
+sg_add_child_compact($el, 'sgToggleFile', $item['sgToggleFile'] ?? '', '', true);
     switch ($type) {
 
       case 'text':
@@ -243,6 +414,7 @@ sg_add_child_compact($el, 'sgToggleArrowSide', $item['sgToggleArrowSide'] ?? '',
 
       case 'button':
         sg_add_child_compact($el, 'btnText', $item['btnText'] ?? 'Kliknij', 'Kliknij', true);
+        sg_add_child_compact($el, 'btnClickEffect', $item['btnClickEffect'] ?? 'none', 'none');
         sg_add_child_compact($el, 'btnAction', $item['btnAction'] ?? 'link', 'link');
         sg_add_child_compact($el, 'btnUrl', $item['btnUrl'] ?? 'https://', 'https://', true);
         sg_add_child_compact($el, 'btnTarget', $item['btnTarget'] ?? '_blank', '_blank');
@@ -258,10 +430,16 @@ sg_add_child_compact($el, 'sgToggleArrowSide', $item['sgToggleArrowSide'] ?? '',
         sg_add_child_compact($el, 'btnRadius', $item['btnRadius'] ?? '10', '10');
         sg_add_child_compact($el, 'btnBorderW', $item['btnBorderW'] ?? '1', '1');
         sg_add_child_compact($el, 'btnWeight', $item['btnWeight'] ?? '700', '700');
+        sg_add_child_compact($el, 'btnFontSize', $item['btnFontSize'] ?? '13', '13');
         sg_add_child_compact($el, 'btnAlign', $item['btnAlign'] ?? 'center', 'center');
         sg_add_child_compact($el, 'btnUpper', $item['btnUpper'] ?? '0', '0');
         sg_add_child_compact($el, 'btnLetter', $item['btnLetter'] ?? '0', '0');
-
+        sg_add_child_compact($el, 'btnFontFamily', $item['btnFontFamily'] ?? "'Segoe UI', system-ui, -apple-system, sans-serif", "'Segoe UI', system-ui, -apple-system, sans-serif", true);
+sg_add_child_compact($el, 'btnFontStyle', $item['btnFontStyle'] ?? 'normal', 'normal');
+sg_add_child_compact($el, 'btnTextDecoration', $item['btnTextDecoration'] ?? 'none', 'none');
+        sg_add_child_compact($el, 'btnFontFamily', $item['btnFontFamily'] ?? "'Segoe UI', system-ui, -apple-system, sans-serif", "'Segoe UI', system-ui, -apple-system, sans-serif", true);
+        sg_add_child_compact($el, 'btnFontStyle', $item['btnFontStyle'] ?? 'normal', 'normal');
+        sg_add_child_compact($el, 'btnTextDecoration', $item['btnTextDecoration'] ?? 'none', 'none');
         sg_add_child_compact($el, 'btnBg', $item['btnBg'] ?? '#156fe5', '#156fe5');
         sg_add_child_compact($el, 'btnColor', $item['btnColor'] ?? '#ffffff', '#ffffff');
         sg_add_child_compact($el, 'btnBorderColor', $item['btnBorderColor'] ?? '#156fe5', '#156fe5');
@@ -282,10 +460,13 @@ sg_add_child_compact($el, 'sgToggleArrowSide', $item['sgToggleArrowSide'] ?? '',
         sg_add_child_compact($el, 'btnLoading', $item['btnLoading'] ?? '0', '0');
         break;
 case 'brand':
-
+ sg_add_child_compact($el, 'content', $item['content'] ?? '', '', true);
   break;
 
 case 'nav':
+    sg_add_child_compact($el, 'color',      $item['color'] ?? '#ffffff', '#ffffff');
+  sg_add_child_compact($el, 'fontSize',   $item['fontSize'] ?? '20px', '20px');
+  sg_add_child_compact($el, 'fontFamily', $item['fontFamily'] ?? '"Segoe UI", sans-serif', '"Segoe UI", sans-serif');
   sg_add_child_compact($el, 'navItems', $item['navItems'] ?? '', '', true);
 
   sg_add_child_compact($el, 'navOrientation', $item['navOrientation'] ?? 'horizontal', 'horizontal');
@@ -306,6 +487,8 @@ case 'nav':
   sg_add_child_compact($el, 'navActiveMode', $item['navActiveMode'] ?? 'query_page', 'query_page');
   sg_add_child_compact($el, 'navLayout', $item['navLayout'] ?? 'pills', 'pills');
   sg_add_child_compact($el, 'navHookMode', $item['navHookMode'] ?? 'none', 'none');
+sg_add_child_compact($el, 'navFillX', $item['navFillX'] ?? '0', '0');
+sg_add_child_compact($el, 'navFillY', $item['navFillY'] ?? '0', '0');
 
   sg_add_child_compact($el, 'navJustify', $item['navJustify'] ?? 'start', 'start');
   sg_add_child_compact($el, 'navVJustify', $item['navVJustify'] ?? 'top', 'top');
@@ -313,9 +496,16 @@ case 'nav':
   sg_add_child_compact($el, 'navWrap', $item['navWrap'] ?? '0', '0');
   sg_add_child_compact($el, 'navStretch', $item['navStretch'] ?? '0', '0');
   sg_add_child_compact($el, 'navDivider', $item['navDivider'] ?? '0', '0');
+sg_add_child_compact($el, 'navDividerText',  $item['navDividerText']  ?? '|', '|', true);
+sg_add_child_compact($el, 'navDividerSize',  $item['navDividerSize']  ?? '14', '14');
+sg_add_child_compact($el, 'navDividerColor', $item['navDividerColor'] ?? '#ffffff', '#ffffff');
+
+
+
   sg_add_child_compact($el, 'navLinkBorderW', $item['navLinkBorderW'] ?? '1', '1');
   sg_add_child_compact($el, 'navLinkBorderColor', $item['navLinkBorderColor'] ?? '#ffffff', '#ffffff');
-  sg_add_child_compact($el, 'navLinkShadow', $item['navLinkShadow'] ?? '0', '0');
+  sg_add_child_compact($el, 'navLinkShadow', $item['navLinkShadow'] ?? 'soft', 'soft');
+
   sg_add_child_compact($el, 'navName', $item['navName'] ?? '', '', true);
   sg_add_child_compact($el, 'navHtmlId', $item['navHtmlId'] ?? '', '', true);
   sg_add_child_compact($el, 'navHtmlClass', $item['navHtmlClass'] ?? '', '', true);
@@ -416,6 +606,11 @@ if (($item['isFooter'] ?? '0') === '1') {
 
   sg_add_child_compact($el, 'footerBlur', $item['footerBlur'] ?? '0', '0');
   sg_add_child_compact($el, 'footerOpacity', $item['footerOpacity'] ?? '100', '100');
+    sg_add_child_compact($el, 'footerFlex',    $item['footerFlex'] ?? '1', '1');
+  sg_add_child_compact($el, 'footerJustify', $item['footerJustify'] ?? 'space-between', 'space-between');
+  sg_add_child_compact($el, 'footerAlign',   $item['footerAlign'] ?? 'center', 'center');
+  sg_add_child_compact($el, 'footerWrap',    $item['footerWrap'] ?? '1', '1');
+  sg_add_child_compact($el, 'footerGap',     $item['footerGap'] ?? '12', '12');
 
 }
 
@@ -423,6 +618,9 @@ if (($item['isFooter'] ?? '0') === '1') {
   break;
       case 'form':
         sg_add_child_compact($el, 'formType', $item['formType'] ?? 'text', 'text');
+        sg_add_child_compact($el, 'color', $item['color'] ?? 'rgb(15, 23, 42)', 'rgb(15, 23, 42)');
+sg_add_child_compact($el, 'fontSize', $item['fontSize'] ?? '16px', '16px');
+sg_add_child_compact($el, 'fontFamily', $item['fontFamily'] ?? "'Segoe UI', sans-serif", "'Segoe UI', sans-serif", true);
         sg_add_child_compact($el, 'label', $item['label'] ?? '', '', true);
         sg_add_child_compact($el, 'options', $item['options'] ?? '', '', true);
         sg_add_child_compact($el, 'accentColor', $item['accentColor'] ?? '#156fe5', '#156fe5');
@@ -471,6 +669,12 @@ sg_add_child_compact($el, 'formInputShadow',      $item['formInputShadow'] ?? 's
 
 sg_add_child_compact($el, 'formInputPadX',        $item['formInputPadX'] ?? '10', '10');
 sg_add_child_compact($el, 'formInputPadY',        $item['formInputPadY'] ?? '9', '9');
+sg_add_child_compact($el, 'formInputHeight',      $item['formInputHeight'] ?? '38', '38');
+
+sg_add_child_compact($el, 'formInnerPad',         $item['formInnerPad'] ?? '0', '0');
+sg_add_child_compact($el, 'formFieldGap',         $item['formFieldGap'] ?? '2', '2');
+sg_add_child_compact($el, 'formAutoHeight',       $item['formAutoHeight'] ?? '0', '0');
+sg_add_child_compact($el, 'formMinHeight',        $item['formMinHeight'] ?? '60', '60');
 
 sg_add_child_compact($el, 'formPlaceholderColor', $item['formPlaceholderColor'] ?? '#94a3b8', '#94a3b8');
 sg_add_child_compact($el, 'formFocusRing',        $item['formFocusRing'] ?? '4', '4');
@@ -495,7 +699,7 @@ sg_add_child_compact($el, 'formNoBg', $item['formNoBg'] ?? '0', '0');
     }
   }
 }
-
+    if (!empty($elements)) {
 saveRecursive($elements, $xml);
 }
 
@@ -503,7 +707,22 @@ $dom = new DOMDocument('1.0', 'UTF-8');
 $dom->preserveWhiteSpace = false;
 $dom->formatOutput = true;
 $dom->loadXML($xml->asXML());
-$dom->save($newXmlFile);
+$xmlOut = $dom->saveXML();
+
+$tmp = $newXmlFile . '.tmp';
+if (file_put_contents($tmp, $xmlOut, LOCK_EX) === false) {
+  http_response_code(500);
+  echo "Nie udało się zapisać pliku tymczasowego.";
+  exit;
+}
+if (!@rename($tmp, $newXmlFile)) {
+  @unlink($tmp);
+  http_response_code(500);
+  echo "Nie udało się podmienić XML (rename).";
+  exit;
+}
+
+
 
 echo "Plik XML został pomyślnie zaktualizowany!";
 exit;
@@ -528,7 +747,8 @@ exit;
     .panel-header { background: var(--dark); color: white; padding: 10px 15px; cursor: move; border-radius: 8px 8px 0 0; }
     .panel-content { padding: 15px; max-height: 85vh; overflow-y: auto; }
     
-    .canvas-element { position: absolute; padding: 0 !important; margin: 0 !important; cursor: move; outline: none; box-sizing: border-box; }
+.canvas-element { position: absolute; padding: 0; margin: 0; cursor: move; outline: none; box-sizing: border-box; }
+
     .canvas-element div, .canvas-element p { margin: 0 !important; padding: 0 !important; line-height: inherit; }
     .canvas-element.active { outline: 2px dashed #156fe5 !important; }
 
@@ -538,7 +758,7 @@ exit;
   display: block;
   box-sizing: border-box;
   line-height: 1.2;
-
+tab-size: 4;
   min-width: 60px;
   min-height: 28px;
 
@@ -580,6 +800,12 @@ exit;
 .canvas-element div,
 .canvas-element span {
   text-transform: none !important;
+}
+
+.type-text,
+.type-text div,
+.type-text span,
+.type-text p {
   font-weight: normal;
 }
 .text-toolbar{
@@ -669,6 +895,11 @@ exit;
 </button>
 <button id="add-nav-btn" class="btn" style="background:#0f172a;color:white;">DODAJ PANEL NAWIGACYJNY</button>
 <button id="add-calendar-btn" class="btn" style="background:#2563eb;color:white;">DODAJ KALENDARZ</button>
+
+<button id="toggle-guides-btn" class="btn" style="background:#9333ea;color:white;">
+  LINIE DOPASOWANIA: WŁĄCZONE
+</button>
+
 <button id="open-project-bg-btn" class="btn" style="background:#334155;color:white;">
   TŁO PROJEKTU
 </button>
@@ -683,10 +914,12 @@ exit;
 </div>
 
 <div style="margin-top:10px; border-top:1px solid #e5e7eb; padding-top:10px;">
-  <div style="font-size:12px; color:#334155; font-weight:700; margin-bottom:6px;">Tło (baza pliku)</div>
+  <div style="font-size:12px; color:#334155; font-weight:700; margin-bottom:6px;">
+    Tła projektu (bazy plików)
+  </div>
 
   <select id="base-file" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:10px;">
-    <option value="">— brak —</option>
+    <option value="">— wybierz plik tła —</option>
     <?php
 $files = glob($projectsDir . DIRECTORY_SEPARATOR . '*.xml') ?: [];
 sort($files);
@@ -695,16 +928,17 @@ foreach ($files as $p) {
   echo '<option value="'.htmlspecialchars($fn).'">'.htmlspecialchars($fn).'</option>';
 }
 ?>
-
   </select>
 
-  <div style="display:flex; gap:8px; margin-top:8px;">
-    <button id="set-base-btn" type="button">Ustaw tło</button>
-    <button id="clear-base-btn" type="button" class="secondary">Usuń tło</button>
+  <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+    <button id="set-base-btn" type="button">Dodaj tło</button>
+    <button id="clear-base-btn" type="button" class="secondary">Usuń wszystkie</button>
   </div>
 
+  <div id="base-list" style="display:flex; flex-direction:column; gap:6px; margin-top:8px;"></div>
+
   <div id="base-status" style="margin-top:8px; font-size:12px; color:#64748b;">
-    Tło: brak
+    Tła: brak
   </div>
 </div>
 
@@ -733,8 +967,8 @@ foreach ($files as $p) {
   <div id="sg-pal-list" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;"></div>
 
   <div class="sg-pal-help">
-    Tip: kliknij dowolne pole koloru w panelach → potem kliknij próbkę w palecie (wstawi do ostatniego pola).<br>
-    PPM na próbce usuwa pojedynczy kolor.
+    Tip: kliknij na kolor w palenie albo na stronie<br>
+
   </div>
 </div>
 
@@ -776,10 +1010,11 @@ foreach ($files as $p) {
 
             </div>
 
-            <?php include 'button_manager.php'; ?>
+           
             <?php include 'block_manager.php'; ?>
                         <?php include 'footer_manager.php'; ?>
             <?php include 'image_manager.php'; ?>
+             <?php include 'button_manager.php'; ?>
             <?php include 'ankieta_manager.php'; ?>
 <?php include 'brand.php'; ?>
 
@@ -902,11 +1137,27 @@ window.activeContainer = activeContainer;
 var addMode = null;
 var savedRange = null;
 var zCounter = 10;
+function sgIsBaseLayer(el){
+  return !!el && !!el.dataset && (el.dataset.origin === "base" || el.dataset.locked === "1");
+}
+
+function sgEnsureSafeTarget(){//pilnuje, żebym nie dodawała nic do bazy
+  if (sgIsBaseLayer(activeContainer)) {
+    resetToCanvas();
+    return false;
+  }
+  return true;
+}
 
 
-function setAsTarget(id) {
+function setAsTarget(id) {// ustawienie guzik albo ramka jako kontenera
   const el = document.querySelector(`[data-id="${id}"]`);
   if (!el) return;
+
+  if (sgIsBaseLayer(el)) {
+    resetToCanvas();
+    return;
+  }
 
   const t = (el.dataset.type || "");
   if (t !== "block" && t !== "button") return;
@@ -928,7 +1179,27 @@ function setAsTarget(id) {
 
   if (typeof refreshLayers === "function") refreshLayers();
 }
-function resetToCanvas() {
+
+
+function sgIsTextEditTarget(node) {
+  if (!node) return false;
+
+  const el = (node.nodeType === 1) ? node : node.parentElement;
+  if (!el) return false;
+
+  if (el.closest('textarea, input, select')) return true;
+
+  if (el.isContentEditable) return true;
+  if (el.closest('[contenteditable="true"]')) return true;
+
+  const textBox = el.closest('.type-text');
+  if (textBox && textBox.dataset && textBox.dataset.editing === "1") return true;
+
+  return false;
+}
+
+
+function resetToCanvas() {//wróć do trybu pracy na całej stronie (canvas), zaktualizuj napis i odśwież warstwy.
   activeContainer = canvas;
   window.activeContainer = activeContainer;
 
@@ -940,13 +1211,13 @@ function resetToCanvas() {
 
   if (typeof refreshLayers === "function") refreshLayers();
 }
-function toggleTarget(id){
+function toggleTarget(id){//przełącza miejsce pracy: jeśli teraz edytujesz tę ramkę/guzik, to wraca na główny canvas, a jeśli nie - ustawia tę ramkę/guzik jako aktywny kontener.
   const el = document.querySelector(`[data-id="${id}"]`);
   if (!el) return;
   if (window.activeContainer === el) resetToCanvas();
   else setAsTarget(id);
 }
-function sgApplyMoveLockStyles(el){
+function sgApplyMoveLockStyles(el){//dodaje/usuwa tą śmieszną ikonke że element zablokowany
   if (!el) return;
   const locked = (el.dataset.sgLockMove === "1");
   if (locked) {
@@ -956,7 +1227,7 @@ function sgApplyMoveLockStyles(el){
   }
 }
 
-window.sgToggleLockMove = function(id){
+window.sgToggleLockMove = function(id){//włącza/wyłącza blokadę przesuwania danego elementu (zmienia data-sg-lock-move), aktualizuje wygląd i odświeża warstwy.
   const el = document.querySelector(`.canvas-element[data-id="${id}"]`);
   if (!el) return;
   if (el.dataset.locked === "1") return;
@@ -970,7 +1241,7 @@ window.sgToggleLockMove = function(id){
     function refreshLayers() {
         layersList.innerHTML = '';
         
-        function drawLayerTree(container, level = 0) {
+        function drawLayerTree(container, level = 0) {//przechodzi po elementach w danym kontenerze, dodaje je do listy warstw jako <li>, a potem robi to samo dla ich dzieci, tworząc drzewo warstw.
             const elements = Array.from(container.children).filter(el => el.classList.contains('canvas-element'));
             elements.sort((a, b) => parseInt(b.style.zIndex || 0) - parseInt(a.style.zIndex || 0));
 
@@ -987,7 +1258,10 @@ li.className = 'layer-item'
 
                 const previewColor = el.dataset.type === 'text' ? (el.style.color || '#000000') : (el.style.backgroundColor || '#ffffff');
 
-const isTargetable = (el.dataset.type === "block" || el.dataset.type === "button");
+const isTargetable =
+  (el.dataset.type === "block" || el.dataset.type === "button") &&
+  !sgIsBaseLayer(el);
+
 
 const targetLabel =
   (el.dataset.type === "button") ? "OTWÓRZ GUZIK" :
@@ -1015,6 +1289,7 @@ const editBtn = (el.dataset.type === 'text')
   ? `<button class="layer-btn layer-btn-edit" title="Edytuj tekst"
        onclick="event.stopPropagation(); sgStartTextEdit('${el.dataset.id}')">✎</button>`
   : '';
+
 const baseLocked = (el.dataset.locked === "1");
 const moveLocked = (baseLocked || el.dataset.sgLockMove === "1");
 
@@ -1025,6 +1300,15 @@ const lockBtn = `
     ${moveLocked ? '🔒' : '🔓'}
   </button>
 `;
+
+
+const orderUpBtn = baseLocked
+  ? `<button class="layer-btn" disabled title="Zablokowane (baza)">▲</button>`
+  : `<button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', 1)">▲</button>`;
+
+const orderDownBtn = baseLocked
+  ? `<button class="layer-btn" disabled title="Zablokowane (baza)">▼</button>`
+  : `<button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', -1)">▼</button>`;
 
                 li.innerHTML = `
   <div class="layer-top-row" style="display:flex; justify-content:space-between; align-items:center;">
@@ -1044,8 +1328,8 @@ const lockBtn = `
 <div class="layer-controls">
   ${editBtn}
   ${lockBtn}
-  <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', 1)">▲</button>
-  <button class="layer-btn" onclick="event.stopPropagation(); changeOrder('${el.dataset.id}', -1)">▼</button>
+${orderUpBtn}
+${orderDownBtn}
 </div>
 
 
@@ -1057,13 +1341,15 @@ const lockBtn = `
   ${metaTxt ? `<div style="font-size:11px;color:#64748b;margin-top:4px;">${metaTxt}</div>` : ''}
   <div style="font-size:10px;color:#94a3b8;margin-top:2px;">${el.dataset.id}</div>
 `;
-                li.onclick = (e) => selectElement(el);
+                li.onclick = (e) => {
+  if (el.dataset && el.dataset.origin === "base") return;
+  selectElement(el);
+};
                 layersList.appendChild(li);
                 
                 drawLayerTree(el, level + 1); 
             });
         }
-
         drawLayerTree(canvas);
         const allElements = document.querySelectorAll('.canvas-element');
         document.getElementById('layers-empty-msg').style.display = allElements.length === 0 ? 'block' : 'none';
@@ -1101,7 +1387,8 @@ function sg_forceIntoTarget(targetEl) {
 }
 
 function createElement(x, y, type) {
-  const targetEl = activeContainer;
+if (!sgEnsureSafeTarget()) return;
+const targetEl = activeContainer;
 
   if (type === 'button') {
     if (typeof createButtonElement === "function") {
@@ -1195,20 +1482,21 @@ if (type === 'brand') {
     refreshLayers();
 }
 
-
 function nestElement(childId, parentId) {
   const child = document.querySelector(`[data-id="${childId}"]`);
   const parent = document.querySelector(`[data-id="${parentId}"]`);
   if (!child || !parent || child === parent) return;
 
+if (isBaseLocked(child) || child.dataset.locked === "1") return;
+if (isBaseLocked(parent) || parent.dataset.locked === "1") return;
+
+
   const parentType = String(parent.dataset.type || "");
-  const isButton = parentType === "button";
-  if (isButton) {
+  const isContainer = (parentType === "button" || parentType === "block");
+  if (isContainer) {
     const isOpen = (window.activeContainer === parent);
     const alreadyInside = (child.parentElement === parent);
-    if (!isOpen && !alreadyInside) {
-      return;
-    }
+    if (!isOpen && !alreadyInside) return;
   }
 
   const pRect = parent.getBoundingClientRect();
@@ -1222,6 +1510,8 @@ function nestElement(childId, parentId) {
 }
 
     function unNestElement(el) {
+        if (!el) return;
+  if (isBaseLocked(el)) return;
     const rect = el.getBoundingClientRect();
     const canvasRect = canvas.getBoundingClientRect();
     
@@ -1233,6 +1523,11 @@ function nestElement(childId, parentId) {
 
 
 function selectElement(el) {
+    if (!el) return;
+  if (el.dataset && el.dataset.origin === "base") {
+    deselectAll();
+    return;
+  }
   const isBaseLocked = (el?.dataset?.locked === "1");
 
   if (activeElement && activeElement !== el && activeElement.dataset.type === 'text' && activeElement.dataset.editing === "1") {
@@ -1250,31 +1545,20 @@ function selectElement(el) {
   document.getElementById('delete-element-btn').style.display = isBaseLocked ? 'none' : 'block';
 
 
-  if (activeElement && activeElement !== el && activeElement.dataset.type === 'text' && activeElement.dataset.editing === "1") {
-    exitTextEdit(activeElement);
-  }
-
-  if (activeElement) activeElement.classList.remove('active');
-
-  activeElement = el;
-  window.activeElement = el;
-
-  el.classList.add('active');
-
-  hiddenTools.style.display = 'block';
-  document.getElementById('delete-element-btn').style.display = 'block';
-
   const type = el.dataset.type;
-  const isFooter = (el.dataset.isFooter === "1");
+  const isFooter = (el.dataset.isFooter === "1" || el.dataset.footer === "1");
 
   document.getElementById('text-edit-section').style.display   = (type === 'text') ? 'block' : 'none';
   document.getElementById('image-edit-section').style.display  = (type === 'image') ? 'block' : 'none';
   document.getElementById('form-edit-section').style.display   = (type === 'form') ? 'block' : 'none';
   document.getElementById('slider-edit-section').style.display = (type === 'slider') ? 'block' : 'none';
 
-document.getElementById('block-edit-section').style.display  = (type === 'block') ? 'block' : 'none';
-  const footerSec = document.getElementById('footer-edit-section');
-  if (footerSec) footerSec.style.display = (type === 'block' && isFooter) ? 'block' : 'none';
+const blockSec = document.getElementById('block-edit-section');
+if (blockSec) blockSec.style.display = (type === 'block' && !isFooter) ? 'block' : 'none';
+
+const footerSec = document.getElementById('footer-edit-section');
+if (footerSec) footerSec.style.display = (type === 'block' && isFooter) ? 'block' : 'none';
+
   if (type === 'block' && isFooter && typeof syncFooterInputs === "function") {
     syncFooterInputs(el);
   }
@@ -1297,15 +1581,17 @@ document.getElementById('block-edit-section').style.display  = (type === 'block'
     if (typeof syncImageInputs === "function") syncImageInputs(el);
 
   } else if (type === 'block') {
-    if (isFooter) {
-  if (typeof syncFooterInputs === "function") syncFooterInputs(el);
-  if (typeof window.applyFooterStyles === "function") window.applyFooterStyles(el);
-  if (typeof syncBlockInputs === "function") syncBlockInputs(el);
-} else {
-  if (typeof syncBlockInputs === "function") syncBlockInputs(el);
+  if (isFooter) {
+    if (typeof syncFooterInputs === "function") syncFooterInputs(el);
+    if (typeof window.applyFooterStyles === "function") window.applyFooterStyles(el);
+  } else {
+    if (typeof syncBlockInputs === "function") syncBlockInputs(el);
+  }
 }
-
-  } else if (type === 'text') {
+else if (type === 'button') {
+  if (typeof syncButtonInputs === "function") syncButtonInputs(el);
+}
+ else if (type === 'text') {
     document.getElementById('prop-size').value = parseInt(el.style.fontSize) || 20;
     document.getElementById('prop-color').value = rgbToHex(el.style.color);
     if (typeof updateTextToolbarState === "function") updateTextToolbarState();
@@ -1314,7 +1600,8 @@ document.getElementById('block-edit-section').style.display  = (type === 'block'
     if (typeof syncSliderInputs === "function") syncSliderInputs(el);
   }
 
-
+const btnSec = document.getElementById('button-edit-section');
+if (btnSec) btnSec.style.display = (type === 'button') ? 'block' : 'none';
 
   const metaSec = document.getElementById('meta-edit-section');
   if (metaSec) metaSec.style.display = 'block';
@@ -1329,7 +1616,6 @@ document.getElementById('block-edit-section').style.display  = (type === 'block'
 
   refreshLayers();
 }
-
 
     function deselectAll() {
         if (activeElement && activeElement.dataset.type === 'text' && activeElement.dataset.editing === "1") {
@@ -1354,7 +1640,6 @@ document.getElementById('add-brand-btn').onclick = (e) => {
   const cy = r.top  + r.height * 0.20;
   createElement(cx, cy, 'brand');
 };
-
 document.getElementById('open-project-bg-btn').onclick = (e) => {
   e.preventDefault();
   e.stopPropagation();
@@ -1440,10 +1725,9 @@ document.getElementById('add-nav-btn').onclick = (e) => {
   createElement(cx, cy, 'nav');
 };
 
-
-
 canvas.onclick = (e) => { 
-    if (addMode === 'form') {
+if (addMode === 'form') {
+  if (!sgEnsureSafeTarget()) return;
   const targetEl = activeContainer;
   createFormElement(e.clientX, e.clientY);
   sg_forceIntoTarget(targetEl);
@@ -1456,13 +1740,42 @@ canvas.onclick = (e) => {
     } 
 };
 
+
+
+document.addEventListener("mousedown", (e) => {
+  if (sgIsTextEditTarget(e.target)) return;
+
+  const inUi = e.target.closest("#controls-panel, #layers-panel, #sg-base-edit-prompt");
+  if (inUi) return;
+
+  if (!e.target.closest(".canvas-element")) deselectAll();
+}, true);
+
+
+
 document.getElementById('delete-element-btn').onclick = () => {
   if (!activeElement) return;
   if (activeElement.dataset.locked === "1") return; 
   activeElement.remove();
   deselectAll();
 };
+function sgExtractRichTextFromEditable(el){
+  if (!el) return "";
 
+  const clone = el.cloneNode(true);
+
+  clone.querySelectorAll('.sgta-arrow').forEach(n => n.remove());
+  clone.classList.remove('active');
+  clone.removeAttribute('contenteditable');
+
+  clone.querySelectorAll('[contenteditable]').forEach(n => {
+    n.removeAttribute('contenteditable');
+  });
+
+  return clone.innerHTML
+    .replace(/\r\n/g, "\n")
+    .replace(/\u00A0/g, " ");
+}
 
 function getElementData(el) {
 
@@ -1484,16 +1797,20 @@ if (childData && childData.id && childData.type) children.push(childData);
   });
 
   let content = "";
-  if (el.dataset.type === "text") {
-  const clone = el.cloneNode(true);
-  clone.querySelectorAll('.sgta-arrow').forEach(n => n.remove()); 
-  content = clone.innerHTML;
+if (el.dataset.type === "text") {
+  const arrows = el.querySelectorAll('.sgta-arrow');
+  const prev = [];
+  arrows.forEach(a => { prev.push(a.style.display); a.style.display = "none"; });
+
+  content = sgExtractRichTextFromEditable(el);
+
+  arrows.forEach((a, i) => { a.style.display = prev[i] || ""; });
 } else if (el.dataset.type === "image") {
     const img = el.querySelector("img");
     content = img ? (img.getAttribute("src") || "") : "";
   }
  else if (el.dataset.type === "brand") {
-  content = el.innerHTML.replace(/"/g, "'");
+  content = el.innerHTML;
 }
 
   const bg = (el.style.background && el.style.background.trim() !== "")
@@ -1610,7 +1927,7 @@ sgToggleTrigger: el.dataset.sgToggleTrigger || "",
 sgToggleArrow: el.dataset.sgToggleArrow || "",
 sgToggleInitial: el.dataset.sgToggleInitial || "",
 sgToggleArrowSide: el.dataset.sgToggleArrowSide || "",
-
+sgToggleFile: el.dataset.sgToggleFile || "",
     sliderTrack: el.dataset.sliderTrack || "#e2e8f0",
     sliderFill: el.dataset.sliderFill || "#156fe5",
     sliderThumb: el.dataset.sliderThumb || "#156fe5",
@@ -1647,6 +1964,13 @@ footerShadowAlpha: el.dataset.footerShadowAlpha || "18",
 
 footerBlur: el.dataset.footerBlur || "0",
 footerOpacity: el.dataset.footerOpacity || "100",
+footerFlex: el.dataset.footerFlex || "1",
+footerJustify: el.dataset.footerJustify || "space-between",
+footerAlign: el.dataset.footerAlign || "center",
+footerWrap: el.dataset.footerWrap || "1",
+footerGap: el.dataset.footerGap || "12",
+backgroundClip: el.style.backgroundClip || cs.backgroundClip || "",
+backgroundOrigin: el.style.backgroundOrigin || cs.backgroundOrigin || "",
 
 imgFit: el.dataset.imgFit || 'cover',
 imgPosX: el.dataset.imgPosX || '50',
@@ -1657,6 +1981,7 @@ imgFlipX: el.dataset.imgFlipX || '0',
 imgFlipY: el.dataset.imgFlipY || '0',
 btnText: el.dataset.btnText || 'Kliknij',
 btnAction: el.dataset.btnAction || 'link',
+btnClickEffect: el.dataset.btnClickEffect || 'none',
 btnUrl: el.dataset.btnUrl || 'https://',
 btnTarget: el.dataset.btnTarget || '_blank',
 btnScrollTargetId: el.dataset.btnScrollTargetId || '',
@@ -1670,10 +1995,13 @@ btnIconPos: el.dataset.btnIconPos || 'left',
 btnRadius: el.dataset.btnRadius || '10',
 btnBorderW: el.dataset.btnBorderW || '1',
 btnWeight: el.dataset.btnWeight || '700',
+btnFontSize: el.dataset.btnFontSize || '13',
 btnAlign: el.dataset.btnAlign || 'center',
 btnUpper: el.dataset.btnUpper || '0',
 btnLetter: el.dataset.btnLetter || '0',
-
+btnFontFamily: el.dataset.btnFontFamily || "'Segoe UI', system-ui, -apple-system, sans-serif",
+btnFontStyle: el.dataset.btnFontStyle || "normal",
+btnTextDecoration: el.dataset.btnTextDecoration || "none",
 btnBg: el.dataset.btnBg || '#156fe5',
 btnColor: el.dataset.btnColor || '#ffffff',
 btnBorderColor: el.dataset.btnBorderColor || '#156fe5',
@@ -1721,6 +2049,10 @@ navVJustify: el.dataset.navVJustify || "top",
 navWrap: el.dataset.navWrap || "0",
 navStretch: el.dataset.navStretch || "0",
 navDivider: el.dataset.navDivider || "0",
+navDividerText:  el.dataset.navDividerText  || "|",
+navDividerSize:  el.dataset.navDividerSize  || "14",
+navDividerColor: el.dataset.navDividerColor || "#ffffff",
+
 
 navLinkBorderW: el.dataset.navLinkBorderW || "1",
 navLinkBorderColor: el.dataset.navLinkBorderColor || "#ffffff",
@@ -1729,6 +2061,8 @@ navLinkShadow: el.dataset.navLinkShadow || "soft",
 navName: el.dataset.navName || "",
 navHtmlId: el.dataset.navHtmlId || "",
 navHtmlClass: el.dataset.navHtmlClass || "",
+navFillX: el.dataset.navFillX || "0",
+navFillY: el.dataset.navFillY || "0",
 
 navBrandText: el.dataset.navBrandText || "",
 navBrandHref: el.dataset.navBrandHref || "#",
@@ -1773,25 +2107,106 @@ calShowToday: el.dataset.calShowToday || "1",
 }
 
 
-    document.getElementById('generate-btn').onclick = () => {
-        const elementsData = [];
-        
-Array.from(canvas.children).forEach(el => {
-  if (!el.classList.contains('canvas-element')) return;
-  const d = getElementData(el);
-  if (d) elementsData.push(d);
-});
+document.getElementById('generate-btn').onclick = async () => {
+  try {
+    if (window.sgToggle?.flushEditorSnapshots) {
+      window.sgToggle.flushEditorSnapshots();
+    }
 
-        const fd = new FormData();
-        fd.append('action', 'generate_xml');
-        fd.append('elements', JSON.stringify(elementsData));
-        fd.append('baseFile', window.sgBaseFile || '');
-        fd.append('pageHeight', String(SG_PAGE_H));
-        fd.append('windowScroll', document.getElementById('sgWinScrollJson')?.value || '{}');
-fd.append('projectBackground', document.getElementById('sgProjectBgJson')?.value || '{}');
-        fetch('super_generator.php', { method: 'POST', body: fd }).then(res => res.text()).then(data => alert(data));
-    };
+    const csrf = <?= json_encode($_SESSION['csrf_token']) ?>;
+    const pageFile = window.sgCurrentFile || '';
+    const allSceneControllers = Array.from(
+      document.querySelectorAll('.canvas-element[data-sg-toggle-target], .page-element[data-sg-toggle-target]')
+    ).filter((el) => {
+      try {
+        const raw = String(el.dataset.sgToggleTarget || '').trim();
+        if (!raw || raw[0] !== '{') return false;
+        const parsed = JSON.parse(raw);
+        return parsed && parsed.mode === 'scene';
+      } catch {
+        return false;
+      }
+    });
+
+    for (const el of allSceneControllers) {
+      const controllerId = el.dataset.id || '';
+      const beforeRaw = el.dataset.sgToggleBeforeState || '';
+      const afterRaw  = el.dataset.sgToggleAfterState || '';
+
+      if (!controllerId || !beforeRaw || !afterRaw) continue;
+
+      const fdToggle = new FormData();
+      fdToggle.append('action', 'save_toggle_diff');
+      fdToggle.append('csrf', csrf);
+      fdToggle.append('file', pageFile);
+      fdToggle.append('controllerId', controllerId);
+      fdToggle.append('before', beforeRaw);
+      fdToggle.append('after', afterRaw);
+
+      const resToggle = await fetch('super_generator.php', {
+        method: 'POST',
+        body: fdToggle
+      });
+
+      const jsonToggle = await resToggle.json();
+
+      if (!resToggle.ok || !jsonToggle.ok) {
+        throw new Error(jsonToggle?.error || 'Nie udało się zapisać toggle diff');
+      }
+
+      el.dataset.sgToggleFile = jsonToggle.file || '';
+    }
+
+    const fd = new FormData();
+    const mainEls = [];
+
+    Array.from(canvas.children).forEach((el) => {
+      if (!el.classList.contains("canvas-element")) return;
+
+      const d = getElementData(el);
+      if (!d) return;
+
+      const isBase = (el.dataset.origin === "base");
+      const isBaseEdited = (el.dataset.baseEdit === "1");
+
+      if (isBase && !isBaseEdited) return;
+
+      if (isBaseEdited) {
+        d.inheritedFrom = (window.sgBaseFile || "");
+        d.override = "1";
+      }
+
+      mainEls.push(d);
+    });
+
+    fd.append('action', 'generate_xml');
+    fd.append('csrf', csrf);
+    fd.append('file', pageFile);
+    fd.append('elements', JSON.stringify(mainEls));
+    fd.append('baseFile', window.sgBaseFile || '');
+    fd.append(
+  'baseFiles',
+  JSON.stringify(window.sgBaseFiles || (window.sgBaseFile ? [window.sgBaseFile] : []))
+);
+    fd.append('pageHeight', String(SG_PAGE_H));
+    fd.append('windowScroll', document.getElementById('sgWinScrollJson')?.value || '{}');
+    fd.append('projectBackground', document.getElementById('sgProjectBgJson')?.value || '{}');
+
+    const res = await fetch('super_generator.php', {
+      method: 'POST',
+      body: fd
+    });
+
+    const text = await res.text();
+    alert(text);
+  } catch (err) {
+    console.error(err);
+    alert('Błąd zapisu: ' + (err?.message || err));
+  }
+};
+
 window.sgBaseFile = '';
+window.sgBaseFiles = [];
 
 async function fetchXmlFile(fileName){
   const url = `super_generator.php?action=read_xml&file=${encodeURIComponent(fileName)}`;
@@ -1800,27 +2215,148 @@ async function fetchXmlFile(fileName){
   return await res.text();
 }
 
-function parseExtends(xmlText){
+function parseExtendsList(xmlText){
   try{
     const doc = new DOMParser().parseFromString(xmlText, "application/xml");
-    const ext = doc.querySelector("customPage > extends");
-    return ext ? (ext.textContent || "").trim() : "";
-  }catch(e){ return ""; }
+
+    return Array.from(doc.querySelectorAll("customPage > extends"))
+      .map(ext => (ext.textContent || "").trim())
+      .filter(Boolean)
+      .filter((v, i, arr) => arr.indexOf(v) === i);
+  } catch(e) {
+    return [];
+  }
 }
 
+function parseExtends(xmlText){
+  return parseExtendsList(xmlText)[0] || "";
+}
+function renderBaseListStatus(){
+  const list = document.getElementById("base-list");
+  const status = document.getElementById("base-status");
+  const files = window.sgBaseFiles || [];
+
+  if (status) {
+    status.textContent = files.length
+      ? `Tła: ${files.length} (🔒 zablokowane)`
+      : "Tła: brak";
+  }
+
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  if (!files.length) {
+    list.innerHTML = '<div style="font-size:12px;color:#94a3b8;">Nie dodano żadnego tła.</div>';
+    return;
+  }
+
+  files.forEach((file, idx) => {
+    const row = document.createElement("div");
+
+    row.style.cssText =
+      "display:flex;align-items:center;gap:6px;justify-content:space-between;" +
+      "padding:6px 8px;border:1px solid #cbd5e1;border-radius:10px;" +
+      "background:#f8fafc;font-size:12px;";
+
+    row.innerHTML = `
+      <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        ${idx + 1}. ${file}
+      </span>
+      <span style="display:flex;gap:4px;flex-shrink:0;">
+        <button type="button" data-base-up="${idx}" title="Przesuń wyżej">▲</button>
+        <button type="button" data-base-down="${idx}" title="Przesuń niżej">▼</button>
+        <button type="button" data-base-remove="${idx}" title="Usuń">✕</button>
+      </span>
+    `;
+
+    list.appendChild(row);
+  });
+
+  list.querySelectorAll("[data-base-remove]").forEach(btn => {
+    btn.onclick = async (e) => {
+      e.preventDefault();
+
+      const i = parseInt(btn.dataset.baseRemove, 10);
+      window.sgBaseFiles.splice(i, 1);
+
+      await renderAllBases();
+      renderBaseListStatus();
+      refreshLayers();
+    };
+  });
+
+  list.querySelectorAll("[data-base-up]").forEach(btn => {
+    btn.onclick = async (e) => {
+      e.preventDefault();
+
+      const i = parseInt(btn.dataset.baseUp, 10);
+      if (i <= 0) return;
+
+      const tmp = window.sgBaseFiles[i - 1];
+      window.sgBaseFiles[i - 1] = window.sgBaseFiles[i];
+      window.sgBaseFiles[i] = tmp;
+
+      await renderAllBases();
+      renderBaseListStatus();
+      refreshLayers();
+    };
+  });
+
+  list.querySelectorAll("[data-base-down]").forEach(btn => {
+    btn.onclick = async (e) => {
+      e.preventDefault();
+
+      const i = parseInt(btn.dataset.baseDown, 10);
+      if (i >= window.sgBaseFiles.length - 1) return;
+
+      const tmp = window.sgBaseFiles[i + 1];
+      window.sgBaseFiles[i + 1] = window.sgBaseFiles[i];
+      window.sgBaseFiles[i] = tmp;
+
+      await renderAllBases();
+      renderBaseListStatus();
+      refreshLayers();
+    };
+  });
+}
+
+async function renderAllBases(){
+  clearBaseFromCanvas();
+
+  window.sgBaseFile = (window.sgBaseFiles && window.sgBaseFiles[0]) || '';
+
+  for (const base of (window.sgBaseFiles || [])) {
+    const baseXml = await fetchXmlFile(base);
+    renderXmlToCanvas(baseXml, "base");
+  }
+}
 function clearBaseFromCanvas(){
   document.querySelectorAll('.canvas-element[data-origin="base"]').forEach(el => el.remove());
 }
 
 function markLocked(el){
-  el.dataset.locked = "1";
   el.dataset.origin = "base";
-  el.style.pointerEvents = "auto";
-
+  el.dataset.locked = "1";
+  el.dataset.baseEdit = "0";      
+  el.style.pointerEvents = "none";
   el.style.userSelect = "none";
-  el.style.filter = "grayscale(0.05)";  
   el.style.opacity = "0.98";
 }
+function isBaseLocked(el){
+  return !!el && el.dataset.origin === "base" && el.dataset.baseEdit !== "1";
+}
+function unlockBaseEl(el){
+  el.dataset.locked = "0";
+  el.dataset.baseEdit = "1";
+  el.dataset.origin = "child";
+  el.dataset.inheritedFrom = (window.sgBaseFile || "");
+
+  el.style.pointerEvents = "";
+  el.style.opacity = "";
+}
+
+
 
 function afterCreateFromXml(el){
   if (!el) return;
@@ -1849,6 +2385,7 @@ function xmlElToItem(node){
   const get = (tag, def="") => {
     const n = node.querySelector(`:scope > ${tag}`);
     return n ? (n.textContent ?? def) : def;
+
   };
 
   const item = {
@@ -1867,10 +2404,21 @@ function xmlElToItem(node){
     boxShadow: get("boxShadow","none"),
     opacity: get("opacity","1"),
     backdropFilter: get("backdropFilter","none"),
+      backgroundClip: get("backgroundClip",""),
+  backgroundOrigin: get("backgroundOrigin",""),
+
     dataset: {},
     children: []
   };
-  const skip = new Set(["x","y","w","h","content","color","bg","border","zIndex","borderRadius","boxShadow","opacity","backdropFilter"]);
+      if (item.dataset.footer === "1" && !item.dataset.isFooter) {
+  item.dataset.isFooter = "1";
+}
+const skip = new Set([
+  "x","y","w","h","content","color","bg","border","zIndex",
+  "borderRadius","boxShadow","opacity","backdropFilter",
+  "backgroundClip","backgroundOrigin"
+]);
+
 Array.from(node.children).forEach(ch => {
   const k = ch.tagName;
   if (skip.has(k)) return;
@@ -1917,16 +2465,17 @@ Array.from(node.children).forEach(ch => {
 });
 
 
-  const childrenNode = node.querySelector(":scope > children");
-  if (childrenNode) {
-    const childEls = Array.from(childrenNode.querySelectorAll(":scope > element"));
-    item.children = childEls.map(xmlElToItem);
-  }
+const childrenNode = node.querySelector(":scope > children");
+if (childrenNode) {
+  const childEls = Array.from(childrenNode.children).filter(n => n.tagName === "element");
+  item.children = childEls.map(xmlElToItem);
+}
 
   return item;
 }
 
 function spawnItem(item, origin){
+  
   const el = document.createElement("div");
   el.className = "canvas-element type-" + item.type;
   el.dataset.id = item.id;
@@ -1945,6 +2494,9 @@ function spawnItem(item, origin){
   el.style.opacity = item.opacity;
   el.style.backdropFilter = item.backdropFilter;
   el.style.background = item.bg;
+  if (item.backgroundClip)   el.style.backgroundClip = item.backgroundClip;
+if (item.backgroundOrigin) el.style.backgroundOrigin = item.backgroundOrigin;
+
   Object.entries(item.dataset || {}).forEach(([k,v]) => el.dataset[k] = String(v));
   applySavedMeta(el);
   sgApplyMoveLockStyles(el);
@@ -1969,13 +2521,37 @@ el.style.padding = el.dataset.padding || "0px";
 
   } else if (item.type === "image") {
     const src = item.content || "";
+    el.style.overflow = "hidden";
+el.style.display = "block";
     el.innerHTML = `<img src="${src.replaceAll('"','&quot;')}" alt="" style="width:100%;height:100%;object-fit:${el.dataset.imgFit||'cover'};">`;
 } else if (item.type === "brand") {
-  el.innerHTML = "";
+ 
+  el.innerHTML = item.content || "";
   el.contentEditable = "false";
   window.updateBrandVisuals?.(el);
-} else {
+} else if (item.type === "nav") {
+  el.contentEditable = "false";
 
+  if (el.dataset.fontSize)   el.style.fontSize = el.dataset.fontSize;
+  if (el.dataset.fontFamily) el.style.fontFamily = el.dataset.fontFamily;
+  if (el.dataset.color)      el.style.color = el.dataset.color;
+
+} else if (item.type === "form") {
+  el.contentEditable = "false";
+
+  if (el.dataset.fontSize) {
+    el.style.fontSize = el.dataset.fontSize;
+  }
+
+  if (el.dataset.fontFamily) {
+    el.style.fontFamily = el.dataset.fontFamily;
+  }
+
+  if (item.color) {
+    el.style.color = item.color;
+  }
+
+} else {
   el.contentEditable = "false";
 }
 
@@ -2011,25 +2587,26 @@ async function loadWithBase(childFile){
   const ph = parsePageHeight(childXml);
 if (ph) applyPageHeight(ph);
 
-  const baseFile = parseExtends(childXml);
+const baseFiles = parseExtendsList(childXml);
 
-  if (baseFile){
-    window.sgBaseFile = baseFile;
-    const baseXml = await fetchXmlFile(baseFile);
-    renderXmlToCanvas(baseXml, "base");
-    document.getElementById("base-status").textContent = `Tło: ${baseFile} ( zablokowane)`;
-    document.getElementById("base-file").value = baseFile; 
-  } else {
-    window.sgBaseFile = '';
-    document.getElementById("base-status").textContent = `Tło: brak`;
-    document.getElementById("base-file").value = "";
-  }
+window.sgBaseFiles = baseFiles;
+window.sgBaseFile = baseFiles[0] || '';
+document.getElementById("base-file").value = "";
 
-  renderXmlToCanvas(childXml, "child");
+if (baseFiles.length) {
+  await renderAllBases();
+}
+
+renderBaseListStatus();
+
+renderXmlToCanvas(childXml, "child");
   let winCfg = parseWindowScroll(childXml);
-if (!winCfg && baseFile) {
-  const baseXml2 = await fetchXmlFile(baseFile);
-  winCfg = parseWindowScroll(baseXml2);
+if (!winCfg && baseFiles.length) {
+  for (const bf of [...baseFiles].reverse()) {
+    const baseXml2 = await fetchXmlFile(bf);
+    winCfg = parseWindowScroll(baseXml2);
+    if (winCfg) break;
+  }
 }
 
 if (!winCfg) {
@@ -2052,9 +2629,12 @@ if (window.sgWinScrollLoad) window.sgWinScrollLoad(winCfg);
 else if (window.sg_sideblock_window) window.sg_sideblock_window(winCfg);
 let bgCfg = window.sgProjectBgParse?.(childXml);
 
-if (!bgCfg && baseFile) {
-  const baseXml3 = await fetchXmlFile(baseFile);
-  bgCfg = window.sgProjectBgParse?.(baseXml3);
+if (!bgCfg && baseFiles.length) {
+  for (const bf of [...baseFiles].reverse()) {
+    const baseXml3 = await fetchXmlFile(bf);
+    bgCfg = window.sgProjectBgParse?.(baseXml3);
+    if (bgCfg) break;
+  }
 }
 
 if (!bgCfg) bgCfg = window.sgProjectBgDefault?.();
@@ -2071,40 +2651,65 @@ window.sgProjectBgApply?.(bgCfg);
 
   refreshLayers();
 }
-
 document.getElementById('set-base-btn').onclick = async (e) => {
   e.preventDefault();
+
   const base = document.getElementById('base-file').value.trim();
+  const editedFile = window.sgCurrentFile || currentFile || '';
+
   if (!base) {
-    alert("Wybierz plik bazy.");
+    alert("Wybierz plik tła.");
     return;
   }
-  clearBaseFromCanvas();
-  window.sgBaseFile = base;
 
-const baseXml = await fetchXmlFile(base);
-renderXmlToCanvas(baseXml, "base");
+  if (!window.sgBaseFiles) window.sgBaseFiles = [];
 
-  document.getElementById("base-status").textContent = `Tło: ${base} (🔒 zablokowane)`;
+  if (base === editedFile) {
+    alert("Nie możesz dodać aktualnie edytowanego pliku jako tła dla samego siebie.");
+    return;
+  }
+
+  if (window.sgBaseFiles.includes(base)) {
+    alert("To tło jest już dodane.");
+    return;
+  }
+
+  window.sgBaseFiles.push(base);
+
+  await renderAllBases();
+  renderBaseListStatus();
   refreshLayers();
+
+  document.getElementById('generate-btn').click();
 };
 
-document.getElementById('clear-base-btn').onclick = (e) => {
+document.getElementById('clear-base-btn').onclick = async (e) => {
   e.preventDefault();
+
   clearBaseFromCanvas();
+
+  window.sgBaseFiles = [];
   window.sgBaseFile = '';
-  document.getElementById("base-status").textContent = "Tło: brak";
+
+  renderBaseListStatus();
   refreshLayers();
+
+  document.getElementById('generate-btn').click();
 };
+
 
 function changeOrder(id, dir) {
   const el = document.querySelector(`[data-id="${id}"]`);
   if (!el) return;
 
+ 
+  if (isBaseLocked(el)) return;
+
   const isContainer = (x) =>
     x && x !== canvas &&
     x.classList?.contains("canvas-element") &&
-    (x.dataset.type === "block" || x.dataset.type === "button");
+    (x.dataset.type === "block" || x.dataset.type === "button") &&
+    !sgIsBaseLayer(x);
 
   if (dir === 1) {
     if (isContainer(activeContainer) && activeContainer !== el) {
@@ -2112,6 +2717,7 @@ function changeOrder(id, dir) {
       refreshLayers();
       return;
     }
+
     const siblings = Array.from(el.parentElement.children).filter(s =>
       s !== el &&
       s.classList.contains("canvas-element") &&
@@ -2133,6 +2739,7 @@ function changeOrder(id, dir) {
 
   refreshLayers();
 }
+
 
 
 
@@ -2185,11 +2792,11 @@ function enterTextEdit(el) {
 }
 
 function exitTextEdit(el) {
-    if (!el || el.dataset.type !== 'text') return;
-    el.dataset.editing = "0";
-    el.contentEditable = "false";
-    el.style.cursor = "move";
-    el.style.userSelect = "none";  
+  if (!el || el.dataset.type !== 'text') return;
+  el.dataset.editing = "0";
+  el.contentEditable = "false";
+  el.style.cursor = "move";
+  el.style.userSelect = ""; 
 }
 
 
@@ -2243,9 +2850,14 @@ if (el.dataset.sgLockMove === "1") {
       el.style.pointerEvents = "auto";
 
       if (moved) {
+        const canDropInto = (frame) => {
+          if (!frame || frame === canvas) return false;
+          return (window.activeContainer === frame) || (el.parentElement === frame);
+        };
+
         const hit = document.elementFromPoint(mu.clientX, mu.clientY);
         const targetFrame = hit ? hit.closest(".type-block, .type-button") : null;
-        if (targetFrame && targetFrame !== el) {
+        if (targetFrame && targetFrame !== el && canDropInto(targetFrame)) {
           if (el.parentElement !== targetFrame) {
             nestElement(el.dataset.id, targetFrame.dataset.id);
           }
@@ -2257,17 +2869,17 @@ if (el.dataset.sgLockMove === "1") {
               mu.clientY >= r.top  && mu.clientY <= r.bottom;
 
             if (inside) {
-              if (el.parentElement !== startParentFrame) {
+              if (canDropInto(startParentFrame) && el.parentElement !== startParentFrame) {
                 nestElement(el.dataset.id, startParentFrame.dataset.id);
               }
             } else {
               if (el.parentElement !== canvas) unNestElement(el);
             }
           } else {
-            if (el.parentElement !== canvas) unNestElement(el);
           }
         }
       }
+
 
 
       if (type === "block") window.sg_sidescroll_blok?.(el);
@@ -2281,7 +2893,7 @@ if (el.dataset.sgLockMove === "1") {
 
 var currentFile = <?= json_encode($selected) ?>;
 window.sgCurrentFile = currentFile;
-
+window.SG_CSRF = <?= json_encode($_SESSION['csrf_token']) ?>;
 window.addEventListener('load', () => loadWithBase(currentFile));
 let SG_PAGE_H = 2000;
 
@@ -2293,7 +2905,54 @@ function applyPageHeight(v){
   if (r) r.value = SG_PAGE_H;
   if (n) n.value = SG_PAGE_H;
 }
+window.applyPageHeight = applyPageHeight;
+function sgEnsurePageFitsElement(el, extraSpace = 80) {
+  if (!el) return;
 
+  const canvasRect = canvas.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+
+  const bottomInsideCanvas = (elRect.bottom - canvasRect.top) + extraSpace;
+
+  if (bottomInsideCanvas > SG_PAGE_H) {
+    applyPageHeight(Math.ceil(bottomInsideCanvas));
+  }
+}
+
+window.sgEnsurePageFitsElement = sgEnsurePageFitsElement;
+function sgResizeBlockToVisibleChildren(blockEl, extraPadding = 20) {
+  if (!blockEl) return;
+  if (!blockEl.classList.contains('type-block')) return;
+
+  let maxBottom = 0;
+
+  const children = Array.from(blockEl.children).filter((child) => {
+    return child.classList && child.classList.contains('canvas-element');
+  });
+
+  children.forEach((child) => {
+    const hidden =
+  child.style.display === 'none' ||
+  child.classList.contains('sg-toggle-hidden');
+    if (hidden) return;
+
+    const top = parseInt(child.style.top || '0', 10) || 0;
+    const height = child.offsetHeight || parseInt(child.style.height || '0', 10) || 0;
+    const bottom = top + height;
+
+    if (bottom > maxBottom) maxBottom = bottom;
+  });
+
+  const nextHeight = Math.max(40, maxBottom + extraPadding);
+  blockEl.style.height = nextHeight + 'px';
+
+  if (typeof refreshLayers === 'function') refreshLayers();
+  if (typeof window.sgEnsurePageFitsElement === 'function') {
+    window.sgEnsurePageFitsElement(blockEl, 120);
+  }
+}
+
+window.sgResizeBlockToVisibleChildren = sgResizeBlockToVisibleChildren;
 document.getElementById('page-height')?.addEventListener('input', (e)=> applyPageHeight(e.target.value));
 document.getElementById('page-height-num')?.addEventListener('input', (e)=> applyPageHeight(e.target.value));
 applyPageHeight(2000);
@@ -2430,48 +3089,68 @@ document.addEventListener('mousedown', (e) => {
 document.addEventListener('keydown', (e) => {
   const el = activeElement;
   if (!el) return;
-if (el.dataset.locked === "1" || el.dataset.sgLockMove === "1") return;
+  if (el.dataset.locked === "1" || el.dataset.sgLockMove === "1") return;
 
   const focused = document.activeElement;
   const tag = focused && focused.tagName ? focused.tagName.toUpperCase() : '';
   if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) return;
   if (focused && focused.isContentEditable) return;
 
-  const isText = el.dataset.type === 'text';
-  const isEditing = isText && el.dataset.editing === '1';
+  const k = e.key;
+  if (k !== 'ArrowLeft' && k !== 'ArrowRight' && k !== 'ArrowUp' && k !== 'ArrowDown') return;
 
-  if (isEditing) {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      exitTextEdit(el);
-      selectElement(el);
-    }
-    return;
-  }
-
-  if (isText && e.key === 'Enter') {
-    e.preventDefault();
-    enterTextEdit(el);
-    return;
-  }
-
-  const step = e.shiftKey ? 10 : 1;
-  let dx = 0, dy = 0;
-
-  if (e.key === 'ArrowLeft') dx = -step;
-  else if (e.key === 'ArrowRight') dx = step;
-  else if (e.key === 'ArrowUp') dy = -step;
-  else if (e.key === 'ArrowDown') dy = step;
-  else return;
+  const step = e.altKey ? 1 : (e.shiftKey ? 20 : 5);
 
   e.preventDefault();
+  e.stopPropagation();
+
+  let dx = 0, dy = 0;
+  if (k === 'ArrowLeft') dx = -step;
+  if (k === 'ArrowRight') dx = step;
+  if (k === 'ArrowUp') dy = -step;
+  if (k === 'ArrowDown') dy = step;
 
   const curLeft = parseInt(el.style.left || '0', 10) || 0;
   const curTop = parseInt(el.style.top || '0', 10) || 0;
 
   el.style.left = (curLeft + dx) + 'px';
-  el.style.top = (curTop + dy) + 'px';
-});
+  el.style.top  = (curTop + dy) + 'px';
+
+  if (el.dataset.type === "block") window.sg_sidescroll_blok?.(el);
+}, true);
+document.addEventListener('keydown', (e) => {
+  const el = activeElement;
+  if (!el) return;
+
+  if (el.dataset.type !== 'text' || el.dataset.editing !== '1') return;
+
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    e.stopPropagation();
+
+    insertAtCaret("\t");
+
+    return;
+  }
+}, true);
+
+function insertAtCaret(text) {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+
+  const range = sel.getRangeAt(0);
+  range.deleteContents();
+
+  const node = document.createTextNode(text);
+  range.insertNode(node);
+
+  // ustaw kursor za wstawionym tekstem
+  range.setStartAfter(node);
+  range.setEndAfter(node);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
 
 window.sgTextBoxResize = function(dx, dy){
   const el = activeElement;

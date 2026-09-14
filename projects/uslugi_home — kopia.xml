@@ -1,0 +1,852 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-04-12 20:05:21</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>pulpit_pacjent.xml</extends>
+  <element id="el_1773084337622" type="text">
+    <x>657</x>
+    <y>164</y>
+    <w>208px</w>
+    <h>49px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <content>Nasze usługi</content>
+    <color>rgb(86, 126, 179)</color>
+    <fontSize>33px</fontSize>
+    <fontWeight>700</fontWeight>
+    <textAlign>center</textAlign>
+    <lineHeight>39.6px</lineHeight>
+  </element>
+  <element id="el_1773084410310" type="text">
+    <x>331</x>
+    <y>213</y>
+    <w>860px</w>
+    <h>34px</h>
+    <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+    <backgroundClip>border-box</backgroundClip>
+    <backgroundOrigin>padding-box</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <content>Sprawdź, jakie świadczenia oferuje klinika VetMell. Wybierz usługę, aby zobaczyć szczegóły.</content>
+    <color>rgb(62, 56, 56)</color>
+    <fontSize>16px</fontSize>
+    <textAlign>center</textAlign>
+    <lineHeight>19.2px</lineHeight>
+  </element>
+  <element id="blk_1775925787067" type="block">
+    <x>204</x>
+    <y>304</y>
+    <w>350px</w>
+    <h>215px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1775998165078" type="text">
+        <x>14</x>
+        <y>15</y>
+        <w>287px</w>
+        <h>51px</h>
+        <bg>padding-box border-box transparent</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Badanie krwi - morfologia i biochemia</content>
+        <color>rgb(40, 80, 123)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <letterSpacing>0px</letterSpacing>
+      </element>
+      <element id="el_1775998274951" type="text">
+        <x>14</x>
+        <y>67</y>
+        <w>68px</w>
+        <h>19px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>190,00 zł</content>
+        <color>rgb(31, 110, 183)</color>
+        <fontSize>16px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1775998342223" type="text">
+        <x>82</x>
+        <y>67</y>
+        <w>111px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>● ok. 20 min</content>
+        <color>rgb(145, 145, 145)</color>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1775998423278" type="text">
+        <x>14</x>
+        <y>98</y>
+        <w>336px</w>
+        <h>83px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Pobranie krwi oraz podstawowy panel laboratoryjny (morfologia + biochemia).</content>
+        <color>rgb(56, 56, 56)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1775998478215" type="button">
+        <htmlId>sgbtn_el_1775998478215</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>23</x>
+        <y>165</y>
+        <w>172px</w>
+        <h>32px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <btnText>Dowiedz się więcej </btnText>
+        <btnAction>none</btnAction>
+        <btnPreset>outline</btnPreset>
+        <btnSize>lg</btnSize>
+        <btnRadius>15</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>400</btnWeight>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#6294d5</btnGradFrom>
+        <btnGradTo>#a6d9f2</btnGradTo>
+        <btnGradAngle>101</btnGradAngle>
+      </element>
+    </children>
+  </element>
+  <element id="el_1776015841556_629542" type="block">
+    <x>586</x>
+    <y>304</y>
+    <w>350px</w>
+    <h>215px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1776015841556_354309" type="text">
+        <x>14</x>
+        <y>15</y>
+        <w>277px</w>
+        <h>52px</h>
+        <bg>padding-box border-box transparent</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Badanie USG jamy brzusznej</content>
+        <color>rgb(40, 80, 123)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <letterSpacing>0px</letterSpacing>
+      </element>
+      <element id="el_1776015841556_479808" type="text">
+        <x>14</x>
+        <y>39</y>
+        <w>68px</w>
+        <h>19px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>220,00 zł</content>
+        <color>rgb(31, 110, 183)</color>
+        <fontSize>16px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776015841556_80241" type="text">
+        <x>84</x>
+        <y>39</y>
+        <w>111px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>● ok. 30 min</content>
+        <color>rgb(145, 145, 145)</color>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776015841556_992563" type="text">
+        <x>14</x>
+        <y>82</y>
+        <w>336px</w>
+        <h>83px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Badanie ultrasonograficzne narządów jamy brzusznej z opisem.</content>
+        <color>rgb(56, 56, 56)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776015841556_829429" type="button">
+        <htmlId>sgbtn_el_1776015841556_829429</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>23</x>
+        <y>165</y>
+        <w>172px</w>
+        <h>32px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <btnText>Dowiedz się więcej </btnText>
+        <btnAction>none</btnAction>
+        <btnPreset>outline</btnPreset>
+        <btnSize>lg</btnSize>
+        <btnRadius>15</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>400</btnWeight>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#6294d5</btnGradFrom>
+        <btnGradTo>#a6d9f2</btnGradTo>
+        <btnGradAngle>101</btnGradAngle>
+      </element>
+    </children>
+  </element>
+  <element id="el_1776015849907_381530" type="block">
+    <x>966</x>
+    <y>304</y>
+    <w>350px</w>
+    <h>215px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1776015849907_924301" type="text">
+        <x>14</x>
+        <y>15</y>
+        <w>277px</w>
+        <h>52px</h>
+        <bg>padding-box border-box transparent</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Czipowanie i paszport</content>
+        <color>rgb(40, 80, 123)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <letterSpacing>0px</letterSpacing>
+      </element>
+      <element id="el_1776015849907_902510" type="text">
+        <x>14</x>
+        <y>41</y>
+        <w>68px</w>
+        <h>19px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>180,00 zł
+</content>
+        <color>rgb(31, 110, 183)</color>
+        <fontSize>16px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776015849907_688863" type="text">
+        <x>84</x>
+        <y>41</y>
+        <w>111px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>● ok. 25 min</content>
+        <color>rgb(145, 145, 145)</color>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776015849907_129252" type="text">
+        <x>14</x>
+        <y>82</y>
+        <w>336px</w>
+        <h>83px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Założenie mikroczipu, rejestracja i wystawienie paszportu zwierzęcia towarzyszącego.</content>
+        <color>rgb(56, 56, 56)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776015849907_54298" type="button">
+        <htmlId>sgbtn_el_1776015849907_54298</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>23</x>
+        <y>165</y>
+        <w>172px</w>
+        <h>32px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <btnText>Dowiedz się więcej </btnText>
+        <btnAction>none</btnAction>
+        <btnPreset>outline</btnPreset>
+        <btnSize>lg</btnSize>
+        <btnRadius>15</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>400</btnWeight>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#6294d5</btnGradFrom>
+        <btnGradTo>#a6d9f2</btnGradTo>
+        <btnGradAngle>101</btnGradAngle>
+      </element>
+    </children>
+  </element>
+  <element id="el_1776016464128_166279" type="block">
+    <x>204</x>
+    <y>556</y>
+    <w>350px</w>
+    <h>215px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1776016464128_694925" type="text">
+        <x>14</x>
+        <y>15</y>
+        <w>260px</w>
+        <h>28px</h>
+        <bg>padding-box border-box transparent</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Konsultacja internistyczna</content>
+        <color>rgb(40, 80, 123)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <letterSpacing>0px</letterSpacing>
+      </element>
+      <element id="el_1776016464128_980557" type="text">
+        <x>14</x>
+        <y>43</y>
+        <w>68px</w>
+        <h>19px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>150,00 zł</content>
+        <color>rgb(31, 110, 183)</color>
+        <fontSize>16px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016464128_257853" type="text">
+        <x>82</x>
+        <y>43</y>
+        <w>111px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>● ok. 30 min</content>
+        <color>rgb(145, 145, 145)</color>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016464128_737451" type="text">
+        <x>14</x>
+        <y>82</y>
+        <w>336px</w>
+        <h>83px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Pierwsza wizyta, zebranie wywiadu, badanie kliniczne pacjenta.</content>
+        <color>rgb(56, 56, 56)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016464128_266750" type="button">
+        <htmlId>sgbtn_el_1776016464128_266750</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>23</x>
+        <y>165</y>
+        <w>172px</w>
+        <h>32px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <btnText>Dowiedz się więcej </btnText>
+        <btnAction>none</btnAction>
+        <btnPreset>outline</btnPreset>
+        <btnSize>lg</btnSize>
+        <btnRadius>15</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>400</btnWeight>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#6294d5</btnGradFrom>
+        <btnGradTo>#a6d9f2</btnGradTo>
+        <btnGradAngle>101</btnGradAngle>
+      </element>
+    </children>
+  </element>
+  <element id="el_1776016473137_633355" type="block">
+    <x>586</x>
+    <y>556</y>
+    <w>350px</w>
+    <h>215px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1776016473137_717851" type="text">
+        <x>14</x>
+        <y>15</y>
+        <w>269px</w>
+        <h>29px</h>
+        <bg>padding-box border-box transparent</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Konsultacja kontrolna</content>
+        <color>rgb(40, 80, 123)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <letterSpacing>0px</letterSpacing>
+      </element>
+      <element id="el_1776016473137_797292" type="text">
+        <x>14</x>
+        <y>39</y>
+        <w>68px</w>
+        <h>19px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>100,00 zł</content>
+        <color>rgb(31, 110, 183)</color>
+        <fontSize>16px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016473137_266355" type="text">
+        <x>82</x>
+        <y>39</y>
+        <w>111px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>● ok. 20 min</content>
+        <color>rgb(145, 145, 145)</color>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016473137_493826" type="text">
+        <x>14</x>
+        <y>82</y>
+        <w>336px</w>
+        <h>83px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Kontrola po wcześniejszym leczeniu lub zabiegu, omówienie wyników.</content>
+        <color>rgb(56, 56, 56)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016473137_824927" type="button">
+        <htmlId>sgbtn_el_1776016473137_824927</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>23</x>
+        <y>165</y>
+        <w>172px</w>
+        <h>32px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <btnText>Dowiedz się więcej </btnText>
+        <btnAction>none</btnAction>
+        <btnPreset>outline</btnPreset>
+        <btnSize>lg</btnSize>
+        <btnRadius>15</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>400</btnWeight>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#6294d5</btnGradFrom>
+        <btnGradTo>#a6d9f2</btnGradTo>
+        <btnGradAngle>101</btnGradAngle>
+      </element>
+    </children>
+  </element>
+  <element id="el_1776016496980_487295" type="block">
+    <x>966</x>
+    <y>556</y>
+    <w>350px</w>
+    <h>215px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>14</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1776016496980_479795" type="text">
+        <x>14</x>
+        <y>15</y>
+        <w>276px</w>
+        <h>24px</h>
+        <bg>padding-box border-box transparent</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>RTG z opisem</content>
+        <color>rgb(40, 80, 123)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <letterSpacing>0px</letterSpacing>
+      </element>
+      <element id="el_1776016496980_932331" type="text">
+        <x>14</x>
+        <y>39</y>
+        <w>75px</w>
+        <h>24px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>200,00 zł</content>
+        <color>rgb(31, 110, 183)</color>
+        <fontSize>16px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016496980_686164" type="text">
+        <x>97</x>
+        <y>39</y>
+        <w>111px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>● ok. 30 min</content>
+        <color>rgb(145, 145, 145)</color>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016496980_18072" type="text">
+        <x>14</x>
+        <y>82</y>
+        <w>336px</w>
+        <h>83px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Badanie rentgenowskie w 1–2 projekcjach wraz z opisem lekarza.</content>
+        <color>rgb(56, 56, 56)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016496980_932594" type="button">
+        <htmlId>sgbtn_el_1776016496980_932594</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>23</x>
+        <y>165</y>
+        <w>172px</w>
+        <h>32px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <btnText>Dowiedz się więcej </btnText>
+        <btnAction>none</btnAction>
+        <btnPreset>outline</btnPreset>
+        <btnSize>lg</btnSize>
+        <btnRadius>15</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>400</btnWeight>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#6294d5</btnGradFrom>
+        <btnGradTo>#a6d9f2</btnGradTo>
+        <btnGradAngle>101</btnGradAngle>
+      </element>
+    </children>
+  </element>
+  <element id="el_1776016841905_624040" type="block">
+    <x>204</x>
+    <y>813</y>
+    <w>350px</w>
+    <h>215px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>15</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1776016841905_212397" type="text">
+        <x>14</x>
+        <y>15</y>
+        <w>269px</w>
+        <h>29px</h>
+        <bg>padding-box border-box transparent</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Sanacja jamy ustnej</content>
+        <color>rgb(40, 80, 123)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <letterSpacing>0px</letterSpacing>
+      </element>
+      <element id="el_1776016841905_157491" type="text">
+        <x>14</x>
+        <y>39</y>
+        <w>68px</w>
+        <h>19px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>450,00 zł</content>
+        <color>rgb(31, 110, 183)</color>
+        <fontSize>16px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016841905_149173" type="text">
+        <x>82</x>
+        <y>39</y>
+        <w>111px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>● ok. 60 min</content>
+        <color>rgb(145, 145, 145)</color>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016841905_173459" type="text">
+        <x>14</x>
+        <y>82</y>
+        <w>336px</w>
+        <h>83px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Zabieg stomatologiczny w znieczuleniu ogólnym.</content>
+        <color>rgb(56, 56, 56)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016841905_513956" type="button">
+        <htmlId>sgbtn_el_1776016841905_513956</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>23</x>
+        <y>165</y>
+        <w>172px</w>
+        <h>32px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <btnText>Dowiedz się więcej </btnText>
+        <btnAction>none</btnAction>
+        <btnPreset>outline</btnPreset>
+        <btnSize>lg</btnSize>
+        <btnRadius>15</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>400</btnWeight>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#6294d5</btnGradFrom>
+        <btnGradTo>#a6d9f2</btnGradTo>
+        <btnGradAngle>101</btnGradAngle>
+      </element>
+    </children>
+  </element>
+  <element id="el_1776016863331_17476" type="block">
+    <x>586</x>
+    <y>813</y>
+    <w>350px</w>
+    <h>215px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>15</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1776016863331_453763" type="text">
+        <x>14</x>
+        <y>15</y>
+        <w>269px</w>
+        <h>29px</h>
+        <bg>padding-box border-box transparent</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Szczepienie psa/kota</content>
+        <color>rgb(40, 80, 123)</color>
+        <fontSize>19px</fontSize>
+        <fontWeight>700</fontWeight>
+        <letterSpacing>0px</letterSpacing>
+      </element>
+      <element id="el_1776016863331_818701" type="text">
+        <x>14</x>
+        <y>39</y>
+        <w>68px</w>
+        <h>19px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>120,00 zł</content>
+        <color>rgb(31, 110, 183)</color>
+        <fontSize>16px</fontSize>
+        <fontWeight>700</fontWeight>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016863331_523324" type="text">
+        <x>82</x>
+        <y>39</y>
+        <w>111px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>● ok. 20 min</content>
+        <color>rgb(145, 145, 145)</color>
+        <fontSize>16px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016863331_103034" type="text">
+        <x>14</x>
+        <y>82</y>
+        <w>336px</w>
+        <h>83px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Badanie kliniczne + podanie szczepionki zgodnie z kalendarzem szczepień.</content>
+        <color>rgb(56, 56, 56)</color>
+        <fontSize>17px</fontSize>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1776016863331_879781" type="button">
+        <htmlId>sgbtn_el_1776016863331_879781</htmlId>
+        <htmlClass>sgbtn-wrap</htmlClass>
+        <x>23</x>
+        <y>165</y>
+        <w>172px</w>
+        <h>32px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <btnText>Dowiedz się więcej </btnText>
+        <btnAction>none</btnAction>
+        <btnPreset>outline</btnPreset>
+        <btnSize>lg</btnSize>
+        <btnRadius>15</btnRadius>
+        <btnBorderW>0</btnBorderW>
+        <btnWeight>400</btnWeight>
+        <btnGradient>1</btnGradient>
+        <btnGradFrom>#6294d5</btnGradFrom>
+        <btnGradTo>#a6d9f2</btnGradTo>
+        <btnGradAngle>101</btnGradAngle>
+      </element>
+    </children>
+  </element>
+</customPage>

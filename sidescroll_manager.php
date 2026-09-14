@@ -85,7 +85,6 @@
   </div>
 
   <div style="font-size:11px; color:#64748b; margin-top:8px; line-height:1.3;">
-    TIP: żeby sterować ramką, ramka musi mieć sensowną wysokość (mniejszą niż „zawartość”), wtedy suwak będzie przesuwał jej zawartość.
   </div>
 
 </div>

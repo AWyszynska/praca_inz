@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toggleDiff controller="el_1775998478215" page="uslugi_home.xml">
+  <before>
+    <element id="el_1775998478215" type="button" tagName="div" parentId="blk_1775925787067" className="canvas-element type-button sgbtn-wrap">
+      <style>left: 23px; top: 165px; width: 172px; height: 32px; z-index: 13; color: rgb(0, 0, 0); border: none; border-radius: 0px; box-shadow: none; opacity: 1; backdrop-filter: none; background: padding-box border-box rgba(0, 0, 0, 0);</style>
+      <attrs>
+        <attr name="data-id">el_1775998478215</attr>
+        <attr name="data-type">button</attr>
+        <attr name="data-html-id">sgbtn_el_1775998478215</attr>
+        <attr name="data-html-class">sgbtn-wrap</attr>
+        <attr name="data-sg-toggle-target">{"mode":"scene","targets":[]}</attr>
+        <attr name="data-sg-toggle-initial">before</attr>
+        <attr name="data-sg-toggle-file">uslugi_home__el_1775998478215.xml</attr>
+        <attr name="data-btn-text">Dowiedz się więcej</attr>
+        <attr name="data-btn-action">none</attr>
+        <attr name="data-btn-preset">outline</attr>
+        <attr name="data-btn-size">lg</attr>
+        <attr name="data-btn-radius">15</attr>
+        <attr name="data-btn-border-w">0</attr>
+        <attr name="data-btn-weight">400</attr>
+        <attr name="data-btn-gradient">1</attr>
+        <attr name="data-btn-grad-from">#6294d5</attr>
+        <attr name="data-btn-grad-to">#a6d9f2</attr>
+        <attr name="data-btn-grad-angle">101</attr>
+        <attr name="id">sgbtn_el_1775998478215</attr>
+        <attr name="data-btn-url">https://</attr>
+        <attr name="data-btn-target">_blank</attr>
+        <attr name="data-btn-scroll-offset">0</attr>
+        <attr name="data-btn-icon-pos">left</attr>
+        <attr name="data-btn-bg">#156fe5</attr>
+        <attr name="data-btn-color">#ffffff</attr>
+        <attr name="data-btn-border-color">#156fe5</attr>
+        <attr name="data-btn-hover-bg">#0f5bd1</attr>
+        <attr name="data-btn-hover-color">#ffffff</attr>
+        <attr name="data-btn-click-effect">none</attr>
+        <attr name="data-btn-align">center</attr>
+        <attr name="data-btn-font-size">13</attr>
+        <attr name="data-btn-letter">0</attr>
+        <attr name="data-btn-shadow">soft</attr>
+        <attr name="data-btn-font-family">'Segoe UI', system-ui, -apple-system, sans-serif</attr>
+        <attr name="data-btn-font-style">normal</attr>
+        <attr name="data-btn-text-decoration">none</attr>
+      </attrs>
+      <innerHTML>&lt;div class="sgbtn-wrap" style="position: absolute; inset: 0px; pointer-events: auto; background: rgba(0, 0, 0, 0); z-index: 0;"&gt;&lt;button class="sgbtn sgbtn--lg" type="button" aria-disabled="false" data-grad="1" data-click-effect="none" style="pointer-events: none; --sgbtn-bg: linear-gradient(101deg, #6294d5, #a6d9f2); --sgbtn-color: #ffffff; --sgbtn-border: #156fe5; --sgbtn-hover-bg: linear-gradient(101deg, #0f5bd1, #a6d9f2); --sgbtn-hover-color: #ffffff; --sgbtn-radius: 15px; --sgbtn-border-w: 0px; --sgbtn-shadow: 0 10px 20px rgba(2,6,23,.12); --sgbtn-weight: 400; --sgbtn-align: center; --sgbtn-font-size: 13px; --sgbtn-justify: center; --sgbtn-letter: 0px; --sgbtn-font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; --sgbtn-font-style: normal; --sgbtn-text-decoration: none; text-transform: none;"&gt;&lt;span class="sgbtn__text"&gt;Dowiedz się więcej&lt;/span&gt;&lt;/button&gt;&lt;/div&gt;</innerHTML>
+    </element>
+  </before>
+  <after>
+    <element id="el_1775998478215" type="button" tagName="div" parentId="blk_1775925787067" className="canvas-element type-button sgbtn-wrap">
+      <style>left: 23px; top: 165px; width: 172px; height: 32px; z-index: 13; color: rgb(0, 0, 0); border: none; border-radius: 0px; box-shadow: none; opacity: 1; backdrop-filter: none; background: padding-box border-box rgba(0, 0, 0, 0);</style>
+      <attrs>
+        <attr name="data-id">el_1775998478215</attr>
+        <attr name="data-type">button</attr>
+        <attr name="data-html-id">sgbtn_el_1775998478215</attr>
+        <attr name="data-html-class">sgbtn-wrap</attr>
+        <attr name="data-btn-text">Zwiń szczegóły</attr>
+        <attr name="data-btn-action">none</attr>
+        <attr name="data-btn-preset">outline</attr>
+        <attr name="data-btn-size">lg</attr>
+        <attr name="data-btn-radius">15</attr>
+        <attr name="data-btn-border-w">0</attr>
+        <attr name="data-btn-weight">400</attr>
+        <attr name="data-btn-gradient">1</attr>
+        <attr name="data-btn-grad-from">#6294d5</attr>
+        <attr name="data-btn-grad-to">#a6d9f2</attr>
+        <attr name="data-btn-grad-angle">101</attr>
+        <attr name="id">sgbtn_el_1775998478215</attr>
+        <attr name="data-btn-url">https://</attr>
+        <attr name="data-btn-target">_blank</attr>
+        <attr name="data-btn-scroll-offset">0</attr>
+        <attr name="data-btn-icon-pos">left</attr>
+        <attr name="data-btn-bg">#156fe5</attr>
+        <attr name="data-btn-color">#ffffff</attr>
+        <attr name="data-btn-border-color">#156fe5</attr>
+        <attr name="data-btn-hover-bg">#0f5bd1</attr>
+        <attr name="data-btn-hover-color">#ffffff</attr>
+        <attr name="data-btn-click-effect">none</attr>
+        <attr name="data-btn-align">center</attr>
+        <attr name="data-btn-font-size">13</attr>
+        <attr name="data-btn-letter">0</attr>
+        <attr name="data-btn-shadow">soft</attr>
+        <attr name="data-btn-font-family">'Segoe UI', system-ui, -apple-system, sans-serif</attr>
+        <attr name="data-btn-font-style">normal</attr>
+        <attr name="data-btn-text-decoration">none</attr>
+        <attr name="data-sg-toggle-target">{"mode":"scene","targets":[]}</attr>
+        <attr name="data-sg-toggle-initial">before</attr>
+        <attr name="data-sg-toggle-state">before</attr>
+        <attr name="data-btn-disabled">0</attr>
+        <attr name="data-sg-toggle-file">uslugi_home__el_1775998478215.xml</attr>
+      </attrs>
+      <innerHTML>&lt;div class="sgbtn-wrap" style="position: absolute; inset: 0px; pointer-events: auto; background: rgba(0, 0, 0, 0); z-index: 0;"&gt;&lt;button class="sgbtn sgbtn--lg" type="button" aria-disabled="false" data-grad="1" data-click-effect="none" style="pointer-events: none; --sgbtn-bg: linear-gradient(101deg, #6294d5, #a6d9f2); --sgbtn-color: #ffffff; --sgbtn-border: #156fe5; --sgbtn-hover-bg: linear-gradient(101deg, #0f5bd1, #a6d9f2); --sgbtn-hover-color: #ffffff; --sgbtn-radius: 15px; --sgbtn-border-w: 0px; --sgbtn-shadow: 0 10px 20px rgba(2,6,23,.12); --sgbtn-weight: 400; --sgbtn-align: center; --sgbtn-font-size: 13px; --sgbtn-justify: center; --sgbtn-letter: 0px; --sgbtn-font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; --sgbtn-font-style: normal; --sgbtn-text-decoration: none; text-transform: none;"&gt;&lt;span class="sgbtn__text"&gt;Zwiń szczegóły&lt;/span&gt;&lt;/button&gt;&lt;/div&gt;</innerHTML>
+    </element>
+  </after>
+</toggleDiff>

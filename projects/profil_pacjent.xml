@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-05-13 22:45:10</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>solid</mode>
+    <solid>#e0f0ff</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>pulpit_pacjent.xml</extends>
+  <element id="blk_1778700439954" type="block">
+    <x>62</x>
+    <y>174</y>
+    <w>247px</w>
+    <h>350px</h>
+    <bg>rgb(255, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1778704860684" type="text">
+        <x>19</x>
+        <y>48</y>
+        <w>207px</w>
+        <h>60px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>18</zIndex>
+        <content>Imię i nazwisko</content>
+        <color>rgb(70, 52, 52)</color>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>center</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="nav_1778703292989_6475" type="nav">
+        <x>24</x>
+        <y>118</y>
+        <w>10px</w>
+        <h>223px</h>
+        <bg>none rgb(255, 255, 255)</bg>
+        <border>1px solid rgba(255, 255, 255, 0.08)</border>
+        <backgroundClip>initial</backgroundClip>
+        <backgroundOrigin>initial</backgroundOrigin>
+        <zIndex>15</zIndex>
+        <borderRadius>12px</borderRadius>
+        <boxShadow>rgba(0, 0, 0, 0.18) 0px 10px 24px</boxShadow>
+        <color>rgb(74, 64, 64)</color>
+        <fontSize>16px</fontSize>
+        <navItems>Mój profil|/praca_inz/final_view.php?file=profil_pacjent_main.xml|profil
+Historia|/praca_inz/final_view.php?file=pulpit_pacjent_moj_historia.xml|historia
+Płatności|/praca_inz/final_view.php?file=pulpit_pacjent_moj_platnosci.xml|platnosci
+Ustawienia|/praca_inz/final_view.php?file=profil_pacjent_main.xml|ustawienia
+Powiadomienia|/praca_inz/final_view.php?file=pulpit_pacjent_moj_powiadomienia.xml|powiadomienia</navItems>
+        <navOrientation>vertical</navOrientation>
+        <navLinkColor>#6f6262</navLinkColor>
+        <navHoverColor>#183691</navHoverColor>
+        <navActiveBg>rgba(100,255,255,0.18)</navActiveBg>
+        <navActiveColor>#9f2323</navActiveColor>
+        <navLayout>sidebar</navLayout>
+        <navLinkBorderColor>rgba(255,255,255,0.10)</navLinkBorderColor>
+        <navLinkShadow>none</navLinkShadow>
+        <navBrandHref>#</navBrandHref>
+        <navBgSolid>#ffffff</navBgSolid>
+      </element>
+    </children>
+  </element>
+</customPage>

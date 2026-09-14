@@ -131,7 +131,7 @@ return KEY_PREFIX + file;
       const empty = document.createElement("div");
       empty.style.fontSize = "12px";
       empty.style.color = "#64748b";
-      empty.textContent = "Brak zapisanych kolorów — dodaj pierwszy 🙂";
+      empty.textContent = "Nie masz dodanych kolorów";
       listWrap.appendChild(empty);
     }
   }

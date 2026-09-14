@@ -99,7 +99,7 @@ if (!function_exists('sidescroll_menager_block')) {
         </div>
 
         <div style="margin-top:10px; font-size:11px; color:#64748b;">
-          Uwaga: konfiguracja siedzi w <code>data-sg-scroll-block</code> na ramce (JSON).
+
         </div>
       </div>
     </div>

@@ -1,5 +1,8 @@
 (() => {
   const SNAP_PX = 8;
+
+  const SG_GUIDES_KEY = "sg_guides_enabled";
+  window.sgGuidesEnabled = localStorage.getItem(SG_GUIDES_KEY) !== "0";
   const style = document.createElement("style");
   style.textContent = `
     .sg-guides-layer{
@@ -86,7 +89,82 @@
     if (v) v.style.opacity = "0";
     if (h) h.style.opacity = "0";
   }
+  function hideAllGuides() {
+    document.querySelectorAll(".sg-guides-layer").forEach((layer) => {
+      const v = layer.querySelector(".sg-guide-v");
+      const h = layer.querySelector(".sg-guide-h");
+      if (v) v.style.opacity = "0";
+      if (h) h.style.opacity = "0";
+    });
+  }
 
+  function updateGuidesButtonText() {
+    const btn = document.getElementById("toggle-guides-btn");
+    if (!btn) return;
+
+    btn.textContent = window.sgGuidesEnabled
+      ? "LINIE DOPASOWANIA: WŁĄCZONE"
+      : "LINIE DOPASOWANIA: WYŁĄCZONE";
+
+    btn.style.background = window.sgGuidesEnabled ? "#9333ea" : "#64748b";
+    btn.style.color = "white";
+  }
+
+function ensureGuidesButton() {
+  let btn = document.getElementById("toggle-guides-btn");
+
+  // Jeśli guzik już jest ręcznie dodany w super_generator.php,
+  // to tylko podpinamy mu kliknięcie.
+  if (btn) {
+    if (btn.dataset.sgGuidesBound !== "1") {
+      btn.dataset.sgGuidesBound = "1";
+
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        window.sgGuidesEnabled = !window.sgGuidesEnabled;
+        localStorage.setItem(SG_GUIDES_KEY, window.sgGuidesEnabled ? "1" : "0");
+
+        hideAllGuides();
+        updateGuidesButtonText();
+      });
+    }
+
+    updateGuidesButtonText();
+    return;
+  }
+
+  // Jeśli guzika nie ma w HTML, skrypt stworzy go sam.
+  const afterBtn =
+    document.getElementById("add-calendar-btn") ||
+    document.getElementById("add-nav-btn") ||
+    document.getElementById("generate-btn");
+
+  if (!afterBtn || !afterBtn.parentElement) return;
+
+  btn = document.createElement("button");
+  btn.id = "toggle-guides-btn";
+  btn.type = "button";
+  btn.className = "btn";
+  btn.style.background = "#9333ea";
+  btn.style.color = "white";
+  btn.dataset.sgGuidesBound = "1";
+
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    window.sgGuidesEnabled = !window.sgGuidesEnabled;
+    localStorage.setItem(SG_GUIDES_KEY, window.sgGuidesEnabled ? "1" : "0");
+
+    hideAllGuides();
+    updateGuidesButtonText();
+  });
+
+  afterBtn.insertAdjacentElement("afterend", btn);
+  updateGuidesButtonText();
+}
 function collectTargets(parent, movingEl) {
   const targetsX = [];
   const targetsY = [];
@@ -196,8 +274,8 @@ function findBestSnapY(top, h, targetsY) {
 
         if (typeof window.selectElement === "function") window.selectElement(div);
 
-        const parent = getParentContainer(div);
-        ensureLayer(parent);
+                const parent = getParentContainer(div);
+        if (window.sgGuidesEnabled) ensureLayer(parent);
 
         const startX = e.clientX;
         const startY = e.clientY;
@@ -217,30 +295,34 @@ function findBestSnapY(top, h, targetsY) {
           let nextL = origX + dx;
           let nextT = origY + dy;
 
-          const w = div.offsetWidth;
-          const h = div.offsetHeight;
+                    if (window.sgGuidesEnabled) {
+            const w = div.offsetWidth;
+            const h = div.offsetHeight;
 
-          const { targetsX, targetsY } = collectTargets(parent, div);
+            const { targetsX, targetsY } = collectTargets(parent, div);
 
-          const snapX = findBestSnapX(nextL, w, targetsX);
-          const snapY = findBestSnapY(nextT, h, targetsY);
+            const snapX = findBestSnapX(nextL, w, targetsX);
+            const snapY = findBestSnapY(nextT, h, targetsY);
 
-          if (snapX) {
-            nextL = nextL + snapX.delta;
-            showV(parent, snapX.guideX);
+            if (snapX) {
+              nextL = nextL + snapX.delta;
+              showV(parent, snapX.guideX);
+            } else {
+              const layer = parent.querySelector(":scope > .sg-guides-layer");
+              const v = layer?.querySelector?.(".sg-guide-v");
+              if (v) v.style.opacity = "0";
+            }
+
+            if (snapY) {
+              nextT = nextT + snapY.delta;
+              showH(parent, snapY.guideY);
+            } else {
+              const layer = parent.querySelector(":scope > .sg-guides-layer");
+              const hEl = layer?.querySelector?.(".sg-guide-h");
+              if (hEl) hEl.style.opacity = "0";
+            }
           } else {
-            const layer = parent.querySelector(":scope > .sg-guides-layer");
-            const v = layer?.querySelector?.(".sg-guide-v");
-            if (v) v.style.opacity = "0";
-          }
-
-          if (snapY) {
-            nextT = nextT + snapY.delta;
-            showH(parent, snapY.guideY);
-          } else {
-            const layer = parent.querySelector(":scope > .sg-guides-layer");
-            const hEl = layer?.querySelector?.(".sg-guide-h");
-            if (hEl) hEl.style.opacity = "0";
+            hideGuides(parent);
           }
 
           div.style.left = Math.round(nextL) + "px";
@@ -313,10 +395,15 @@ if (isMoving) {
     });
   }
   let tries = 0;
-  const t = setInterval(() => {
+    const t = setInterval(() => {
     tries++;
+    ensureGuidesButton();
     install();
-    if (window.setupElementMovement?.__sgGuidesInstalled) clearInterval(t);
+
+    if (window.setupElementMovement?.__sgGuidesInstalled && document.getElementById("toggle-guides-btn")) {
+      clearInterval(t);
+    }
+
     if (tries > 80) clearInterval(t);
   }, 50);
 

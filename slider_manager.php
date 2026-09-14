@@ -97,8 +97,5 @@
     <button type="button" class="tool-btn" id="slider-unpin-to-canvas" style="flex:1;">🧷 Odepnij na ekran</button>
   </div>
 
-  <div style="font-size:11px; color:#64748b; margin-top:8px; line-height:1.3;">
-    Tip: jeśli chcesz dodawać do ramki bez przypinania, kliknij 🎯 przy ramce w panelu warstw ("Dodaj do: Ramka") i dopiero wtedy dodaj zsuwak.
-  </div>
 
 </div>

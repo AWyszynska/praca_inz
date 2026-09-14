@@ -51,10 +51,46 @@
     const st = document.createElement("style");
     st.id = "sg-form-pro-css";
     st.textContent = `
+      .canvas-element[data-type="form"] .sg-form-inner,
+      .page-element[data-type="form"] .sg-form-inner{
+        padding:var(--sg-inner-pad, 6px) !important;
+        box-sizing:border-box !important;
+        width:100% !important;
+        height:100% !important;
+        border-radius:inherit !important;
+        background:transparent !important;
+      }
+
+      .canvas-element[data-type="form"] .sg-form-inner *,
+      .page-element[data-type="form"] .sg-form-inner *{
+        box-sizing:border-box !important;
+      }
+
+      .canvas-element[data-type="form"] .sg-form-field,
+      .page-element[data-type="form"] .sg-form-field{
+        margin-top:var(--sg-field-gap, 0px) !important;
+        width:100% !important;
+      }
+
       .sg-form-inner input::placeholder,
       .sg-form-inner textarea::placeholder{
         color: var(--sg-placeholder, #94a3b8);
         opacity: 1;
+      }
+
+.sg-form-inner input:not([type="radio"]):not([type="checkbox"]),
+.sg-form-inner select{
+  min-height:0 !important;
+  height:var(--sg-input-height, 38px) !important;
+  line-height:1.25 !important;
+  display:block !important;
+}
+
+      .sg-form-inner textarea{
+        min-height:72px !important;
+        line-height:1.35 !important;
+        display:block !important;
+        resize:none;
       }
 
       .sg-form-inner input:focus,
@@ -118,12 +154,16 @@ if (el.dataset.passAutocomplete === undefined) el.dataset.passAutocomplete = "";
 
     if (el.dataset.formInputRadius === undefined) el.dataset.formInputRadius = "10";
     if (el.dataset.formInputPadX === undefined) el.dataset.formInputPadX = "10";
-    if (el.dataset.formInputPadY === undefined) el.dataset.formInputPadY = "9";
-
+    if (el.dataset.formInputPadY === undefined) el.dataset.formInputPadY = "6";
+if (el.dataset.formInputHeight === undefined) el.dataset.formInputHeight = "38";
     if (!el.dataset.formPlaceholderColor) el.dataset.formPlaceholderColor = "#94a3b8";
     if (el.dataset.formFocusRing === undefined) el.dataset.formFocusRing = "4";
     if (el.dataset.formFocusOpacity === undefined) el.dataset.formFocusOpacity = "18";
-if (el.dataset.formNoBg === undefined) el.dataset.formNoBg = "0";
+if (el.dataset.formNoBg === undefined) el.dataset.formNoBg = "1";
+if (el.dataset.formInnerPad === undefined) el.dataset.formInnerPad = "0";
+if (el.dataset.formFieldGap === undefined) el.dataset.formFieldGap = "2";
+if (el.dataset.formAutoHeight === undefined) el.dataset.formAutoHeight = "0";
+if (el.dataset.formMinHeight === undefined) el.dataset.formMinHeight = "60";
     if (!el.dataset.accentColor) el.dataset.accentColor = "#156fe5";
     if (!el.style.fontSize) el.style.fontSize = "16px";
     if (!el.style.color) el.style.color = "#0f172a";
@@ -175,7 +215,7 @@ if (noBg) {
       if (!el.style.overflow) el.style.overflow = "visible";
     }
 
-    if (!el.style.width) el.style.width = "320px";
+    if (!el.style.height) el.style.height = "60px";
   }
 
   function updatePanelVisibility(type) {
@@ -195,7 +235,7 @@ show("form-password-container", type === "password");
 
     show("form-rating-container", type === "rating");
     show("form-likert-container", type === "likert");
-show("form-no-bg-row", ["radio", "checkbox"].includes(type));
+show("form-no-bg-row", ["text", "textarea", "email", "number", "date", "password", "select", "radio", "checkbox"].includes(type));
 
     show("form-email-presets", type === "email");
   }
@@ -516,7 +556,7 @@ function bindPasswordUi(host) {
     const inline = el.dataset.formInline === "1";
 
     const accent = el.dataset.accentColor || "#156fe5";
-    const fs = parseInt(el.style.fontSize || "16", 10) || 16;
+    const fs = parseInt(el.style.fontSize || el.dataset.fontSize || "16", 10) || 16;
 
     const inputStyle = el.dataset.formInputStyle || "box";
     const radius = clamp(parseInt(el.dataset.formInputRadius || "10", 10) || 10, 0, 80);
@@ -540,9 +580,44 @@ function bindPasswordUi(host) {
     const inputShadow = el.dataset.formInputShadow || "soft";
 
     const placeColor = el.dataset.formPlaceholderColor || "#94a3b8";
-    const focusRing = clamp(parseInt(el.dataset.formFocusRing || "4", 10) || 4, 0, 20);
-    const focusOpacity = clamp(parseInt(el.dataset.formFocusOpacity || "18", 10) || 18, 0, 60) / 100;
-    
+const focusRing = clamp(parseInt(el.dataset.formFocusRing || "4", 10) || 4, 0, 20);
+const focusOpacity = clamp(parseInt(el.dataset.formFocusOpacity || "18", 10) || 18, 0, 60) / 100;
+const inputH = clamp(parseInt(el.dataset.formInputHeight || "38", 10) || 38, 20, 120);
+const innerPad = clamp(parseInt(el.dataset.formInnerPad || "6", 10) || 6, 0, 60);
+const fieldGap = clamp(parseInt(el.dataset.formFieldGap || "6", 10) || 6, 0, 80);
+
+const padYNum = clamp(parseInt(padY || "9", 10) || 9, 4, 22);
+const borderWNum = clamp(parseInt(inputBorderW || "1", 10) || 1, 0, 8);
+
+const autoHeight = String(el.dataset.formAutoHeight || "0") === "1";
+const manualMinHeight = parseInt(el.dataset.formMinHeight || "", 10);
+
+if (autoHeight) {
+  const normalFieldH = Math.max(
+    inputH,
+    Math.round(fs * 1.25) + (padYNum * 2) + (borderWNum * 2)
+  );
+
+  let neededH = innerPad * 2;
+  if (label) neededH += 19;
+  if (help) neededH += 18;
+  if (label || help) neededH += fieldGap;
+
+  if (type === "textarea") {
+    const rows = clamp(parseInt(el.dataset.formRows || "3", 10) || 3, 1, 20);
+    neededH += Math.max(72, Math.round(fs * 1.35 * rows) + (padYNum * 2) + (borderWNum * 2));
+  } else if (["radio", "checkbox", "yesno", "rating", "likert"].includes(type)) {
+    neededH += 58;
+  } else {
+    neededH += normalFieldH;
+  }
+
+  el.style.minHeight = Math.ceil(neededH) + "px";
+} else if (Number.isFinite(manualMinHeight) && manualMinHeight > 0) {
+  el.style.minHeight = clamp(manualMinHeight, 20, 2000) + "px";
+} else {
+  el.style.minHeight = "";
+}
 
     const name = (el.dataset.formName || "").trim() || (type === "email" ? "email" : "");
 
@@ -805,12 +880,12 @@ if (type === "password") {
       `;
     }
 
-    const innerPe = isFinal ? "auto" : "none";
+const innerPe = isFinal ? "auto" : "none";
 
     el.innerHTML = `
       <div class="sg-form-inner"
         style="
-          padding:12px;
+          padding:${innerPad}px;
           box-sizing:border-box;
           width:100%;
           height:100%;
@@ -821,10 +896,13 @@ if (type === "password") {
           --sg-accent:${accent};
           --sg-placeholder:${placeColor};
           --sg-focus-ring:${focusRing}px;
-          --sg-focus-a:${focusOpacity};
+--sg-focus-a:${focusOpacity};
+--sg-inner-pad:${innerPad}px;
+--sg-field-gap:${fieldGap}px;
+--sg-input-height:${inputH}px;
         ">
         ${header}
-        <div style="margin-top:${label || help ? 10 : 0}px; color:inherit;">
+        <div class="sg-form-field" style="color:inherit;">
           ${field}
         </div>
       </div>
@@ -878,7 +956,7 @@ if (isFinal && type === "password") {
     ensureDefaults(el);
 
     const type = el.dataset.formType || "text";
-    const fs = parseInt(el.style.fontSize || "16", 10) || 16;
+    const fs = parseInt(el.style.fontSize || el.dataset.fontSize || "16", 10) || 16;
 
     if ($("form-type-select")) $("form-type-select").value = type;
     if ($("form-label-text")) $("form-label-text").value = el.dataset.label || "";
@@ -937,11 +1015,17 @@ if ($("form-no-bg")) $("form-no-bg").checked = el.dataset.formNoBg === "1";
 
     if ($("form-input-pad-x")) $("form-input-pad-x").value = parseInt(el.dataset.formInputPadX || "10", 10) || 10;
     if ($("form-input-pad-y")) $("form-input-pad-y").value = parseInt(el.dataset.formInputPadY || "9", 10) || 9;
-
+if ($("form-input-height")) $("form-input-height").value = parseInt(el.dataset.formInputHeight || "38", 10) || 38;
     if ($("form-placeholder-color")) $("form-placeholder-color").value = el.dataset.formPlaceholderColor || "#94a3b8";
     if ($("form-focus-ring")) $("form-focus-ring").value = parseInt(el.dataset.formFocusRing || "4", 10) || 4;
     if ($("form-focus-opacity")) $("form-focus-opacity").value = parseInt(el.dataset.formFocusOpacity || "18", 10) || 18;
-
+if ($("form-inner-pad")) $("form-inner-pad").value = parseInt(el.dataset.formInnerPad || "6", 10) || 6;
+if ($("form-field-gap")) $("form-field-gap").value = parseInt(el.dataset.formFieldGap || "6", 10) || 6;
+if ($("form-auto-height")) $("form-auto-height").checked = el.dataset.formAutoHeight === "1";
+if ($("form-min-height")) $("form-min-height").value = el.dataset.formMinHeight || "";
+if ($("form-height")) {
+  $("form-height").value = parseInt(el.style.height || el.style.minHeight || el.offsetHeight || "60", 10) || 60;
+}
     if ($("form-width")) $("form-width").value = parseInt(el.style.width || "320", 10) || 320;
 
     updatePanelVisibility(type);
@@ -1155,7 +1239,15 @@ on("form-no-bg", "change", (e) => {
       updateFormVisuals(el);
       refreshLayers?.();
     });
+on("form-input-height", "input", (e) => {
+  const el = activeForm(); if (!el) return;
 
+  const h = clamp(parseInt(e.target.value || "38", 10) || 38, 20, 120);
+  el.dataset.formInputHeight = String(h);
+
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
     on("form-placeholder-color", "input", (e) => {
       const el = activeForm(); if (!el) return;
       el.dataset.formPlaceholderColor = e.target.value;
@@ -1276,13 +1368,18 @@ on("pass-meter", "change", (e) => {
       refreshLayers?.();
     });
 
-    on("form-font-size", "input", (e) => {
-      const el = activeForm(); if (!el) return;
-      const n = parseInt(e.target.value || "16", 10) || 16;
-      el.style.fontSize = n + "px";
-      updateFormVisuals(el);
-      refreshLayers?.();
-    });
+on("form-font-size", "input", (e) => {
+  const el = activeForm(); if (!el) return;
+
+  const n = parseInt(e.target.value || "", 10);
+  if (!Number.isFinite(n)) return;
+
+  el.style.fontSize = n + "px";
+  el.dataset.fontSize = n + "px";
+
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
 
     on("form-text-color", "input", (e) => {
       const el = activeForm(); if (!el) return;
@@ -1297,7 +1394,51 @@ on("pass-meter", "change", (e) => {
       updateFormVisuals(el);
       refreshLayers?.();
     });
+on("form-inner-pad", "input", (e) => {
+  const el = activeForm(); if (!el) return;
+  el.dataset.formInnerPad = String(clamp(parseInt(e.target.value || "6", 10) || 0, 0, 60));
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
 
+on("form-field-gap", "input", (e) => {
+  const el = activeForm(); if (!el) return;
+  el.dataset.formFieldGap = String(clamp(parseInt(e.target.value || "6", 10) || 0, 0, 80));
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
+
+on("form-auto-height", "change", (e) => {
+  const el = activeForm(); if (!el) return;
+  el.dataset.formAutoHeight = e.target.checked ? "1" : "0";
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
+
+on("form-min-height", "input", (e) => {
+  const el = activeForm(); if (!el) return;
+  el.dataset.formMinHeight = String(e.target.value || "");
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
+on("form-height", "input", (e) => {
+  const el = activeForm(); 
+  if (!el) return;
+
+  const h = clamp(parseInt(e.target.value || "60", 10) || 60, 20, 2000);
+
+  el.style.height = h + "px";
+  el.style.minHeight = h + "px";
+
+  el.dataset.formMinHeight = String(h);
+  el.dataset.formAutoHeight = "0";
+
+  if ($("form-min-height")) $("form-min-height").value = String(h);
+  if ($("form-auto-height")) $("form-auto-height").checked = false;
+
+  updateFormVisuals(el);
+  refreshLayers?.();
+});
     on("form-width", "input", (e) => {
       const el = activeForm(); if (!el) return;
       el.style.width = (parseInt(e.target.value || "320", 10) || 320) + "px";
@@ -1345,11 +1486,18 @@ on("pass-meter", "change", (e) => {
       const data = orig(el);
       if (isForm(el)) {
         ensureDefaults(el);
-
+        data.fontSize = el.style.fontSize || el.dataset.fontSize || "16px";
+data.color = el.style.color || "#0f172a";
+data.fontFamily = el.style.fontFamily || "'Segoe UI', sans-serif";
+data.w = el.style.width || (el.offsetWidth ? el.offsetWidth + "px" : "320px");
+data.h = el.style.height || (el.offsetHeight ? el.offsetHeight + "px" : "60px");
         data.formHelpText = el.dataset.formHelpText || "";
         data.formPlaceholder = el.dataset.formPlaceholder || "";
         data.formNoBg = el.dataset.formNoBg || "0";
-
+data.formInnerPad = el.dataset.formInnerPad || "6";
+data.formFieldGap = el.dataset.formFieldGap || "6";
+data.formAutoHeight = el.dataset.formAutoHeight || "0";
+data.formMinHeight = el.dataset.formMinHeight || "";
         data.formRequired = el.dataset.formRequired || "0";
         data.formInline = el.dataset.formInline || "0";
         data.formName = el.dataset.formName || "";
@@ -1391,7 +1539,7 @@ data.passAutocomplete = el.dataset.passAutocomplete || "";
         data.formInputRadius = el.dataset.formInputRadius || "10";
         data.formInputPadX = el.dataset.formInputPadX || "10";
         data.formInputPadY = el.dataset.formInputPadY || "9";
-
+data.formInputHeight = el.dataset.formInputHeight || "38";
         data.formPlaceholderColor = el.dataset.formPlaceholderColor || "#94a3b8";
         data.formFocusRing = el.dataset.formFocusRing || "4";
         data.formFocusOpacity = el.dataset.formFocusOpacity || "18";

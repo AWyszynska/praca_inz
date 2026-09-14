@@ -1,0 +1,60 @@
+/* Usługi - rozwijane szczegóły */
+
+.sg-service-card {
+  overflow: hidden !important;
+  transition:
+    height 0.32s ease,
+    top 0.32s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
+}
+
+.sg-service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.14) !important;
+}
+
+.sg-service-card .sg-service-detail {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition:
+    opacity 0.26s ease,
+    transform 0.26s ease;
+}
+
+.sg-service-card.sg-service-open .sg-service-detail {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.sg-service-card .sgbtn {
+  cursor: pointer;
+}
+
+.sg-service-card .sgbtn__text {
+  transition: opacity 0.15s ease;
+}
+
+/* Awaryjne ukrycie dolnych elementów przed pełnym załadowaniem JS */
+.page-element[data-type="block"] > .page-element[data-type="button"] ~ .page-element {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sg-service-card.sg-service-ready > .page-element[data-type="button"] ~ .page-element {
+  opacity: inherit;
+  pointer-events: auto;
+}
+.sg-service-detail {
+  visibility: hidden;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.sg-service-card.sg-service-open .sg-service-detail {
+  visibility: visible;
+  opacity: 1 !important;
+  pointer-events: auto;
+}

@@ -67,14 +67,32 @@
     <div id="font-options" style="display: none; margin-top: 12px; background: #f1f5f9; padding: 12px; border-radius: 6px;">
       <label style="display: block; font-size: 12px; margin-bottom: 6px; color: #475569;">Krój pisma:</label>
       <select id="prop-font-family">
-        <option value="'Segoe UI', sans-serif">Standardowa (Segoe UI)</option>
-        <option value="'Arial', sans-serif">Arial</option>
-        <option value="'Verdana', sans-serif">Verdana</option>
-        <option value="'Times New Roman', serif">Times New Roman</option>
-        <option value="'Georgia', serif">Georgia</option>
-        <option value="'Courier New', monospace">Courier New</option>
-        <option value="'Brush Script MT', cursive">Artystyczna (Brush Script)</option>
-      </select>
+  <option value="'Segoe UI', system-ui, -apple-system, sans-serif">Standardowa (Segoe UI / system)</option>
+<option value="Georgia, serif">Georgia</option>
+  <option value="Arial, Helvetica, sans-serif">Arial / Helvetica</option>
+  <option value="Verdana, Geneva, sans-serif">Verdana</option>
+  <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+  <option value="'Trebuchet MS', Arial, sans-serif">Trebuchet MS</option>
+  <option value="Calibri, 'Segoe UI', sans-serif">Calibri</option>
+  <option value="'Gill Sans', 'Segoe UI', sans-serif">Gill Sans</option>
+  <option value="'Lucida Sans Unicode', 'Lucida Grande', sans-serif">Lucida Sans</option>
+
+  <option value="'Times New Roman', Times, serif">Times New Roman</option>
+  <option value="Georgia, serif">Georgia</option>
+  <option value="Garamond, 'Times New Roman', serif">Garamond</option>
+  <option value="'Palatino Linotype', Palatino, serif">Palatino</option>
+  <option value="Cambria, Georgia, serif">Cambria</option>
+  <option value="Baskerville, 'Times New Roman', serif">Baskerville</option>
+
+  <option value="'Courier New', Courier, monospace">Courier New</option>
+  <option value="Consolas, Monaco, monospace">Consolas</option>
+  <option value="'Lucida Console', Monaco, monospace">Lucida Console</option>
+
+  <option value="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif">Impact</option>
+  <option value="'Comic Sans MS', 'Comic Sans', cursive">Comic Sans</option>
+  <option value="'Brush Script MT', 'Comic Sans MS', cursive">Artystyczna (Brush Script)</option>
+</select>
+
     </div>
   </div>
 

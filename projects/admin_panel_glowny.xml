@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customPage>
+  <generatedAt>2026-05-28 11:29:55</generatedAt>
+  <pageHeight>2000</pageHeight>
+  <windowScroll>
+    <enabled>1</enabled>
+    <firefoxThin>0</firefoxThin>
+    <width>12</width>
+    <radius>10</radius>
+    <track>rgba(203,213,225,0.25)</track>
+    <thumb>rgba(15,23,42,0.55)</thumb>
+    <thumbHover>rgba(15,23,42,0.75)</thumbHover>
+  </windowScroll>
+  <projectBackground>
+    <mode>none</mode>
+    <solid>#f3f4f6</solid>
+    <gradType>linear</gradType>
+    <gradAngle>180</gradAngle>
+    <gradFrom>#0ea5e9</gradFrom>
+    <gradMid>#6366f1</gradMid>
+    <gradTo>#111827</gradTo>
+    <gradUseMid>0</gradUseMid>
+    <gradPosX>50</gradPosX>
+    <gradPosY>50</gradPosY>
+    <gradPreset/>
+  </projectBackground>
+  <extends>admin_panel.xml</extends>
+  <element id="blk_1779824043158" type="block">
+    <x>11</x>
+    <y>161</y>
+    <w>1500px</w>
+    <h>97px</h>
+    <bg>linear-gradient(135deg, rgb(255, 229, 229), rgb(199, 210, 254)) rgb(255, 229, 229)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>11</zIndex>
+    <borderRadius>16px</borderRadius>
+    <boxShadow>rgba(0, 0, 0, 0.12) 0px 12px 30px 0px</boxShadow>
+    <children>
+      <element id="el_1779958834570" type="text">
+        <x>27</x>
+        <y>34</y>
+        <w>206px</w>
+        <h>27px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>11</zIndex>
+        <content>Dzisiejsze wizyty: </content>
+        <fontFamily>Georgia, serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779958893485_8515" type="text">
+        <x>374</x>
+        <y>34</y>
+        <w>171px</w>
+        <h>24px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Wolne terminy: </content>
+        <fontFamily>Georgia, serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779958925180_970138" type="text">
+        <x>749</x>
+        <y>34</y>
+        <w>204px</w>
+        <h>26px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Najbliższa wizyta:</content>
+        <fontFamily>Georgia, serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+      <element id="el_1779958953325_115339" type="text">
+        <x>1122</x>
+        <y>34</y>
+        <w>240px</w>
+        <h>15px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Przychód miesięczny: </content>
+        <fontFamily>Georgia, serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="blk_1779824098102" type="block">
+    <x>68</x>
+    <y>279</y>
+    <w>600px</w>
+    <h>220px</h>
+    <bg>rgb(250, 253, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>12</zIndex>
+    <borderRadius>16px</borderRadius>
+    <children>
+      <element id="el_1779959175156_640344" type="text">
+        <x>6</x>
+        <y>10</y>
+        <w>293px</w>
+        <h>29px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>12</zIndex>
+        <content>Dzisiejszy harmonogram : </content>
+        <fontFamily>Georgia, serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="blk_1779824134069" type="block">
+    <x>726</x>
+    <y>279</y>
+    <w>500px</w>
+    <h>489px</h>
+    <bg>rgb(250, 255, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <borderRadius>16px</borderRadius>
+    <children>
+      <element id="el_1779959286975_488502" type="text">
+        <x>16</x>
+        <y>18</y>
+        <w>254px</w>
+        <h>20px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Tablica informacyjna : </content>
+        <fontFamily>Georgia, serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+  <element id="el_1779959148964_820086" type="block">
+    <x>69</x>
+    <y>546</y>
+    <w>600px</w>
+    <h>220px</h>
+    <bg>rgb(255, 250, 255)</bg>
+    <border>1px solid rgb(226, 232, 240)</border>
+    <backgroundClip>initial</backgroundClip>
+    <backgroundOrigin>initial</backgroundOrigin>
+    <zIndex>13</zIndex>
+    <borderRadius>16px</borderRadius>
+    <children>
+      <element id="el_1779959245960_784035" type="text">
+        <x>6</x>
+        <y>17</y>
+        <w>293px</w>
+        <h>29px</h>
+        <bg>padding-box border-box rgba(0, 0, 0, 0)</bg>
+        <backgroundClip>border-box</backgroundClip>
+        <backgroundOrigin>padding-box</backgroundOrigin>
+        <zIndex>13</zIndex>
+        <content>Godziny pracy : </content>
+        <fontFamily>Georgia, serif</fontFamily>
+        <fontWeight>700</fontWeight>
+        <fontStyle>italic</fontStyle>
+        <textAlign>start</textAlign>
+        <lineHeight>normal</lineHeight>
+      </element>
+    </children>
+  </element>
+</customPage>
